@@ -25,22 +25,22 @@ Allows users to evaluate the modern impact of global warming using real historic
 
 **Required Must-have Stories**
 
-* User can sign up for an account
-* User can log in to/log out from their account
-* User can view global warming data in chart form
-* User can view global warming data in graph form
-* User can use a toggle button to toggle between data views
-* User can use a dropdown menu to choose the variables and ranges displayed
-* User can use a dropdown menu to choose what location (including their own location) to view data from
-* User can view current news stories related to global warming
-* Each news story includes a thumbnail image and text snippet, user can click it to open full news story in web view
-* User can scroll down infintely to view older news stories
+* [ ] User can sign up for an account
+* [ ] User can log in to/log out from their account
+* [ ] User can view global warming data in chart form
+* [ ] User can view global warming data in graph form
+* [ ] User can use a toggle button to toggle between data views
+* [ ] User can use a dropdown menu to choose the variables and ranges displayed
+* [ ] User can use a dropdown menu to choose what location (including their own location) to view data from
+* [ ] User can view current news stories related to global warming
+* [ ] Each news story includes a thumbnail image and text snippet, user can click it to open full news story in web view
+* [ ] User can scroll down infintely to view older news stories
 
 **Optional Nice-to-have Stories**
 
-* User can toggle between dark mode and light mode
-* User can add custom locations that are added to the dropdown menu
-* User can filter news stories by source
+* [ ] User can toggle between dark mode and light mode
+* [ ] User can add custom locations that are added to the dropdown menu
+* [ ] User can filter news stories by source
 
 ### 2. Screen Archetypes
 
