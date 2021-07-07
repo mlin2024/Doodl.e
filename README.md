@@ -29,7 +29,7 @@ Allows users to evaluate the modern impact of global warming using real historic
 * [ ] User can log in to/log out from their account
 * [ ] User can view global warming data in chart form
 * [ ] User can view global warming data in graph form
-* [ ] User can use a toggle button to toggle between data views
+* [ ] User can use tabs to toggle between data views
 * [ ] User can use a dropdown menu to choose the variables and ranges displayed
 * [ ] User can use a dropdown menu to choose what location (including their own location) to view data from
 * [ ] User can view current news stories related to global warming
@@ -48,10 +48,12 @@ Allows users to evaluate the modern impact of global warming using real historic
    * User can log in to their account
 * Sign Up Screen
    * User can sign up for an account
+* Home Screen
+   * User can choose to view past data, future data, or climate news
 * Data Screen
    * User can view global warming data in chart form
    * User can view global warming data in graph form
-   * User can use a toggle button to toggle between data views
+   * User can use tabs to toggle between data views
    * User can use a dropdown menu to choose the variables and ranges displayed
    * User can use a dropdown menu to choose what location (including their own location) to view data from
 * News Screen
@@ -63,15 +65,15 @@ Allows users to evaluate the modern impact of global warming using real historic
 
 **Tab Navigation** (Tab to Screen)
 
-* Data Screen
-* News Feed
+* Data Screen (graph view)
+* Data Screen (chart view)
 
 **Flow Navigation** (Screen to Screen)
 
 * Login Screen
-   => Home
+   => Home Screen
 * Sign Up Screen
-   => Home
+   => Home Screen
 * Data Screen
    => None
 * News Screen
@@ -79,11 +81,7 @@ Allows users to evaluate the modern impact of global warming using real historic
 
 ## Wireframes
 [Add picture of your hand sketched wireframes in this section]
-<img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
-
-### [BONUS] Digital Wireframes & Mockups
-
-### [BONUS] Interactive Prototype
+<img src="https://raw.githubusercontent.com/mlin2024/EarthIf/main/EarthIfWireframe.jpg" width=600>
 
 ## Schema 
 [This section will be completed in Unit 9]
