@@ -1,4 +1,4 @@
-# Earth If
+# Doodl.e
 
 ## Table of Contents
 1. [Overview](#Overview)
@@ -8,16 +8,16 @@
 
 ## Overview
 ### Description
-Allows users to evaluate the modern impact of global warming using real historical data and future projections. Also displays current news stories regarding global warming.
+[Description of your app]
 
 ### App Evaluation
 [Evaluation of your app across the following attributes]
-- **Category:** Education
-- **Mobile:** Currently only on mobile for Android
-- **Story:** Allows users to evaluate the modern impact of global warning
-- **Market:** Anyone who is concerned about current and future events
-- **Habit:** Not habit-forming, but useful to check daily for current information about global warming.
-- **Scope:** Focus is relatively narrow, focused towards global warming.
+- **Category:**
+- **Mobile:**
+- **Story:**
+- **Market:**
+- **Habit:**
+- **Scope:**
 
 ## Product Spec
 
@@ -25,63 +25,47 @@ Allows users to evaluate the modern impact of global warming using real historic
 
 **Required Must-have Stories**
 
-* [ ] User can sign up for an account
-* [ ] User can log in to/log out from their account
-* [ ] User can view global warming data in chart form
-* [ ] User can view global warming data in graph form
-* [ ] User can use tabs to toggle between data views
-* [ ] User can use a dropdown menu to choose the variables and ranges displayed
-* [ ] User can use a dropdown menu to choose what location (including their own location) to view data from
-* [ ] User can view current news stories related to global warming
-* [ ] Each news story includes a thumbnail image and text snippet, user can click it to open full news story in web view
-* [ ] User can scroll down infintely to view older news stories
+* [fill in your required user stories here]
+* ...
 
 **Optional Nice-to-have Stories**
 
-* [ ] User can toggle between dark mode and light mode
-* [ ] User can add custom locations that are added to the dropdown menu
-* [ ] User can filter news stories by source
+* [fill in your required user stories here]
+* ...
 
 ### 2. Screen Archetypes
 
-* Login Screen
-   * User can log in to their account
-* Sign Up Screen
-   * User can sign up for an account
-* Home Screen
-   * User can choose to view past data, future data, or climate news
-* Data Screen
-   * User can view global warming data in chart form
-   * User can view global warming data in graph form
-   * User can use tabs to toggle between data views
-   * User can use a dropdown menu to choose the variables and ranges displayed
-   * User can use a dropdown menu to choose what location (including their own location) to view data from
-* News Screen
-   * User can view current news stories related to global warming
-   * Each news story includes a thumbnail image and text snippet, user can click it to open full news story in web view
-   * User can scroll down infintely to view older news stories
+* [list first screen here]
+   * [list associated required story here]
+   * ...
+* [list second screen here]
+   * [list associated required story here]
+   * ...
 
 ### 3. Navigation
 
 **Tab Navigation** (Tab to Screen)
 
-* Data Screen (graph view)
-* Data Screen (chart view)
+* [fill out your first tab]
+* [fill out your second tab]
+* [fill out your third tab]
 
 **Flow Navigation** (Screen to Screen)
 
-* Login Screen
-   => Home Screen
-* Sign Up Screen
-   => Home Screen
-* Data Screen
-   => None
-* News Screen
-   => None
+* [list first screen here]
+   * [list screen navigation here]
+   * ...
+* [list second screen here]
+   * [list screen navigation here]
+   * ...
 
 ## Wireframes
 [Add picture of your hand sketched wireframes in this section]
-<img src="https://raw.githubusercontent.com/mlin2024/EarthIf/main/EarthIfWireframe.jpg" width=600>
+<img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
+
+### [BONUS] Digital Wireframes & Mockups
+
+### [BONUS] Interactive Prototype
 
 ## Schema 
 [This section will be completed in Unit 9]
