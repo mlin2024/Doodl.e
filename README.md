@@ -8,16 +8,16 @@
 
 ## Overview
 ### Description
-[Description of your app]
+*Doodl.e* is an anonymous collaborative doodling app where you can send out your doodles to the world and contribute to other people's doodles. Get notified whenever your own doodles are contributed to, and watch them evolve. You can also play with your friends in a fun party game.
 
 ### App Evaluation
 [Evaluation of your app across the following attributes]
-- **Category:**
-- **Mobile:**
-- **Story:**
-- **Market:**
-- **Habit:**
-- **Scope:**
+- **Category:** Game/Entertainment/Social
+- **Mobile:** Primarily for mobile, but would be possible on a computer. Main functionality of the app (drawing) would be much easier on a touchscreen device.
+- **Story:** Users can share doodles and add to other users' doodles.
+- **Market:** People who like drawing would enjoy this app, but really anyone who likes a social and anonymous game.
+- **Habit:** Users can create and edit as many doodles as they want every day.
+- **Scope:** Currently mostly involves doodling, but could be broadened to become more social.
 
 ## Product Spec
 
@@ -25,39 +25,87 @@
 
 **Required Must-have Stories**
 
-* [fill in your required user stories here]
-* ...
+* User can log in/log out
+* User can sign up for a new account
+* User can choose between Doodle Mode and Game Mode
+* User can view their profile
+* User can logout
+* User can choose to either create a new doodle contribute to an existing doodle
+* User can draw a new doodle
+* User can receive an existing doodle from the database (that they have not already contributed to) and add on to it
+* User can send out their new doodle/contribution to the database
+* User can choose to either create a new game or join an existing game
+* User can create a new game and receive the game code
+* User can join a game by inputting the game code
+* User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
+* User can view the full history of each doodle in the game after the game ends
+* User can change username and password
+* User can add their Twitter to allow automatic posting of their doodles
+* User can view a gallery of all the doodles they've done
+* User can receive a notification whenever one of their doodles is contributed to
 
 **Optional Nice-to-have Stories**
 
-* [fill in your required user stories here]
-* ...
+* User can undo/redo their strokes
+* User can choose their drawing color out of a list of colors (previously used colors cannot be chosen)
+* When receiving an existing doodle from the database, user can view a timelapse of the work already done on the doodle
 
 ### 2. Screen Archetypes
 
-* [list first screen here]
-   * [list associated required story here]
-   * ...
-* [list second screen here]
-   * [list associated required story here]
-   * ...
+* Login/Signup Screen
+   * User can log in
+   * User can sign up for a new account
+* Home Screen
+   * User can choose between Doodle Mode and Game Mode
+   * User can view their profile
+   * User can log out
+* Doodle Mode Screen
+   * User can choose to either create a new doodle contribute to an existing doodle
+   * User can draw a new doodle
+   * User can receive an existing doodle from the database (that they have not already contributed to) and add on to it
+   * User can send out their new doodle/contribution to the database
+   * *User can undo/redo their strokes*
+   * *User can choose their drawing color out of a list of colors (previously used colors cannot be chosen)*
+   * *When receiving an existing doodle from the database, user can view a timelapse of the work already done on the doodle*
+* Game Mode Screen
+   * User can choose to either create a new game or join an existing game
+   * User can create a new game and receive the game code
+   * User can join a game by inputting the game code
+* Game Screen
+   * User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
+   * User can view the full history of each doodle in the game after the game ends
+* Profile Screen
+   * User can change username and password
+   * User can add their Twitter to allow automatic posting of their doodles
+   * User can view a gallery of all the doodles they've done
 
 ### 3. Navigation
 
 **Tab Navigation** (Tab to Screen)
 
-* [fill out your first tab]
-* [fill out your second tab]
-* [fill out your third tab]
+* Doodle Mode Screen
+   * Create Doodle Tab
+   * Add to Doodle Tab
+* Game Mode Screen
+   * Create Game Tab
+   * Join Game Tab
 
 **Flow Navigation** (Screen to Screen)
 
-* [list first screen here]
-   * [list screen navigation here]
-   * ...
-* [list second screen here]
-   * [list screen navigation here]
-   * ...
+* Login/Signup Screen
+   * Home Screen
+* Home Screen
+   * Doodle Mode Screen
+   * Game Mode Screen
+   * Profile Screen
+* Doodle Mode Screen
+   * none
+* Game Mode Screen
+   * Game Screen
+* Game Screen
+   * none
+* Profile Screen
+   * none
 
 ## Wireframes
 [Add picture of your hand sketched wireframes in this section]
@@ -79,8 +127,9 @@
    | image         | File     | the doodle that the artist posted |
    | ParentDoodle  | Pointer to Doodle   | the parent to this doodle (null if this doodle has no parent) |
    | tailLength    | Number    | the length of the doodle's "tail" (i.e. how many doodles preceed it, including itself) (if not inGame, Doodle is unable to be randomly received after tailLength reaches 5)|
+   | root          | String    | objectId of the root node |
    | inGame        | Boolean   | whether or not the doodle is part of a game (if it is, it cannot be randomly received, and is deleted after the game ends) |
-   | speedDoodle (optional) | File | data that can be used to recreate a speed-draw of the doodle's past |
+   | *speedDoodle (optional) | File | data that can be used to recreate a speed-draw of the doodle's past* |
    
 #### Game
 
