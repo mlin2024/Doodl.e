@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:testOnly="true"
         android:theme="@style/Theme.Doodle" >
-        <activity android:name="com.example.doodle.activities.MainActivity" >
+        <activity android:name="com.example.doodle.MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

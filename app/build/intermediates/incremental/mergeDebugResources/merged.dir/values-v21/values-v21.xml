@@ -195,6 +195,9 @@
     <style name="Base.V21.ThemeOverlay.AppCompat.Dialog" parent="Base.V7.ThemeOverlay.AppCompat.Dialog">
         <item name="android:windowElevation">@dimen/abc_floating_window_z</item>
     </style>
+    <style name="Base.V21.ThemeOverlay.MaterialComponents.BottomSheetDialog" parent="Base.V14.ThemeOverlay.MaterialComponents.BottomSheetDialog">
+    <item name="android:statusBarColor">@android:color/transparent</item>
+  </style>
     <style name="Base.Widget.AppCompat.ActionBar.TabText" parent="android:Widget.Material.ActionBar.TabText">
     </style>
     <style name="Base.Widget.AppCompat.ActionBar.TabView" parent="android:Widget.Material.ActionBar.TabView">
@@ -351,6 +354,7 @@
     <item name="android:fontFamily">sans-serif-medium</item>
     <item name="android:textStyle">normal</item>
   </style>
+    <style name="ThemeOverlay.MaterialComponents.BottomSheetDialog" parent="Base.V21.ThemeOverlay.MaterialComponents.BottomSheetDialog"/>
     <style name="ThemeOverlay.MaterialComponents.Dialog.Alert.Framework" parent="Base.ThemeOverlay.MaterialComponents.Dialog.Alert.Framework"/>
     <style name="ThemeOverlay.MaterialComponents.Light.Dialog.Alert.Framework" parent="Base.ThemeOverlay.MaterialComponents.Light.Dialog.Alert.Framework"/>
     <style name="ThemeOverlay.MaterialComponents.MaterialAlertDialog.Picker.Date" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
