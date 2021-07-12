@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">Doodl.e</string>
+    <string name="App_name">Doodl.e</string>
+    <string name="app_name">doodl.e</string>
+    <string name="Log_In">Log In</string>
+    <string name="Sign_Up">Sign Up</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
 </resources>
