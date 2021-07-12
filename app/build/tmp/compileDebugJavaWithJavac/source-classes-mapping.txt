@@ -1,4 +1,0 @@
-com/example/doodle/BuildConfig.java
- com.example.doodle.BuildConfig
-com/example/doodle/MainActivity.java
- com.example.doodle.MainActivity
