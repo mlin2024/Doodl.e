@@ -29,7 +29,6 @@ public class LoginSignupActivity extends AppCompatActivity {
 
     private RelativeLayout loginSignupRelativeLayout;
     private LinearLayout loginSignupLinearLayout;
-    private TextView titleText;
     private Button loginButton;
     private ExpandableLayout loginExpandableLayout;
     private EditText usernameEditTextLogin;
@@ -55,7 +54,6 @@ public class LoginSignupActivity extends AppCompatActivity {
 
         loginSignupRelativeLayout = findViewById(R.id.loginSignupRelativeLayout);
         loginSignupLinearLayout = findViewById(R.id.loginSignupLinearLayout);
-        titleText = findViewById(R.id.titleText);
         loginButton = findViewById(R.id.loginButton);
         loginExpandableLayout = findViewById(R.id.loginExpandableLayout);
         usernameEditTextLogin = findViewById(R.id.usernameEditTextLogin);
@@ -109,8 +107,8 @@ public class LoginSignupActivity extends AppCompatActivity {
                 return;
             }
             else { // The login succeded
+                clearEditTexts();
                 goHomeActivity();
-                finish();
             }
         });
     }
@@ -131,10 +129,18 @@ public class LoginSignupActivity extends AppCompatActivity {
                 return;
             }
             else { // The signup succeeded
+                clearEditTexts();
                 goHomeActivity();
-                finish();
             }
         });
+    }
+
+    // Clears the EditTexts
+    private void clearEditTexts() {
+        usernameEditTextLogin.setText("");
+        passwordEditTextLogin.setText("");
+        usernameEditTextSignup.setText("");
+        passwordEditTextSignup.setText("");
     }
 
     // Starts an intent to go to the main activity
