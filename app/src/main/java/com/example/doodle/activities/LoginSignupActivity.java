@@ -49,6 +49,10 @@ public class LoginSignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_signup);
 
+        if (ParseUser.getCurrentUser() != null) {
+            goHomeActivity();
+        }
+
         loginSignupRelativeLayout = findViewById(R.id.loginSignupRelativeLayout);
         loginSignupLinearLayout = findViewById(R.id.loginSignupLinearLayout);
         titleText = findViewById(R.id.titleText);

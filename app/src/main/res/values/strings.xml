@@ -9,4 +9,5 @@
     <string name="login_failed">Login failed, please try again</string>
     <string name="signup_failed">Signup failed, please try again</string>
     <string name="verifying_credentials">Verifying credentials...</string>
+    <string name="logout_failed">Logout failed, please try again</string>
 </resources>
