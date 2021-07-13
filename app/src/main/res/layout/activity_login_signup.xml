@@ -58,6 +58,15 @@
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:singleLine="true" />
+
+            <Button
+                android:id="@+id/loginGoButton"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right|fill_vertical"
+                app:icon="@drawable/ic_baseline_arrow_forward_24"
+                app:iconGravity="textEnd"
+                app:iconPadding="0dp" />
         </net.cachapa.expandablelayout.ExpandableLayout>
 
         <Button
@@ -96,6 +105,15 @@
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:singleLine="true" />
+
+            <Button
+                android:id="@+id/signupGoButton"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right|fill_vertical"
+                app:icon="@drawable/ic_baseline_arrow_forward_24"
+                app:iconGravity="textEnd"
+                app:iconPadding="0dp" />
         </net.cachapa.expandablelayout.ExpandableLayout>
     </LinearLayout>
 

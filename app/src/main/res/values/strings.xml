@@ -1,8 +1,12 @@
 <resources>
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
     <string name="App_name">Doodl.e</string>
     <string name="app_name">doodl.e</string>
     <string name="Log_In">Log In</string>
     <string name="Sign_Up">Sign Up</string>
     <string name="username">username</string>
     <string name="password">password</string>
+    <string name="login_failed">Login failed, please try again</string>
+    <string name="signup_failed">Signup failed, please try again</string>
+    <string name="verifying_credentials">Verifying credentials...</string>
 </resources>
