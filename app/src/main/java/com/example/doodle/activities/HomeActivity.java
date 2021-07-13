@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.example.doodle.R;
@@ -19,6 +21,8 @@ public class HomeActivity extends AppCompatActivity {
 
     RelativeLayout homeRelativeLayout;
     private Toolbar toolbar;
+    private Button doodleModeButton;
+    private Button gameModeButton;
 
 
     @Override
@@ -30,7 +34,16 @@ public class HomeActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.homeActivityToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
+        doodleModeButton = findViewById(R.id.doodleModeButton);
+        gameModeButton = findViewById(R.id.gameModeButton);
 
+        doodleModeButton.setOnClickListener(v -> {
+            goDoodleModeActivity();
+        });
+
+        gameModeButton.setOnClickListener(v -> {
+            goGameModeActivity();
+        });
     }
 
     @Override
@@ -80,6 +93,18 @@ public class HomeActivity extends AppCompatActivity {
     // Starts an intent to go to the profile activity
     private void goProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the doodle mode activity
+    private void goDoodleModeActivity() {
+        Intent intent = new Intent(this, DoodleModeActivity.class);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the game mode activity
+    private void goGameModeActivity() {
+        Intent intent = new Intent(this, GameModeActivity.class);
         startActivity(intent);
     }
 }

@@ -14,8 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Doodle">
         <activity
+            android:name=".activities.GameModeActivity"
+            android:label="@string/Game_Mode"/>
+        <activity
+            android:name=".activities.DoodleModeActivity"
+            android:label="@string/Doodle_Mode"/>
+        <activity
             android:name=".activities.GalleryActivity"
-            android:label="@string/Gallery"/>
+            android:label="@string/Gallery" />
         <activity
             android:name=".activities.ProfileActivity"
             android:label="@string/Profile" />

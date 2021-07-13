@@ -22,4 +22,10 @@
     <style name="OverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_baseline_account_circle_24</item>
     </style>
+
+    <style name="CustomButton.Doodle" parent="Base.Widget.AppCompat.Button">
+        <item name="android:width">250dp</item>
+        <item name="android:height">70dp</item>
+        <item name="android:textSize">24sp</item>
+    </style>
 </resources>

@@ -14,4 +14,9 @@
     <string name="Logout">Logout</string>
     <string name="Gallery">Gallery</string>
     <string name="dots">•••••••</string>
+    <string name="Doodle_Mode">Doodle Mode</string>
+    <string name="Game_Mode">Game Mode</string>
+    <string name="Create">Create</string>
+    <string name="Contribute">Contribute</string>
+    <string name="Join">Join</string>
 </resources>
