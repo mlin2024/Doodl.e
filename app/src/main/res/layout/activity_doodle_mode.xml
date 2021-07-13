@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/doodleModeRelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.DoodleModeActivity">
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/doodleModeButton"
+        android:id="@+id/createDoodleButton"
         style="@style/CustomButton.Doodle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,11 +23,11 @@
         android:text="@string/Create" />
 
     <Button
-        android:id="@+id/gameModeButton"
+        android:id="@+id/contributeDoodleButton"
         style="@style/CustomButton.Doodle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/doodleModeButton"
+        android:layout_below="@+id/createDoodleButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
         android:text="@string/Contribute" />

@@ -19,7 +19,7 @@ import com.parse.ParseUser;
 public class HomeActivity extends AppCompatActivity {
     public static final String TAG = "HomeActivity";
 
-    RelativeLayout homeRelativeLayout;
+    private RelativeLayout homeRelativeLayout;
     private Toolbar toolbar;
     private Button doodleModeButton;
     private Button gameModeButton;
