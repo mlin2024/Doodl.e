@@ -23,6 +23,7 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 
 public class GameModeActivity extends AppCompatActivity {
     public static final String TAG = "GameModeActivity";
+    public static final String GAME_CODE_TAG = "gameCode";
 
     private RelativeLayout gameModeRelativeLayout;
     private Toolbar toolbar;
@@ -79,6 +80,9 @@ public class GameModeActivity extends AppCompatActivity {
             String inputtedGameCode = gameCodeEditText.getText().toString();
             if (inputtedGameCode.isEmpty()) {
                 Snackbar.make(gameModeRelativeLayout, R.string.must_enter_game_code, Snackbar.LENGTH_LONG).show();
+            }
+            else if (inputtedGameCode.length() < 4) {
+                Snackbar.make(gameModeRelativeLayout, R.string.game_code_too_short, Snackbar.LENGTH_LONG).show();
             }
             else {
                 goWaitingRoomActivity(inputtedGameCode);
@@ -142,10 +146,9 @@ public class GameModeActivity extends AppCompatActivity {
 
     // Starts an intent to go to the waiting room activity
     private void goWaitingRoomActivity(String gameCode) {
-        // TODO: create WaitingRoomActivity
-        //Intent intent = new Intent(this, WaitingRoomActivity.class);
-        //intent.putExtra("gameCode", gameCode);
-        //startActivity(intent);
+        Intent intent = new Intent(this, WaitingRoomActivity.class);
+        intent.putExtra(GAME_CODE_TAG, gameCode);
+        startActivity(intent);
     }
 
     // Minimizes the soft keyboard

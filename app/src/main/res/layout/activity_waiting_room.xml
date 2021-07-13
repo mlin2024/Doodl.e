@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/waitingRoomRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.WaitingRoomActivity">
+
+    <include
+        android:id="@+id/waitingRoomActivityToolbar"
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/gameCodeLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/waitingRoomActivityToolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/gameCodeTextViewPrefixWR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/Your_game_code_is"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/gameCodeTextViewWR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/teal_700"
+            android:textSize="34sp"
+            tools:text="AFXP" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playersRecyclerView"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/numPlayersTextView"
+        android:layout_below="@+id/gameCodeLinearLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/numPlayersTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/startGameButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:textSize="24sp"
+        tools:text="Players: 0" />
+
+    <Button
+        android:id="@+id/startGameButton"
+        style="@style/CustomButton.Doodle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/Start_Game"
+        app:icon="@drawable/ic_baseline_arrow_forward_24"
+        app:iconGravity="end" />
+
+</RelativeLayout>

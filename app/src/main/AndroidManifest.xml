@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Doodle">
         <activity
+            android:name=".activities.GameActivity"
+            android:label="@string/Game" />
+        <activity
+            android:name=".activities.WaitingRoomActivity"
+            android:label="@string/Waiting_Room" />
+        <activity
             android:name=".activities.ContributeActivity"
             android:label="@string/Contribute" />
         <activity
