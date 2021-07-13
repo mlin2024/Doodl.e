@@ -19,4 +19,10 @@
     <string name="Create">Create</string>
     <string name="Contribute">Contribute</string>
     <string name="Join">Join</string>
+    <string name="Your_game_code_is">Your game code is:</string>
+    <string name="sample_game_code">AFXP</string>
+    <string name="Enter_game_code">Enter game code:</string>
+    <string name="Create_Game">Create Game!</string>
+    <string name="Join_Game">Join Game!</string>
+    <string name="must_enter_game_code">You must enter a game code!</string>
 </resources>

@@ -14,24 +14,113 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/createGameButton"
-        style="@style/CustomButton.Doodle"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/gameModeLinearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/gameModeActivityToolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="@string/Create" />
+        android:layout_marginTop="50dp"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/joinGameButton"
-        style="@style/CustomButton.Doodle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/createGameButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="@string/Join" />
+        <Button
+            android:id="@+id/createGameButton"
+            style="@style/CustomButton.Doodle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:text="@string/Create" />
+
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/createGameExpandableLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:el_duration="1000"
+            app:el_expanded="false"
+            app:el_parallax="0.5">
+
+            <TextView
+                android:id="@+id/gameCodePrefixTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/Your_game_code_is"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/gameCodeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:textSize="48sp"
+                tools:text="AFXP" />
+
+            <Button
+                android:id="@+id/createGameButtonGo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="100dp"
+                android:text="@string/Create_Game"
+                app:icon="@drawable/ic_baseline_arrow_forward_24"
+                app:iconGravity="end" />
+
+        </net.cachapa.expandablelayout.ExpandableLayout>
+
+        <Button
+            android:id="@+id/joinGameButton"
+            style="@style/CustomButton.Doodle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:text="@string/Join" />
+
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/joinGameExpandableLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:el_duration="1000"
+            app:el_expanded="false"
+            app:el_parallax="0.5">
+
+            <TextView
+                android:id="@+id/enterGameCodeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:text="@string/Enter_game_code"
+                android:textSize="24sp" />
+
+            <EditText
+                android:id="@+id/gameCodeEditText"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="55dp"
+                android:gravity="center_horizontal"
+                android:hint="@string/sample_game_code"
+                android:inputType="textCapCharacters"
+                android:maxLength="4"
+                android:singleLine="true"
+                android:textSize="48sp" />
+
+            <Button
+                android:id="@+id/joinGameButtonGo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="150dp"
+                android:imeOptions="actionDone"
+                android:text="@string/Join_Game"
+                app:icon="@drawable/ic_baseline_arrow_forward_24"
+                app:iconGravity="end" />
+
+        </net.cachapa.expandablelayout.ExpandableLayout>
+    </LinearLayout>
 
 </RelativeLayout>

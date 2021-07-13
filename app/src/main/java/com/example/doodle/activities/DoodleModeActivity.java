@@ -27,8 +27,8 @@ public class DoodleModeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doodle_mode);
 
-        doodleModeRelativeLayout = findViewById(R.id.profileRelativeLayout);
-        toolbar = findViewById(R.id.profileActivityToolbar);
+        doodleModeRelativeLayout = findViewById(R.id.doodleModeRelativeLayout);
+        toolbar = findViewById(R.id.doodleModeActivityToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -63,6 +63,9 @@ public class DoodleModeActivity extends AppCompatActivity {
             case R.id.logoutMenuItem:
                 logout();
                 return true;
+            case android.R.id.home:
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -92,12 +95,14 @@ public class DoodleModeActivity extends AppCompatActivity {
 
     // Starts an intent to go to the doodle activity
     private void goDoodleActivity() {
+        // TODO: create DoodleActivity
         //Intent intent = new Intent(this, DoodleActivity.class);
         //startActivity(intent);
     }
 
     // Starts an intent to go to the contribute activity
     private void goContributeActivity() {
+        // TODO: create ContributeActivity
         //Intent intent = new Intent(this, ContributeActivity.class);
         //startActivity(intent);
     }
