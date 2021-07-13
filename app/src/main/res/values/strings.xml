@@ -25,4 +25,5 @@
     <string name="Create_Game">Create Game!</string>
     <string name="Join_Game">Join Game!</string>
     <string name="must_enter_game_code">You must enter a game code!</string>
+    <string name="Doodle">Doodle</string>
 </resources>

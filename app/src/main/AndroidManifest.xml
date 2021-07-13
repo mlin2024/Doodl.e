@@ -14,11 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Doodle">
         <activity
+            android:name=".activities.ContributeActivity"
+            android:label="@string/Contribute" />
+        <activity
+            android:name=".activities.DoodleActivity"
+            android:label="@string/Doodle" />
+        <activity
             android:name=".activities.GameModeActivity"
-            android:label="@string/Game_Mode"/>
+            android:label="@string/Game_Mode" />
         <activity
             android:name=".activities.DoodleModeActivity"
-            android:label="@string/Doodle_Mode"/>
+            android:label="@string/Doodle_Mode" />
         <activity
             android:name=".activities.GalleryActivity"
             android:label="@string/Gallery" />

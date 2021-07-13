@@ -7,42 +7,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.example.doodle.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseUser;
 
-public class DoodleModeActivity extends AppCompatActivity {
-    public static final String TAG = "DoodleModeActivity";
+public class DoodleActivity extends AppCompatActivity {
+    public static final String TAG = "DoodleActivity";
 
-    private RelativeLayout doodleModeRelativeLayout;
+    private RelativeLayout doodleRelativeLayout;
     private Toolbar toolbar;
-    private Button createDoodleButton;
-    private Button contributeDoodleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_doodle_mode);
+        setContentView(R.layout.activity_doodle);
 
-        doodleModeRelativeLayout = findViewById(R.id.doodleModeRelativeLayout);
-        toolbar = findViewById(R.id.doodleModeActivityToolbar);
+        doodleRelativeLayout = findViewById(R.id.doodleRelativeLayout);
+        toolbar = findViewById(R.id.doodleActivityToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        createDoodleButton = findViewById(R.id.createDoodleButton);
-        contributeDoodleButton = findViewById(R.id.contributeDoodleButton);
-
-        createDoodleButton.setOnClickListener(v -> {
-            goDoodleActivity();
-        });
-
-        contributeDoodleButton.setOnClickListener(v -> {
-            goContributeActivity();
-        });
     }
 
     @Override
@@ -79,7 +66,7 @@ public class DoodleModeActivity extends AppCompatActivity {
     private void logout() {
         ParseUser.logOutInBackground(e -> {
             if (e != null) {
-                Snackbar.make(doodleModeRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(doodleRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
             }
             else {
                 finish();
@@ -90,18 +77,6 @@ public class DoodleModeActivity extends AppCompatActivity {
     // Starts an intent to go to the profile activity
     private void goProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
-    }
-
-    // Starts an intent to go to the doodle activity
-    private void goDoodleActivity() {
-        Intent intent = new Intent(this, DoodleActivity.class);
-        startActivity(intent);
-    }
-
-    // Starts an intent to go to the contribute activity
-    private void goContributeActivity() {
-        Intent intent = new Intent(this, ContributeActivity.class);
         startActivity(intent);
     }
 }
