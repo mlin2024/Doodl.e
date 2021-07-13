@@ -81,6 +81,7 @@
 * Profile Screen
    * User can change username and password
    * User can add their Twitter to allow automatic posting of their doodles
+* Gallery Screen
    * User can view a gallery of all the doodles they've done
 
 ### 3. Navigation
