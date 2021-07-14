@@ -124,7 +124,7 @@
    | createdAt     | DateTime | date when doodle is created (default field) |
    | artist        | Pointer to User| doodle artist |
    | image         | File     | the doodle that the artist posted |
-   | ParentDoodle  | Pointer to Doodle   | the parent to this doodle (null if this doodle has no parent) |
+   | parent        | Pointer to Doodle   | the parent to this doodle (null if this doodle has no parent) |
    | tailLength    | Number    | the length of the doodle's "tail" (i.e. how many doodles preceed it, including itself) (if not inGame, Doodle is unable to be randomly received after tailLength reaches 5)|
    | root          | String    | objectId of the root node |
    | inGame        | Boolean   | whether or not the doodle is part of a game (if it is, it cannot be randomly received, and is deleted after the game ends) |
