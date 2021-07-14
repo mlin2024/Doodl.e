@@ -8,7 +8,7 @@
     tools:context=".activities.ProfileActivity">
 
     <include
-        android:id="@+id/profileActivityToolbar"
+        android:id="@+id/profileToolbar"
         layout="@layout/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -17,7 +17,7 @@
         android:id="@+id/usernameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profileActivityToolbar"
+        android:layout_below="@+id/profileToolbar"
         android:layout_alignParentStart="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"

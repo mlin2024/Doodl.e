@@ -24,7 +24,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         gameRelativeLayout = findViewById(R.id.gameRelativeLayout);
-        toolbar = findViewById(R.id.gameActivityToolbar);
+        toolbar = findViewById(R.id.gameToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

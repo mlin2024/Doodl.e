@@ -30,7 +30,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         profileRelativeLayout = findViewById(R.id.profileRelativeLayout);
-        toolbar = findViewById(R.id.profileActivityToolbar);
+        toolbar = findViewById(R.id.profileToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -39,7 +39,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_waiting_room);
 
         waitingRoomRelativeLayout = findViewById(R.id.waitingRoomRelativeLayout);
-        toolbar = findViewById(R.id.waitingRoomActivityToolbar);
+        toolbar = findViewById(R.id.waitingRoomToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

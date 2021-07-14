@@ -31,7 +31,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         homeRelativeLayout = findViewById(R.id.homeRelativeLayout);
-        toolbar = findViewById(R.id.homeActivityToolbar);
+        toolbar = findViewById(R.id.homeToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         doodleModeButton = findViewById(R.id.doodleModeButton);

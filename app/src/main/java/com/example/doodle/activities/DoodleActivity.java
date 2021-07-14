@@ -25,7 +25,7 @@ public class DoodleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_doodle);
 
         doodleRelativeLayout = findViewById(R.id.doodleRelativeLayout);
-        toolbar = findViewById(R.id.doodleActivityToolbar);
+        toolbar = findViewById(R.id.doodleToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

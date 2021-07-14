@@ -25,7 +25,7 @@ public class ContributeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contribute);
 
         contributeRelativeLayout = findViewById(R.id.contributeRelativeLayout);
-        toolbar = findViewById(R.id.contributeActivityToolbar);
+        toolbar = findViewById(R.id.contributeToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

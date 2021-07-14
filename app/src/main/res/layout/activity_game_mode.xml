@@ -9,7 +9,7 @@
     tools:context=".activities.GameModeActivity">
 
     <include
-        android:id="@+id/gameModeActivityToolbar"
+        android:id="@+id/gameModeToolbar"
         layout="@layout/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -18,7 +18,7 @@
         android:id="@+id/gameModeLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/gameModeActivityToolbar"
+        android:layout_below="@+id/gameModeToolbar"
         android:layout_marginTop="50dp"
         android:orientation="vertical">
 

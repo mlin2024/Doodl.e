@@ -8,7 +8,7 @@
     tools:context=".activities.GalleryActivity">
 
     <include
-        android:id="@+id/galleryActivityToolbar"
+        android:id="@+id/galleryToolbar"
         layout="@layout/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -17,7 +17,7 @@
         android:id="@+id/galleryRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/galleryActivityToolbar"
+        android:layout_below="@+id/galleryToolbar"
         android:layout_alignParentStart="true" />
 
 </RelativeLayout>

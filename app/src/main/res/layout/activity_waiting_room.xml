@@ -8,7 +8,7 @@
     tools:context=".activities.WaitingRoomActivity">
 
     <include
-        android:id="@+id/waitingRoomActivityToolbar"
+        android:id="@+id/waitingRoomToolbar"
         layout="@layout/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -17,7 +17,7 @@
         android:id="@+id/gameCodeLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/waitingRoomActivityToolbar"
+        android:layout_below="@+id/waitingRoomToolbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:orientation="horizontal">

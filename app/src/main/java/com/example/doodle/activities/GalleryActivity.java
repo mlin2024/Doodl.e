@@ -28,7 +28,7 @@ public class GalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
 
         galleryRelativeLayout = findViewById(R.id.galleryRelativeLayout);
-        toolbar = findViewById(R.id.galleryActivityToolbar);
+        toolbar = findViewById(R.id.galleryToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

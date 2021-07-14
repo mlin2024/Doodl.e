@@ -44,7 +44,7 @@ public class GameModeActivity extends AppCompatActivity {
         String gameCode = generateRandomGameCode();
 
         gameModeRelativeLayout = findViewById(R.id.gameModeRelativeLayout);
-        toolbar = findViewById(R.id.gameModeActivityToolbar);
+        toolbar = findViewById(R.id.gameModeToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
