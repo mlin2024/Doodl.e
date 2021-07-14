@@ -15,7 +15,6 @@
 *Doodl.e* is an anonymous collaborative doodling app where you can send out your doodles to the world and contribute to other people's doodles. Get notified whenever your own doodles are contributed to, and watch them evolve. You can also play with your friends in a fun party game.
 
 ### App Evaluation
-[Evaluation of your app across the following attributes]
 - **Category:** Game/Entertainment/Social
 - **Mobile:** Primarily for mobile, but would be possible on a computer. Main functionality of the app (drawing) would be much easier on a touchscreen device.
 - **Story:** Users can share doodles and add to other users' doodles.
