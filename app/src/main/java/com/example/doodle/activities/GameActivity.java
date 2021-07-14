@@ -3,6 +3,7 @@ package com.example.doodle.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -56,7 +57,11 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void logout() {
+        ProgressDialog logoutProgressDialog = new ProgressDialog(GameActivity.this);
+        logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
+        logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
+            logoutProgressDialog.dismiss();
             if (e != null) {
                 Snackbar.make(gameRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
             }
