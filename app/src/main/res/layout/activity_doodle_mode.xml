@@ -14,7 +14,7 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/createNewDoodle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/doodleModeToolbar"
@@ -28,13 +28,17 @@
         style="@style/CustomButton.Doodle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/createNewDoodle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="@string/Create" />
+        android:text="@string/Create"
+        app:icon="@drawable/ic_baseline_edit_24"
+        app:iconGravity="end"
+        app:iconPadding="0dp"
+        app:iconSize="30dp" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/addToExistingDoodle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/createDoodleButton"
@@ -48,9 +52,13 @@
         style="@style/CustomButton.Doodle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/addToExistingDoodle"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:text="@string/Contribute" />
+        android:text="@string/Contribute"
+        app:icon="@drawable/ic_baseline_design_services_24"
+        app:iconGravity="end"
+        app:iconPadding="0dp"
+        app:iconSize="30dp" />
 
 </RelativeLayout>

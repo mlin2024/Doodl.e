@@ -29,7 +29,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
-            android:text="@string/Create" />
+            android:text="@string/Create"
+            app:icon="@drawable/ic_baseline_edit_24"
+            app:iconGravity="end"
+            app:iconPadding="0dp"
+            app:iconSize="30dp" />
 
         <net.cachapa.expandablelayout.ExpandableLayout
             android:id="@+id/createGameExpandableLayout"
@@ -77,7 +81,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
-            android:text="@string/Join" />
+            android:text="@string/Join"
+            app:icon="@drawable/ic_baseline_people_24"
+            app:iconGravity="end"
+            app:iconPadding="0dp"
+            app:iconSize="30dp" />
 
         <net.cachapa.expandablelayout.ExpandableLayout
             android:id="@+id/joinGameExpandableLayout"
