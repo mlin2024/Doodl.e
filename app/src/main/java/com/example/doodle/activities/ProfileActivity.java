@@ -78,9 +78,17 @@ public class ProfileActivity extends AppCompatActivity {
                 Snackbar.make(profileRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
             }
             else {
+                goLoginSignupActivity();
                 finish();
             }
         });
+    }
+
+    // Starts an intent to go to the login/signup activity
+    private void goLoginSignupActivity() {
+        Intent intent = new Intent(this, LoginSignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     // Starts an intent to go to the gallery activity

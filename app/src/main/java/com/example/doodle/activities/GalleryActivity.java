@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -75,8 +76,16 @@ public class GalleryActivity extends AppCompatActivity {
                 Snackbar.make(galleryRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
             }
             else {
+                goLoginSignupActivity();
                 finish();
             }
         });
+    }
+
+    // Starts an intent to go to the login/signup activity
+    private void goLoginSignupActivity() {
+        Intent intent = new Intent(this, LoginSignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }
