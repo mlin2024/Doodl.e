@@ -128,13 +128,13 @@
    | tailLength    | Number    | the length of the doodle's "tail" (i.e. how many doodles preceed it, including itself) (if not inGame, Doodle is unable to be randomly received after tailLength reaches 5)|
    | root          | String    | objectId of the root node |
    | inGame        | Boolean   | whether or not the doodle is part of a game (if it is, it cannot be randomly received, and is deleted after the game ends) |
-   | *speedDoodle (optional) | File | data that can be used to recreate a speed-draw of the doodle's past* |
+   | *speedDoodle (optional)* | *File* | *data that can be used to recreate a speed-draw of the doodle's past* |
    
 #### Game
 
    | Property      | Type     | Description |
    | ------------- | -------- | ------------|
-   | objectId      | String   | unique id for the user post (default field) |
+   | objectId      | String   | unique id for the game (default field) |
    | gameCode      | String   | unique code for the game |
    | players       | Array of Users | users in the game |
    | round         | Number   | current round number (starts at 1) |
