@@ -41,4 +41,7 @@
     <string name="logging_out">Logging out...</string>
     <string name="create_a_new_doodle">Create a new doodle!</string>
     <string name="add_to_an_existing_doodle">Add to an existing doodle!</string>
+    <string name="Done">Done</string>
+    <string name="doodle_submitted">Doodle submitted!</string>
+    <string name="error_saving_doodle">There was an error saving the doodle, please try again</string>
 </resources>

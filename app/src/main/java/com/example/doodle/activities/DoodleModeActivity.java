@@ -12,8 +12,11 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.example.doodle.R;
+import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseUser;
+
+import java.io.Serializable;
 
 public class DoodleModeActivity extends AppCompatActivity {
     public static final String TAG = "DoodleModeActivity";
@@ -103,6 +106,8 @@ public class DoodleModeActivity extends AppCompatActivity {
     // Starts an intent to go to the profile activity
     private void goProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        // Pass a null object along with the intent because this is a new doodle with no parent
+        intent.putExtra(Doodle.class.getSimpleName(), (Serializable) null);
         startActivity(intent);
     }
 

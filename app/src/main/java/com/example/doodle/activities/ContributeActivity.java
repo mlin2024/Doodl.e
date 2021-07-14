@@ -11,8 +11,11 @@ import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
 import com.example.doodle.R;
+import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseUser;
+
+import java.io.Serializable;
 
 public class ContributeActivity extends AppCompatActivity {
     public static final String TAG = "ContributeActivity";
@@ -90,6 +93,14 @@ public class ContributeActivity extends AppCompatActivity {
     // Starts an intent to go to the profile activity
     private void goProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the doodle activity
+    private void goDoodleActivity(Doodle parentDoodle) {
+        Intent intent = new Intent(this, DoodleActivity.class);
+        // Pass the parent doodle along with the intent
+        intent.putExtra(Doodle.class.getSimpleName(), (Serializable) parentDoodle);
         startActivity(intent);
     }
 }

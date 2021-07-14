@@ -12,4 +12,22 @@
         layout="@layout/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <com.divyanshu.draw.widget.DrawView
+        android:id="@+id/doodleDrawView"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_below="@+id/doodleToolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp" />
+
+    <Button
+        android:id="@+id/doneButton"
+        style="@style/CustomButton.Doodle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/Done" />
 </RelativeLayout>

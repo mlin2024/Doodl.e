@@ -5,20 +5,40 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.divyanshu.draw.widget.DrawView;
+import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
+import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class DoodleActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
+    public static final float STROKE_WIDTH = 15;
 
     private RelativeLayout doodleRelativeLayout;
     private Toolbar toolbar;
+    private DrawView doodleDrawView;
+    private Button doneButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +51,25 @@ public class DoodleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        doodleDrawView = findViewById(R.id.doodleDrawView);
+        doneButton = findViewById(R.id.doneButton);
+
+        // Get parent doodle from intent
+        Doodle parentDoodle = (Doodle) getIntent().getExtras().getSerializable(Doodle.class.getSimpleName());
+
+        // Prepare canvas
+        doodleDrawView.clearCanvas();
+        doodleDrawView.setStrokeWidth(STROKE_WIDTH);
+        doodleDrawView.setColor(R.color.black);
+
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap drawingBitmap = doodleDrawView.getBitmap();
+                File drawingFile = saveBitmapToFile(drawingBitmap);
+                saveDoodle(parentDoodle, drawingFile);
+            }
+        });
     }
 
     @Override
@@ -78,6 +117,87 @@ public class DoodleActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private File saveBitmapToFile(Bitmap drawingBitmap) {
+        try {
+            Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(drawingBitmap, 1000);
+            // Configure byte output stream
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            // Compress the image further
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+            // Create a new file for the resized bitmap
+            File resizedFile = getPhotoFileUri("doodle" + System.currentTimeMillis() + ".png");
+            resizedFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(resizedFile);
+            // Write the bytes of the bitmap to file
+            fos.write(bytes.toByteArray());
+            fos.close();
+            return resizedFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Returns the File for a photo stored on disk given the fileName
+    private File getPhotoFileUri(String fileName) {
+        // Get safe storage directory for photos
+        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        // This way, we don't need to request external read/write runtime permissions.
+        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+            Log.d(TAG, "Failed to create directory");
+        }
+
+        // Return the file target for the photo based on filename
+        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
+
+        return file;
+    }
+
+    private void saveDoodle(Doodle parentDoodle, File drawingFile) {
+        Doodle childDoodle = new Doodle();
+
+        // The artist is the current artist
+        childDoodle.setArtist(ParseUser.getCurrentUser());
+        // The image is the image that was just drawn
+        childDoodle.setImage(new ParseFile(drawingFile));
+        // The parent is the doodle that was passed in via intent
+        childDoodle.setParent(parentDoodle);
+        // Calculate the tail length
+        int tailLength = calculateTailLength(parentDoodle) + 1;
+        childDoodle.setTailLength(tailLength);
+        // The root is the same as its parent, if it doesn't have a parent its root is its objectId
+        if (parentDoodle == null) {
+            // TODO: set root equal to ObjectID
+        }
+        else {
+            childDoodle.setRoot(parentDoodle.getRoot());
+        }
+        // inGame is same as the parent
+        childDoodle.setInGame(parentDoodle.getInGame());
+
+        // Save doodle to database
+        childDoodle.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) { // Saving post failed
+                    Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
+                } else { // Saving post succeeded
+                    Snackbar.make(doodleRelativeLayout, R.string.doodle_submitted, Snackbar.LENGTH_LONG).show();
+                    // TODO: make intent go back to home screen with FLAG_ACTIVITY_CLEAR_TOP
+                }
+            }
+        });
+    }
+
+    // Calculates the tail length of a doodle in the database
+    private int calculateTailLength(Doodle doodle) {
+        // TODO: calculate tail length
+        return 0;
     }
 
     // Starts an intent to go to the login/signup activity
