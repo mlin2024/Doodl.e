@@ -28,30 +28,32 @@
 
 **Required Must-have Stories**
 
-* User can log in/log out
-* User can sign up for a new account
-* User can choose between Doodle Mode and Game Mode
-* User can view their profile
-* User can logout
-* User can choose to either create a new doodle contribute to an existing doodle
-* User can draw a new doodle
-* User can receive an existing doodle from the database (that they have not already contributed to) and add on to it
-* User can send out their new doodle/contribution to the database
-* User can choose to either create a new game or join an existing game
-* User can create a new game and receive the game code
-* User can join a game by inputting the game code
-* User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
-* User can view the full history of each doodle in the game after the game ends
-* User can change username and password
-* User can add their Twitter to allow automatic posting of their doodles
-* User can view a gallery of all the doodles they've done
-* User can receive a notification whenever one of their doodles is contributed to
+* [x] User can log in
+* [x] User can sign up for a new account
+* [x] User can logout
+* [ ] User can choose between Doodle Mode and Game Mode
+* [x] User can view their profile
+* [ ] User can choose to either create a new doodle contribute to an existing doodle
+* [ ] User can draw a new doodle
+* [ ] User can contribute to the doodle that they chose in the contribute screen
+* [ ] User can send out their new doodle/contribution to the database
+* [ ] User can choose to either create a new game or join an existing game
+* [ ] User can create a new game and receive the game code
+* [ ] User can join a game by inputting the game code
+* [ ] User can view a list of all users currently in the game
+* [ ] User who created a game can start the game
+* [ ] User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
+* [ ] User can view the full history of each doodle in the game after the game ends
+* [ ] User can add their Twitter to allow automatic posting of their doodles
+* [ ] User can choose to view their gallery
+* [x] User can view a gallery of all the doodles they've done
+* [ ] User can receive a notification whenever one of their doodles is contributed to
 
 **Optional Nice-to-have Stories**
 
-* User can undo/redo their strokes
-* User can choose their drawing color out of a list of colors (previously used colors cannot be chosen)
-* When receiving an existing doodle from the database, user can view a timelapse of the work already done on the doodle
+* [ ] User can undo/redo their strokes
+* [ ] User can choose their drawing color out of a list of colors (previously used colors cannot be chosen)
+* [ ] When receiving an existing doodle from the database, user can view a timelapse of the work already done on the doodle
 
 ### 2. Screen Archetypes
 
@@ -64,22 +66,29 @@
    * User can log out
 * Doodle Mode Screen
    * User can choose to either create a new doodle contribute to an existing doodle
+* Doodle Screen
    * User can draw a new doodle
-   * User can receive an existing doodle from the database (that they have not already contributed to) and add on to it
+   * User can contribute to the doodle that they chose in the contribute screen
    * User can send out their new doodle/contribution to the database
    * *User can undo/redo their strokes*
    * *User can choose their drawing color out of a list of colors (previously used colors cannot be chosen)*
    * *When receiving an existing doodle from the database, user can view a timelapse of the work already done on the doodle*
+* Contribute Screen
+   * User can choose a doodle from a selection of doodles from the database that they've never edited before
+   * User can see the timestamp of each doodle in the selection
 * Game Mode Screen
    * User can choose to either create a new game or join an existing game
    * User can create a new game and receive the game code
    * User can join a game by inputting the game code
+* Waiting Room Screen
+   * User can view a list of all users currently in the game
+   * User who created a game can start the game
 * Game Screen
    * User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
    * User can view the full history of each doodle in the game after the game ends
 * Profile Screen
-   * User can change username and password
    * User can add their Twitter to allow automatic posting of their doodles
+   * User can choose to view their gallery
 * Gallery Screen
    * User can view a gallery of all the doodles they've done
 
