@@ -2,18 +2,24 @@ package com.example.doodle.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.doodle.R;
 import com.example.doodle.adapters.DoodleAdapter;
+import com.example.doodle.fragments.DoodleDetailsFragment;
 import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.FindCallback;
@@ -27,12 +33,15 @@ import java.util.List;
 public class GalleryActivity extends AppCompatActivity {
     public static final String TAG = "GalleryActivity";
 
-    RelativeLayout galleryRelativeLayout;
+    private RelativeLayout galleryRelativeLayout;
     private Toolbar toolbar;
-    RecyclerView galleryRecyclerView;
+    private RecyclerView galleryRecyclerView;
+    private TextView nothingHereYet;
 
-    List<Doodle> doodles;
-    DoodleAdapter doodleAdapter;
+    private List<Doodle> doodles;
+    private DoodleAdapter doodleAdapter;
+    private ProgressDialog progressDialog;
+    public static FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +56,21 @@ public class GalleryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         galleryRecyclerView = findViewById(R.id.galleryRecyclerView);
+        nothingHereYet = findViewById(R.id.nothingHereYet);
 
         doodles = new ArrayList<>();
         doodleAdapter = new DoodleAdapter(this, doodles);
         galleryRecyclerView.setAdapter(doodleAdapter);
+        fragmentManager = getSupportFragmentManager();
 
         // Allows for optimizations
         galleryRecyclerView.setHasFixedSize(true);
 
         // Define 2 column grid layout with a new GridLayoutManager
         galleryRecyclerView.setLayoutManager(gridLayoutManager);
+
+        progressDialog = new ProgressDialog(GalleryActivity.this);
+        progressDialog.setMessage(getResources().getString(R.string.loading_gallery));
 
         // Grab doodles
         queryDoodles();
@@ -110,20 +124,21 @@ public class GalleryActivity extends AppCompatActivity {
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
 
+        progressDialog.show();
         // start an asynchronous call for posts
-        query.findInBackground(new FindCallback<Doodle>() {
-            @Override
-            public void done(List<Doodle> foundDoodles, ParseException e) {
-                if (e != null) { // Query has failed
-                    Log.e(TAG, "Query failed", e);
-                    return;
-                }
-                else {
-                    // Clear out old items before appending in the new ones
-                    doodleAdapter.clear();
-                    // save received posts to list and notify adapter of new data
-                    doodleAdapter.addAll(foundDoodles);
-                }
+        query.findInBackground((foundDoodles, e) -> {
+            progressDialog.dismiss();
+            if (e != null) { // Query has failed
+                Snackbar.make(galleryRelativeLayout, R.string.failed_to_load_gallery, Snackbar.LENGTH_LONG).show();
+                return;
+            }
+            else {
+                // Clear out old items before appending in the new ones
+                doodleAdapter.clear();
+                // Save received posts to list and notify adapter of new data
+                doodleAdapter.addAll(foundDoodles);
+                // Show empty message if gallery is empty
+                if (doodles.size() == 0) nothingHereYet.setVisibility(View.VISIBLE);
             }
         });
     }
