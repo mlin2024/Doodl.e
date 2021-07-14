@@ -31,4 +31,6 @@
     <string name="Waiting_Room">Waiting Room</string>
     <string name="Start_Game">Start Game!</string>
     <string name="Players">Players:</string>
+    <string name="Username_is_required">Username is required</string>
+    <string name="Password_is_required">Password is required</string>
 </resources>

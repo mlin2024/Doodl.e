@@ -72,12 +72,14 @@ public class LoginSignupActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             if (loginExpandableLayout.isExpanded()) loginExpandableLayout.collapse();
             else loginExpandableLayout.expand();
+            clearEditTexts();
             signupExpandableLayout.collapse();
         });
 
         signupButton.setOnClickListener(v -> {
             if (signupExpandableLayout.isExpanded()) signupExpandableLayout.collapse();
             else signupExpandableLayout.expand();
+            clearEditTexts();
             loginExpandableLayout.collapse();
         });
 
@@ -85,14 +87,30 @@ public class LoginSignupActivity extends AppCompatActivity {
             String username = usernameEditTextLogin.getText().toString();
             String password = passwordEditTextLogin.getText().toString();
             hideSoftKeyboard(loginSignupRelativeLayout);
-            loginUser(username, password);
+            if (username.isEmpty()) {
+                Snackbar.make(loginSignupRelativeLayout, R.string.Username_is_required, Snackbar.LENGTH_LONG).show();
+                loginSignupLinearLayout.startAnimation(shake);
+            }
+            else if (password.isEmpty()) {
+                Snackbar.make(loginSignupRelativeLayout, R.string.Password_is_required, Snackbar.LENGTH_LONG).show();
+                loginSignupLinearLayout.startAnimation(shake);
+            }
+            else loginUser(username, password);
         });
 
         signupGoButton.setOnClickListener(v -> {
             String username = usernameEditTextSignup.getText().toString();
             String password = passwordEditTextSignup.getText().toString();
             hideSoftKeyboard(loginSignupRelativeLayout);
-            signupUser(username, password);
+            if (username.isEmpty()) {
+                Snackbar.make(loginSignupRelativeLayout, R.string.Username_is_required, Snackbar.LENGTH_LONG).show();
+                loginSignupLinearLayout.startAnimation(shake);
+            }
+            else if (password.isEmpty()) {
+                Snackbar.make(loginSignupRelativeLayout, R.string.Password_is_required, Snackbar.LENGTH_LONG).show();
+                loginSignupLinearLayout.startAnimation(shake);
+            }
+            else signupUser(username, password);
         });
     }
 
