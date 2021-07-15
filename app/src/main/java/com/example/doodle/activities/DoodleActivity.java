@@ -21,6 +21,7 @@ import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
 import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -47,7 +48,8 @@ public class DoodleActivity extends AppCompatActivity {
 
     private Doodle parentDoodle;
     private boolean inGame;
-    private ProgressDialog progressDialog;
+    private ProgressDialog findingProgressDialog;
+    private ProgressDialog savingProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +65,25 @@ public class DoodleActivity extends AppCompatActivity {
         doodleDrawView = findViewById(R.id.doodleDrawView);
         doneButton = findViewById(R.id.doneButton);
 
+        findingProgressDialog = new ProgressDialog(DoodleActivity.this);
+        findingProgressDialog.setMessage(getResources().getString(R.string.finding_parent));
+        savingProgressDialog = new ProgressDialog(DoodleActivity.this);
+        savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
+
         // Get parent doodle from intent
         String parentDoodleId = getIntent().getStringExtra(PARENT_DOODLE_ID);
-        Doodle parentDoodle = queryDoodle(parentDoodleId);
+        Log.i(TAG, "objectId passed in = " + parentDoodleId);
+
+        try {
+            parentDoodle = findSingleDoodleByObjectId(parentDoodleId);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Snackbar.make(doodleRelativeLayout, R.string.error_finding_parent, Snackbar.LENGTH_LONG).show();
+            goHomeActivity();
+        }
 
         // Get inGame from intent
         inGame = getIntent().getBooleanExtra(IN_GAME, false);
-
-        progressDialog = new ProgressDialog(DoodleActivity.this);
-        progressDialog.setMessage(getResources().getString(R.string.saving_doodle));
 
         // Prepare canvas
         doodleDrawView.clearCanvas();
@@ -132,25 +144,38 @@ public class DoodleActivity extends AppCompatActivity {
         });
     }
 
-    private Doodle queryDoodle(String objectId) {
+    private Doodle findSingleDoodleByObjectId(String objectId) throws ParseException {
         if (objectId == null) return null;
 
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
-        // Include data referred by objectId key
-        query.whereEqualTo(Doodle.KEY_OBJECT_ID, objectId);
-        // Start an asynchronous call for the doodle
-        query.getFirstInBackground((foundDoodle, e) -> {
-            if (e != null) { // Query has failed
-                Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
-                finish();
-            }
-            else { // Query has succeeded
-                parentDoodle = foundDoodle;
-                return;
+
+        findingProgressDialog.show();
+        // Start a synchronous call for the doodle
+        Doodle parentDoodle = query.get(objectId);
+        findingProgressDialog.dismiss();
+        return parentDoodle;
+        /*
+        // This is the async implementation of getting this, I couldn't figure out how to handle parentDoodle being asynchronously populated
+        // TODO: perhaps figure out how to do this asynchronously?
+        query.getInBackground(objectId, new GetCallback<Doodle>() {
+            public void done(Doodle foundDoodle, ParseException e) {
+                findingProgressDialog.dismiss();
+                if (e != null) { // Query has failed
+                    Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
+                    finish();
+                }
+                else { // Query has succeeded
+                    parentDoodle = foundDoodle;
+                    Log.i(TAG, "(inside) parent doodle id = " + parentDoodle.getObjectId());
+                    Log.i(TAG, "found doodle id = " + foundDoodle.getObjectId());
+                }
             }
         });
+        if (parentDoodle == null) Log.e(TAG, "(outside) parentDoodle is null");
+        else Log.i(TAG, "(outside) parent doodle id = " + parentDoodle.getObjectId());
         return parentDoodle;
+         */
     }
 
     private File saveBitmapToFile(Bitmap drawingBitmap) {
@@ -215,10 +240,10 @@ public class DoodleActivity extends AppCompatActivity {
         if (parentDoodle != null) childDoodle.setInGame(parentDoodle.getInGame());
         else childDoodle.setInGame(inGame);
 
-        progressDialog.show();
+        savingProgressDialog.show();
         // Save doodle to database
         childDoodle.saveInBackground(e -> {
-            progressDialog.dismiss();
+            savingProgressDialog.dismiss();
             if (e != null) { // Saving doodle failed
                 Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
             }
