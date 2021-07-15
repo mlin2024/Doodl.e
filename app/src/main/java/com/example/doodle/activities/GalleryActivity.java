@@ -123,7 +123,7 @@ public class GalleryActivity extends AppCompatActivity {
     private void queryDoodles() {
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
-        // Include data referred by user key
+        // Include data referred by artist key
         query.include(Doodle.KEY_ARTIST);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");

@@ -12,4 +12,27 @@
         layout="@layout/toolbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/selectViewPager"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_below="@+id/contributeToolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal" />
+
+    <Button
+        android:id="@+id/selectButton"
+        style="@style/CustomButton.Doodle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/add_to_this_doodle"
+        app:icon="@drawable/ic_baseline_arrow_forward_24"
+        app:iconGravity="end"
+        app:iconPadding="0dp"
+        app:iconSize="30dp" />
 </RelativeLayout>

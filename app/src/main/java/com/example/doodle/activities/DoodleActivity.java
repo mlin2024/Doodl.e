@@ -137,7 +137,7 @@ public class DoodleActivity extends AppCompatActivity {
 
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
-        // Include data referred by user key
+        // Include data referred by objectId key
         query.whereEqualTo(Doodle.KEY_OBJECT_ID, objectId);
         // Start an asynchronous call for the doodle
         query.getFirstInBackground((foundDoodle, e) -> {
