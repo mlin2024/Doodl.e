@@ -13,6 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <ImageView
+        android:id="@+id/parentImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignStart="@+id/doodleDrawView"
+        android:layout_alignTop="@+id/doodleDrawView"
+        android:layout_alignEnd="@id/doodleDrawView"
+        android:layout_alignBottom="@+id/doodleDrawView"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <com.divyanshu.draw.widget.DrawView
         android:id="@+id/doodleDrawView"
         android:layout_width="350dp"
@@ -30,4 +45,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         android:text="@string/Done" />
+
 </RelativeLayout>

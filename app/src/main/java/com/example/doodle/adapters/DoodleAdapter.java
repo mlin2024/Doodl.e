@@ -96,7 +96,6 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
 
         @Override
         public void onClick(View v) {
-            // TODO: move onclicklistener to gallery activity, out of the adapter
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) { // Check if position is valid
                 // Get doodle
