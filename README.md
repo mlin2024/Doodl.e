@@ -34,7 +34,7 @@
 * [ ] User can choose between Doodle Mode and Game Mode
 * [x] User can view their profile
 * [ ] User can choose to either create a new doodle contribute to an existing doodle
-* [ ] User can draw a new doodle
+* [x] User can draw a new doodle
 * [ ] User can contribute to the doodle that they chose in the contribute screen
 * [ ] User can send out their new doodle/contribution to the database
 * [ ] User can choose to either create a new game or join an existing game
