@@ -121,22 +121,22 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     private void queryDoodles() {
-        // specify what type of data we want to query - Post.class
+        // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
-        // include data referred by user key
+        // Include data referred by user key
         query.include(Doodle.KEY_ARTIST);
         // order posts by creation date (newest first)
         query.addDescendingOrder("createdAt");
 
         progressDialog.show();
-        // start an asynchronous call for posts
+        // Start an asynchronous call for doodles
         query.findInBackground((foundDoodles, e) -> {
             progressDialog.dismiss();
             if (e != null) { // Query has failed
                 Snackbar.make(galleryRelativeLayout, R.string.failed_to_load_gallery, Snackbar.LENGTH_LONG).show();
                 return;
             }
-            else {
+            else { // Query has succeeded
                 // Clear out old items before appending in the new ones
                 doodleAdapter.clear();
                 // Save received posts to list and notify adapter of new data

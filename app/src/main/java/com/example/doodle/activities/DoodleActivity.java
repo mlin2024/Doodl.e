@@ -23,6 +23,8 @@ import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -34,11 +36,17 @@ import java.io.IOException;
 public class DoodleActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
     public static final float STROKE_WIDTH = 15;
+    public static final String PARENT_DOODLE_ID = "ParentDoodleId";
+    public static final String IN_GAME = "inGame";
 
     private RelativeLayout doodleRelativeLayout;
     private Toolbar toolbar;
     private DrawView doodleDrawView;
     private Button doneButton;
+
+    private Doodle parentDoodle;
+    private boolean inGame;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,20 +63,24 @@ public class DoodleActivity extends AppCompatActivity {
         doneButton = findViewById(R.id.doneButton);
 
         // Get parent doodle from intent
-        Doodle parentDoodle = (Doodle) getIntent().getExtras().getSerializable(Doodle.class.getSimpleName());
+        String parentDoodleId = getIntent().getStringExtra(PARENT_DOODLE_ID);
+        Doodle parentDoodle = queryDoodle(parentDoodleId);
+
+        // Get inGame from intent
+        inGame = getIntent().getBooleanExtra(IN_GAME, false);
+
+        progressDialog = new ProgressDialog(DoodleActivity.this);
+        progressDialog.setMessage(getResources().getString(R.string.saving_doodle));
 
         // Prepare canvas
         doodleDrawView.clearCanvas();
         doodleDrawView.setStrokeWidth(STROKE_WIDTH);
         doodleDrawView.setColor(R.color.black);
 
-        doneButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bitmap drawingBitmap = doodleDrawView.getBitmap();
-                File drawingFile = saveBitmapToFile(drawingBitmap);
-                saveDoodle(parentDoodle, drawingFile);
-            }
+        doneButton.setOnClickListener(v -> {
+            Bitmap drawingBitmap = doodleDrawView.getBitmap();
+            File drawingFile = saveBitmapToFile(drawingBitmap);
+            saveDoodle(parentDoodle, drawingFile);
         });
     }
 
@@ -119,6 +131,27 @@ public class DoodleActivity extends AppCompatActivity {
         });
     }
 
+    private Doodle queryDoodle(String objectId) {
+        if (objectId == null) return null;
+
+        // Specify what type of data we want to query - Doodle.class
+        ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
+        // Include data referred by user key
+        query.whereEqualTo(Doodle.KEY_OBJECT_ID, objectId);
+        // Start an asynchronous call for the doodle
+        query.getFirstInBackground((foundDoodle, e) -> {
+            if (e != null) { // Query has failed
+                Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
+                finish();
+            }
+            else { // Query has succeeded
+                parentDoodle = foundDoodle;
+                return;
+            }
+        });
+        return parentDoodle;
+    }
+
     private File saveBitmapToFile(Bitmap drawingBitmap) {
         try {
             Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(drawingBitmap, 1000);
@@ -166,38 +199,38 @@ public class DoodleActivity extends AppCompatActivity {
         // The image is the image that was just drawn
         childDoodle.setImage(new ParseFile(drawingFile));
         // The parent is the doodle that was passed in via intent
-        childDoodle.setParent(parentDoodle);
-        // Calculate the tail length
-        int tailLength = calculateTailLength(parentDoodle) + 1;
-        childDoodle.setTailLength(tailLength);
-        // The root is the same as its parent, if it doesn't have a parent its root is its objectId
-        if (parentDoodle == null) {
-            // TODO: set root equal to ObjectID
-        }
-        else {
-            childDoodle.setRoot(parentDoodle.getRoot());
-        }
+        // If it has no parent, just don't set it and let it default to the default defined in the database
+        if (parentDoodle != null) childDoodle.setParent(parentDoodle);
+        // The tail length is just one longer than it's parent
+        // If it doesn't have a parent, don't set it and it will default to 1 as defined in the database
+        if (parentDoodle != null) childDoodle.setTailLength(parentDoodle.getTailLength() + 1);
+        // The root is the same as its parent
+        // If it has no parent, its root is null
+        if (parentDoodle != null) childDoodle.setRoot(parentDoodle.getRoot());
         // inGame is same as the parent
-        childDoodle.setInGame(parentDoodle.getInGame());
+        // If it has no parent, inGame is passed in by intent
+        if (parentDoodle != null) childDoodle.setInGame(parentDoodle.getInGame());
+        else childDoodle.setInGame(inGame);
 
+        progressDialog.show();
         // Save doodle to database
-        childDoodle.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) { // Saving post failed
-                    Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
-                } else { // Saving post succeeded
-                    Snackbar.make(doodleRelativeLayout, R.string.doodle_submitted, Snackbar.LENGTH_LONG).show();
-                    // TODO: make intent go back to home screen with FLAG_ACTIVITY_CLEAR_TOP
-                }
+        childDoodle.saveInBackground(e -> {
+            progressDialog.dismiss();
+            if (e != null) { // Saving post failed
+                Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
+            }
+            else { // Saving post succeeded
+                Toast.makeText(this, R.string.doodle_submitted, Toast.LENGTH_SHORT).show();
+                goHomeActivity();
             }
         });
     }
 
-    // Calculates the tail length of a doodle in the database
-    private int calculateTailLength(Doodle doodle) {
-        // TODO: calculate tail length
-        return 0;
+    // Starts an intent to go to the home activity
+    private void goHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     // Starts an intent to go to the login/signup activity

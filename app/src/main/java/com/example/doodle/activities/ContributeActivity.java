@@ -99,8 +99,9 @@ public class ContributeActivity extends AppCompatActivity {
     // Starts an intent to go to the doodle activity
     private void goDoodleActivity(Doodle parentDoodle) {
         Intent intent = new Intent(this, DoodleActivity.class);
-        // Pass the parent doodle along with the intent
-        intent.putExtra(Doodle.class.getSimpleName(), (Serializable) parentDoodle);
+        // Pass the parent doodle ID
+        intent.putExtra(DoodleActivity.PARENT_DOODLE_ID, (String) parentDoodle.getObjectId());
+        // Don't pass in anything for inGame, it defaults to false
         startActivity(intent);
     }
 }

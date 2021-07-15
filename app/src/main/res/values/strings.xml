@@ -33,7 +33,6 @@
     <string name="Players">Players:</string>
     <string name="Username_is_required">Username is required</string>
     <string name="Password_is_required">Password is required</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading_gallery">Loading gallery...</string>
     <string name="failed_to_load_gallery">Failed to load gallery, please try again later</string>
@@ -44,4 +43,6 @@
     <string name="Done">Done</string>
     <string name="doodle_submitted">Doodle submitted!</string>
     <string name="error_saving_doodle">There was an error saving the doodle, please try again</string>
+    <string name="error_finding_doodle">There was an error finding the doodle, please try again</string>
+    <string name="saving_doodle">Saving doodle...</string>
 </resources>

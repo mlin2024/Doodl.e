@@ -106,14 +106,14 @@ public class DoodleModeActivity extends AppCompatActivity {
     // Starts an intent to go to the profile activity
     private void goProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
-        // Pass a null object along with the intent because this is a new doodle with no parent
-        intent.putExtra(Doodle.class.getSimpleName(), (Serializable) null);
         startActivity(intent);
     }
 
     // Starts an intent to go to the doodle activity
     private void goDoodleActivity() {
         Intent intent = new Intent(this, DoodleActivity.class);
+        // Don't pass in anything for ParentDoodleId, it has no parent since it is a new doodle
+        // Don't pass in anything for inGame, it defaults to false
         startActivity(intent);
     }
 
