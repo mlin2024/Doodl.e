@@ -38,6 +38,7 @@ public class DoodleActivity extends AppCompatActivity {
     public static final float STROKE_WIDTH = 15;
     public static final String PARENT_DOODLE_ID = "ParentDoodleId";
     public static final String IN_GAME = "inGame";
+    public static final String SET_ROOT = "setRoot";
 
     private RelativeLayout doodleRelativeLayout;
     private Toolbar toolbar;
@@ -205,8 +206,10 @@ public class DoodleActivity extends AppCompatActivity {
         // If it doesn't have a parent, don't set it and it will default to 1 as defined in the database
         if (parentDoodle != null) childDoodle.setTailLength(parentDoodle.getTailLength() + 1);
         // The root is the same as its parent
-        // If it has no parent, its root is null
+        // If it has no parent, its root is equal to its objectId, which will be set after it is saved
+        // For now set its root equal to setRoot so we know we have to set it
         if (parentDoodle != null) childDoodle.setRoot(parentDoodle.getRoot());
+        else childDoodle.setRoot(SET_ROOT);
         // inGame is same as the parent
         // If it has no parent, inGame is passed in by intent
         if (parentDoodle != null) childDoodle.setInGame(parentDoodle.getInGame());
@@ -216,12 +219,38 @@ public class DoodleActivity extends AppCompatActivity {
         // Save doodle to database
         childDoodle.saveInBackground(e -> {
             progressDialog.dismiss();
-            if (e != null) { // Saving post failed
+            if (e != null) { // Saving doodle failed
                 Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
             }
-            else { // Saving post succeeded
+            else { // Saving doodle succeeded
+                // Now if it has no parent, set its root equal to its objectId
+                setRootToObjectId();
+
                 Toast.makeText(this, R.string.doodle_submitted, Toast.LENGTH_SHORT).show();
                 goHomeActivity();
+            }
+        });
+    }
+
+    private void setRootToObjectId() {
+        // Specify what type of data we want to query - Doodle.class
+        ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
+        // Include data referred by user key
+        query.whereEqualTo(Doodle.KEY_ROOT, SET_ROOT);
+        // Start an asynchronous call for the doodle
+        query.findInBackground((foundDoodles, e) -> {
+            if (e != null) { // Query has failed
+                Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
+            }
+            else { // Query has succeeded
+                for (Doodle doodle: foundDoodles) {
+                    doodle.setRoot(doodle.getObjectId());
+                    doodle.saveInBackground(e1 -> {
+                        if (e1 != null) {
+                            Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+                }
             }
         });
     }
