@@ -54,6 +54,7 @@ public class DoodleActivity extends AppCompatActivity {
 
     private RelativeLayout doodleRelativeLayout;
     private Toolbar toolbar;
+    private ImageView parentImageView;
     private DrawingView doodleDrawingView;
     private Button doneButton;
 
@@ -74,6 +75,7 @@ public class DoodleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        parentImageView = findViewById(R.id.parentImageView);
         doodleDrawingView = findViewById(R.id.doodleDrawingView);
         doneButton = findViewById(R.id.doneButton);
 
@@ -91,8 +93,6 @@ public class DoodleActivity extends AppCompatActivity {
 
         // Prepare canvas
         doodleDrawingView.initializePen();
-        doodleDrawingView.setBackgroundColor(getResources().getColor(R.color.white));
-        doodleDrawingView.clear();
         doodleDrawingView.setPenSize(STROKE_WIDTH);
         doodleDrawingView.setPenColor(getResources().getColor(R.color.black));
 
@@ -102,8 +102,8 @@ public class DoodleActivity extends AppCompatActivity {
 
         doneButton.setOnClickListener(v -> {
             doodleDrawingView.saveImage(filePath, fileName, Bitmap.CompressFormat.PNG, 100);
-            File drawingFile = new File(fullPath);
-            saveDoodle(parentDoodle, drawingFile);
+            Bitmap drawingBitmap = BitmapFactory.decodeFile(fullPath);
+            saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
         });
     }
 
@@ -172,7 +172,7 @@ public class DoodleActivity extends AppCompatActivity {
                 parentDoodle = foundDoodle;
                 parentBitmap = getBitmapFromDoodle(parentDoodle);
                 // Put the parent drawing on the canvas if it exists
-                if (parentBitmap != null) doodleDrawingView.loadImage(parentBitmap);
+                if (parentBitmap != null) parentImageView.setImageBitmap(parentBitmap);
             }
         });
     }
@@ -193,7 +193,7 @@ public class DoodleActivity extends AppCompatActivity {
         }
     }
 
-    private void saveDoodle(Doodle parentDoodle, File drawingFile) {
+    private void saveDoodle(Doodle parentDoodle, Bitmap parentBitmap, Bitmap drawingBitmap) {
         if (parentDoodle == null) Log.e(TAG, "parentDoodle is null");
 
         Doodle childDoodle = new Doodle();
@@ -201,13 +201,8 @@ public class DoodleActivity extends AppCompatActivity {
         // The artist is the current artist
         childDoodle.setArtist(ParseUser.getCurrentUser());
         // The image is the file that was passed in
-        ParseFile parseFile = new ParseFile(drawingFile);
-        parseFile.saveInBackground((SaveCallback) e -> {
-            if (e != null) {
-                Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
-            }
-        });
-        childDoodle.setImage(parseFile);
+        ParseFile drawingFile = combineBitmapsToParseFile(drawingBitmap, parentBitmap);
+        childDoodle.setImage(drawingFile);
         // The parent is the doodle that was passed in via intent
         // If it has no parent, just don't set it and let it default to the default defined in the database
         if (parentDoodle != null) childDoodle.setParent(parentDoodle);
@@ -262,6 +257,28 @@ public class DoodleActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private ParseFile combineBitmapsToParseFile(Bitmap drawingBitmap, Bitmap parentBitmap) {
+        // TODO: get this to work - currently it is just drawing the entire drawingBitmap on top of the parentBitmap, completely concealing it
+        // If it has no parent, there is nothing to overlay it with
+        if (parentBitmap == null) return saveBitmapToParseFile(drawingBitmap);
+        Bitmap bmOverlay = Bitmap.createBitmap(drawingBitmap.getWidth(), drawingBitmap.getHeight(), drawingBitmap.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(parentBitmap, new Matrix(), null);
+        canvas.drawBitmap(drawingBitmap, 0, 0, null);
+        return saveBitmapToParseFile(bmOverlay);
+    }
+    private ParseFile saveBitmapToParseFile(Bitmap bitmap) {
+        String fileName = "doodle" + System.currentTimeMillis() + ".png";
+        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, 1000);
+        // Configure byte output stream
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        // Compress the image further
+        resizedBitmap.compress(Bitmap.CompressFormat.PNG, 40, bytes);
+        // Save to ParseFile
+        ParseFile parseFile = new ParseFile(fileName, bytes.toByteArray());
+        return parseFile;
     }
 
     // Starts an intent to go to the home activity

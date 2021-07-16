@@ -13,6 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <ImageView
+        android:id="@+id/parentImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignStart="@+id/doodleDrawingView"
+        android:layout_alignTop="@+id/doodleDrawingView"
+        android:layout_alignEnd="@id/doodleDrawingView"
+        android:layout_alignBottom="@+id/doodleDrawingView"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <com.mukesh.DrawingView
         android:id="@+id/doodleDrawingView"
         android:layout_width="350dp"
