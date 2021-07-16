@@ -80,24 +80,11 @@ public class DoodleActivity extends AppCompatActivity {
         // Get parent doodle from intent
         try {
             String parentDoodleId = getIntent().getStringExtra(PARENT_DOODLE_ID);
-            parentDoodle = findSingleDoodleByObjectId(parentDoodleId);
+            findSingleDoodleByObjectId(parentDoodleId);
         } catch (ParseException e) {
             e.printStackTrace();
-            Snackbar.make(doodleRelativeLayout, R.string.error_finding_parent, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
             goHomeActivity();
-        }
-
-        // Get bitmap from parent
-        if (parentDoodle != null) {
-            try {
-                byte[] parentBitmapData = parentDoodle.getImage().getData();
-                parentBitmap = BitmapFactory.decodeByteArray(parentBitmapData, 0, parentBitmapData.length);
-                parentImageView.setImageBitmap(parentBitmap);
-            } catch (ParseException e) {
-                e.printStackTrace();
-                Snackbar.make(doodleRelativeLayout, R.string.error_finding_parent, Snackbar.LENGTH_LONG).show();
-                goHomeActivity();
-            }
         }
 
         // Get inGame from intent
@@ -161,20 +148,14 @@ public class DoodleActivity extends AppCompatActivity {
         });
     }
 
-    private Doodle findSingleDoodleByObjectId(String objectId) throws ParseException {
-        if (objectId == null) return null;
+    private void findSingleDoodleByObjectId(String objectId) throws ParseException {
+        if (objectId == null) return;
 
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
 
         findingProgressDialog.show();
-        // Start a synchronous call for the doodle
-        Doodle parentDoodle = query.get(objectId);
-        findingProgressDialog.dismiss();
-        return parentDoodle;
-        /*
-        // This is the async implementation of getting this, I couldn't figure out how to handle parentDoodle being asynchronously populated
-        // TODO: perhaps figure out how to do this asynchronously?
+        // Start an asynchronous call for the doodle
         query.getInBackground(objectId, new GetCallback<Doodle>() {
             public void done(Doodle foundDoodle, ParseException e) {
                 findingProgressDialog.dismiss();
@@ -184,18 +165,31 @@ public class DoodleActivity extends AppCompatActivity {
                 }
                 else { // Query has succeeded
                     parentDoodle = foundDoodle;
-                    Log.i(TAG, "(inside) parent doodle id = " + parentDoodle.getObjectId());
-                    Log.i(TAG, "found doodle id = " + foundDoodle.getObjectId());
+                    parentBitmap = getBitmapFromDoodle(parentDoodle);
                 }
             }
         });
-        if (parentDoodle == null) Log.e(TAG, "(outside) parentDoodle is null");
-        else Log.i(TAG, "(outside) parent doodle id = " + parentDoodle.getObjectId());
-        return parentDoodle;
-         */
+    }
+
+    private Bitmap getBitmapFromDoodle(Doodle doodle) {
+        if (doodle == null) return null;
+        else {
+            try {
+                byte[] bitmapData = parentDoodle.getImage().getData();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapData, 0, bitmapData.length);
+                parentImageView.setImageBitmap(bitmap);
+                return bitmap;
+            } catch (ParseException e) {
+                Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
+                finish();
+                return null;
+            }
+        }
     }
 
     private void saveDoodle(Doodle parentDoodle, Bitmap drawingBitmap) {
+        if (parentDoodle == null) Log.e(TAG, "parentDoodle is null");
+
         Doodle childDoodle = new Doodle();
 
         // The artist is the current artist
@@ -238,8 +232,13 @@ public class DoodleActivity extends AppCompatActivity {
 
     private File combineBitmapsToFile(Bitmap drawingBitmap, Bitmap parentBitmap) {
         // TODO: get this to work - currently it is just drawing the entire drawingBitmap on top of the parentBitmap, completely concealing it
+        // If it has no parent, there is nothing to overlay it with
+        if (parentBitmap == null) return saveBitmapToFile(drawingBitmap);
+
         Bitmap bmOverlay = Bitmap.createBitmap(drawingBitmap.getWidth(), drawingBitmap.getHeight(), drawingBitmap.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
+        Log.e(TAG, ""+(drawingBitmap == null));
+        Log.e(TAG, ""+(parentBitmap == null));
         canvas.drawBitmap(parentBitmap, new Matrix(), null);
         canvas.drawBitmap(drawingBitmap, 0, 0, null);
         return saveBitmapToFile(bmOverlay);

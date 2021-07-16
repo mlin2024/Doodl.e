@@ -49,5 +49,4 @@
     <string name="failed_to_load_doodles">Failed to load doodles, please try again</string>
     <string name="loading_doodles">Loading doodles...</string>
     <string name="finding_parent">Finding doodle...</string>
-    <string name="error_finding_parent">There was an error finding the doodle, please try again</string>
 </resources>
