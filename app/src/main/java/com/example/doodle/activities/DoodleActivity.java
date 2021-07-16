@@ -73,19 +73,13 @@ public class DoodleActivity extends AppCompatActivity {
         doneButton = findViewById(R.id.doneButton);
 
         findingProgressDialog = new ProgressDialog(DoodleActivity.this);
-        findingProgressDialog.setMessage(getResources().getString(R.string.finding_parent));
+        findingProgressDialog.setMessage(getResources().getString(R.string.finding_doodle));
         savingProgressDialog = new ProgressDialog(DoodleActivity.this);
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
 
         // Get parent doodle from intent
-        try {
-            String parentDoodleId = getIntent().getStringExtra(PARENT_DOODLE_ID);
-            findSingleDoodleByObjectId(parentDoodleId);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
-            goHomeActivity();
-        }
+        String parentDoodleId = getIntent().getStringExtra(PARENT_DOODLE_ID);
+        findSingleDoodleByObjectId(parentDoodleId);
 
         // Get inGame from intent
         inGame = getIntent().getBooleanExtra(IN_GAME, false);
@@ -148,7 +142,7 @@ public class DoodleActivity extends AppCompatActivity {
         });
     }
 
-    private void findSingleDoodleByObjectId(String objectId) throws ParseException {
+    private void findSingleDoodleByObjectId(String objectId) {
         if (objectId == null) return;
 
         // Specify what type of data we want to query - Doodle.class
@@ -156,17 +150,15 @@ public class DoodleActivity extends AppCompatActivity {
 
         findingProgressDialog.show();
         // Start an asynchronous call for the doodle
-        query.getInBackground(objectId, new GetCallback<Doodle>() {
-            public void done(Doodle foundDoodle, ParseException e) {
-                findingProgressDialog.dismiss();
-                if (e != null) { // Query has failed
-                    Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
-                    finish();
-                }
-                else { // Query has succeeded
-                    parentDoodle = foundDoodle;
-                    parentBitmap = getBitmapFromDoodle(parentDoodle);
-                }
+        query.getInBackground(objectId, (foundDoodle, e) -> {
+            findingProgressDialog.dismiss();
+            if (e != null) { // Query has failed
+                Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
+                finish();
+            }
+            else { // Query has succeeded
+                parentDoodle = foundDoodle;
+                parentBitmap = getBitmapFromDoodle(parentDoodle);
             }
         });
     }
@@ -181,7 +173,6 @@ public class DoodleActivity extends AppCompatActivity {
                 return bitmap;
             } catch (ParseException e) {
                 Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
-                finish();
                 return null;
             }
         }
@@ -195,8 +186,8 @@ public class DoodleActivity extends AppCompatActivity {
         // The artist is the current artist
         childDoodle.setArtist(ParseUser.getCurrentUser());
         // The image is the image that was just drawn, plus the bitmap of the parent
-        File drawingFile = combineBitmapsToFile(drawingBitmap, parentBitmap);
-        childDoodle.setImage(new ParseFile(drawingFile));
+        ParseFile drawingFile = combineBitmapsToParseFile(drawingBitmap, parentBitmap);
+        childDoodle.setImage(drawingFile);
         // The parent is the doodle that was passed in via intent
         // If it has no parent, just don't set it and let it default to the default defined in the database
         if (parentDoodle != null) childDoodle.setParent(parentDoodle);
@@ -230,57 +221,28 @@ public class DoodleActivity extends AppCompatActivity {
         });
     }
 
-    private File combineBitmapsToFile(Bitmap drawingBitmap, Bitmap parentBitmap) {
+    private ParseFile combineBitmapsToParseFile(Bitmap drawingBitmap, Bitmap parentBitmap) {
         // TODO: get this to work - currently it is just drawing the entire drawingBitmap on top of the parentBitmap, completely concealing it
         // If it has no parent, there is nothing to overlay it with
-        if (parentBitmap == null) return saveBitmapToFile(drawingBitmap);
+        if (parentBitmap == null) return saveBitmapToParseFile(drawingBitmap);
 
         Bitmap bmOverlay = Bitmap.createBitmap(drawingBitmap.getWidth(), drawingBitmap.getHeight(), drawingBitmap.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
-        Log.e(TAG, ""+(drawingBitmap == null));
-        Log.e(TAG, ""+(parentBitmap == null));
         canvas.drawBitmap(parentBitmap, new Matrix(), null);
         canvas.drawBitmap(drawingBitmap, 0, 0, null);
-        return saveBitmapToFile(bmOverlay);
+        return saveBitmapToParseFile(bmOverlay);
     }
 
-    private File saveBitmapToFile(Bitmap drawingBitmap) {
-        try {
-            Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(drawingBitmap, 1000);
-            // Configure byte output stream
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            // Compress the image further
-            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
-            // Create a new file for the resized bitmap
-            File resizedFile = getPhotoFileUri("doodle" + System.currentTimeMillis() + ".png");
-            resizedFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(resizedFile);
-            // Write the bytes of the bitmap to file
-            fos.write(bytes.toByteArray());
-            fos.close();
-            return resizedFile;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    // Returns the File for a photo stored on disk given the fileName
-    private File getPhotoFileUri(String fileName) {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
-        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
-            Log.d(TAG, "Failed to create directory");
-        }
-
-        // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
-
-        return file;
+    private ParseFile saveBitmapToParseFile(Bitmap bitmap) {
+        String fileName = "doodle" + System.currentTimeMillis() + ".bmp";
+        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, 1000);
+        // Configure byte output stream
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        // Compress the image further
+        resizedBitmap.compress(Bitmap.CompressFormat.PNG, 40, bytes);
+        // Save to ParseFile
+        ParseFile parseFile = new ParseFile(fileName, bytes.toByteArray());
+        return parseFile;
     }
 
     private void setRootToObjectId() {
