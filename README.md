@@ -205,7 +205,7 @@ GIF created with [LiceCap](https://www.cockos.com/licecap/).
 List an 3rd party libraries, icons, graphics, or other assets you used in your app.
 
 - [ExpandableLayout](https://github.com/cachapa/ExpandableLayout) - smooth expanding layouts
-- [AndroidDraw](https://github.com/divyanshub024/AndroidDraw) - drawing and saving doodles
+- [DrawingView](https://github.com/mukeshsolanki/DrawingView-Android) - drawing and saving doodles
 
 
 ## Notes
