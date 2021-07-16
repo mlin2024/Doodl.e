@@ -4,13 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.ImageDecoder;
 import android.graphics.Matrix;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,23 +26,24 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.divyanshu.draw.widget.DrawView;
 import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
 import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
-import com.parse.GetCallback;
+import com.mukesh.DrawingView;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 public class DoodleActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
@@ -47,8 +54,7 @@ public class DoodleActivity extends AppCompatActivity {
 
     private RelativeLayout doodleRelativeLayout;
     private Toolbar toolbar;
-    private ImageView parentImageView;
-    private DrawView doodleDrawView;
+    private DrawingView doodleDrawingView;
     private Button doneButton;
 
     private Doodle parentDoodle;
@@ -68,8 +74,7 @@ public class DoodleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        parentImageView = findViewById(R.id.parentImageView);
-        doodleDrawView = findViewById(R.id.doodleDrawView);
+        doodleDrawingView = findViewById(R.id.doodleDrawingView);
         doneButton = findViewById(R.id.doneButton);
 
         findingProgressDialog = new ProgressDialog(DoodleActivity.this);
@@ -85,13 +90,20 @@ public class DoodleActivity extends AppCompatActivity {
         inGame = getIntent().getBooleanExtra(IN_GAME, false);
 
         // Prepare canvas
-        doodleDrawView.clearCanvas();
-        doodleDrawView.setStrokeWidth(STROKE_WIDTH);
-        doodleDrawView.setColor(R.color.black);
+        doodleDrawingView.initializePen();
+        doodleDrawingView.setBackgroundColor(getResources().getColor(R.color.white));
+        doodleDrawingView.clear();
+        doodleDrawingView.setPenSize(STROKE_WIDTH);
+        doodleDrawingView.setPenColor(getResources().getColor(R.color.black));
+
+        String filePath = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
+        String fileName = "doodle" + System.currentTimeMillis();
+        String fullPath = filePath + "/" + fileName + ".png";
 
         doneButton.setOnClickListener(v -> {
-            Bitmap drawingBitmap = doodleDrawView.getBitmap();
-            saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
+            doodleDrawingView.saveImage(filePath, fileName, Bitmap.CompressFormat.PNG, 100);
+            File drawingFile = new File(fullPath);
+            saveDoodle(parentDoodle, drawingFile);
         });
     }
 
@@ -151,14 +163,16 @@ public class DoodleActivity extends AppCompatActivity {
         findingProgressDialog.show();
         // Start an asynchronous call for the doodle
         query.getInBackground(objectId, (foundDoodle, e) -> {
-            findingProgressDialog.dismiss();
             if (e != null) { // Query has failed
                 Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
+                findingProgressDialog.dismiss();
                 finish();
             }
             else { // Query has succeeded
                 parentDoodle = foundDoodle;
                 parentBitmap = getBitmapFromDoodle(parentDoodle);
+                // Put the parent drawing on the canvas if it exists
+                if (parentBitmap != null) doodleDrawingView.loadImage(parentBitmap);
             }
         });
     }
@@ -167,27 +181,33 @@ public class DoodleActivity extends AppCompatActivity {
         if (doodle == null) return null;
         else {
             try {
-                byte[] bitmapData = parentDoodle.getImage().getData();
+                byte[] bitmapData = doodle.getImage().getData();
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapData, 0, bitmapData.length);
-                parentImageView.setImageBitmap(bitmap);
+                findingProgressDialog.dismiss();
                 return bitmap;
             } catch (ParseException e) {
                 Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
+                findingProgressDialog.dismiss();
                 return null;
             }
         }
     }
 
-    private void saveDoodle(Doodle parentDoodle, Bitmap parentBitmap, Bitmap drawingBitmap) {
+    private void saveDoodle(Doodle parentDoodle, File drawingFile) {
         if (parentDoodle == null) Log.e(TAG, "parentDoodle is null");
 
         Doodle childDoodle = new Doodle();
 
         // The artist is the current artist
         childDoodle.setArtist(ParseUser.getCurrentUser());
-        // The image is the image that was just drawn, plus the bitmap of the parent
-        ParseFile drawingFile = combineBitmapsToParseFile(drawingBitmap, parentBitmap);
-        childDoodle.setImage(drawingFile);
+        // The image is the file that was passed in
+        ParseFile parseFile = new ParseFile(drawingFile);
+        parseFile.saveInBackground((SaveCallback) e -> {
+            if (e != null) {
+                Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
+            }
+        });
+        childDoodle.setImage(parseFile);
         // The parent is the doodle that was passed in via intent
         // If it has no parent, just don't set it and let it default to the default defined in the database
         if (parentDoodle != null) childDoodle.setParent(parentDoodle);
@@ -219,30 +239,6 @@ public class DoodleActivity extends AppCompatActivity {
                 goHomeActivity();
             }
         });
-    }
-
-    private ParseFile combineBitmapsToParseFile(Bitmap drawingBitmap, Bitmap parentBitmap) {
-        // TODO: get this to work - currently it is just drawing the entire drawingBitmap on top of the parentBitmap, completely concealing it
-        // If it has no parent, there is nothing to overlay it with
-        if (parentBitmap == null) return saveBitmapToParseFile(drawingBitmap);
-
-        Bitmap bmOverlay = Bitmap.createBitmap(drawingBitmap.getWidth(), drawingBitmap.getHeight(), drawingBitmap.getConfig());
-        Canvas canvas = new Canvas(bmOverlay);
-        canvas.drawBitmap(parentBitmap, new Matrix(), null);
-        canvas.drawBitmap(drawingBitmap, 0, 0, null);
-        return saveBitmapToParseFile(bmOverlay);
-    }
-
-    private ParseFile saveBitmapToParseFile(Bitmap bitmap) {
-        String fileName = "doodle" + System.currentTimeMillis() + ".bmp";
-        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, 1000);
-        // Configure byte output stream
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        // Compress the image further
-        resizedBitmap.compress(Bitmap.CompressFormat.PNG, 40, bytes);
-        // Save to ParseFile
-        ParseFile parseFile = new ParseFile(fileName, bytes.toByteArray());
-        return parseFile;
     }
 
     private void setRootToObjectId() {
