@@ -1,32 +1,25 @@
 package com.example.doodle.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Gallery;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.doodle.R;
 import com.example.doodle.activities.GalleryActivity;
-import com.example.doodle.fragments.DoodleDetailsFragment;
 import com.example.doodle.models.Doodle;
 import com.parse.ParseFile;
 
-import java.io.Serializable;
 import java.util.List;
 
 public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder>{
@@ -73,13 +66,13 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView doodleImageView;
-
-        private DoodleDetailsFragment doodleDetailsFragment;
+        private TextView timestampTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             doodleImageView = itemView.findViewById(R.id.doodleImageView);
+            timestampTextView = itemView.findViewById(R.id.timestampTextView);
 
             itemView.setOnClickListener(this);
         }
@@ -92,6 +85,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                         .load(image.getUrl())
                         .into(doodleImageView);
             }
+            timestampTextView.setText(doodle.getTimestamp());
         }
 
         @Override
@@ -102,18 +96,18 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 Doodle doodle = doodles.get(position);
 
                 // Set up popup detail fragment
-                doodleDetailsFragment = DoodleDetailsFragment.newInstance(doodle);
-
-                // Make sure there isn't already a fragment
-                FragmentTransaction ft = GalleryActivity.fragmentManager.beginTransaction();
-                Fragment prev = GalleryActivity.fragmentManager.findFragmentByTag(DoodleDetailsFragment.TAG);
-                if (prev != null) {
-                    ft.remove(prev);
+                Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.item_doodle);
+                ImageView doodleImageView = dialog.findViewById(R.id.doodleImageView);
+                TextView timestampTextView = dialog.findViewById(R.id.timestampTextView);
+                ParseFile image = doodle.getImage();
+                if (image != null) {
+                    Glide.with(context)
+                            .load(image.getUrl())
+                            .into(doodleImageView);
                 }
-                ft.addToBackStack(null);
-
-                // Reveal the fragment
-                doodleDetailsFragment.show(GalleryActivity.fragmentManager, DoodleDetailsFragment.TAG);
+                timestampTextView.setText(doodle.getTimestamp());
+                dialog.show();
             }
         }
     }
