@@ -91,7 +91,7 @@ public class DoodleActivity extends AppCompatActivity {
 
         doneButton.setOnClickListener(v -> {
             Bitmap drawingBitmap = doodleDrawView.getBitmap();
-            saveDoodle(parentDoodle, drawingBitmap);
+            saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
         });
     }
 
@@ -178,7 +178,7 @@ public class DoodleActivity extends AppCompatActivity {
         }
     }
 
-    private void saveDoodle(Doodle parentDoodle, Bitmap drawingBitmap) {
+    private void saveDoodle(Doodle parentDoodle, Bitmap parentBitmap, Bitmap drawingBitmap) {
         if (parentDoodle == null) Log.e(TAG, "parentDoodle is null");
 
         Doodle childDoodle = new Doodle();
