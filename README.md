@@ -5,7 +5,7 @@
 2. [Product Spec](#Product-Spec)
 3. [Wireframes](#Wireframes)
 4. [Schema](#Schema)
-5. [Video Walkthrough](#Video-Walkthrough)
+5. [Video Walkthroughs](#Video-Walkthroughs)
 6. [Credits](#Credits)
 7. [Notes](#Notes)
 8. [License](#License)
@@ -192,11 +192,12 @@
    ----------|----------|------------
     `POST`   | /statuses/update.json | post new tweet
     
-## Week 4 Update
+## Video Walkthroughs
+### Week 4 Update
 
 <img src='Week4Update.gif' title='Week 4 update' width='' alt='Week 4 update' />
 
-GIF created with [LiceCap](https://www.cockos.com/licecap/).
+GIFs created with [LiceCap](https://www.cockos.com/licecap/).
 
 ## Credits
 
