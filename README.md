@@ -31,12 +31,12 @@
 * [x] User can log in
 * [x] User can sign up for a new account
 * [x] User can logout
-* [ ] User can choose between Doodle Mode and Game Mode
+* [x] User can choose between Doodle Mode and Game Mode
 * [x] User can view their profile
-* [ ] User can choose to either create a new doodle contribute to an existing doodle
+* [x] User can choose to either create a new doodle or contribute to an existing doodle
 * [x] User can draw a new doodle
-* [ ] User can contribute to the doodle that they chose in the contribute screen
-* [ ] User can send out their new doodle/contribution to the database
+* [x] User can contribute to the doodle that they chose in the contribute screen
+* [x] User can send out their new doodle/contribution to the database
 * [ ] User can choose to either create a new game or join an existing game
 * [ ] User can create a new game and receive the game code
 * [ ] User can join a game by inputting the game code
@@ -45,7 +45,7 @@
 * [ ] User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
 * [ ] User can view the full history of each doodle in the game after the game ends
 * [ ] User can add their Twitter to allow automatic posting of their doodles
-* [ ] User can choose to view their gallery
+* [x] User can choose to view their gallery
 * [x] User can view a gallery of all the doodles they've done
 * [ ] User can receive a notification whenever one of their doodles is contributed to
 
@@ -192,11 +192,9 @@
    ----------|----------|------------
     `POST`   | /statuses/update.json | post new tweet
     
-## Video Walkthrough
+## Week 4 Update
 
-Here's a walkthrough of implemented user stories:
-
-<img src='walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='Week4Update.gif' title='Week 4 update' width='' alt='Week 4 update' />
 
 GIF created with [LiceCap](https://www.cockos.com/licecap/).
 
