@@ -39,7 +39,9 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
     @org.jetbrains.annotations.NotNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull @org.jetbrains.annotations.NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_doodle, parent, false);
+        View view;
+        if (usedForViewPager) view = LayoutInflater.from(context).inflate(R.layout.item_doodle_bordered, parent, false);
+        else view = LayoutInflater.from(context).inflate(R.layout.item_doodle, parent, false);
         return new ViewHolder(view);
     }
 
