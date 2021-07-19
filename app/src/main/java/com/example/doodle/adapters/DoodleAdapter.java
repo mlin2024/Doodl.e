@@ -27,10 +27,12 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
 
     public Context context;
     public List<Doodle> doodles;
+    public boolean usedForViewPager;
 
-    public DoodleAdapter(Context context, List<Doodle> doodles) {
+    public DoodleAdapter(Context context, List<Doodle> doodles, boolean usedForViewPager) {
         this.context = context;
         this.doodles = doodles;
+        this.usedForViewPager = usedForViewPager;
     }
 
     @NonNull
@@ -70,7 +72,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            if (usedForViewPager) itemView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             doodleImageView = itemView.findViewById(R.id.doodleImageView);
             timestampTextView = itemView.findViewById(R.id.timestampTextView);
 

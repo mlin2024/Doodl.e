@@ -54,7 +54,7 @@ public class GalleryActivity extends AppCompatActivity {
         nothingHereYet = findViewById(R.id.nothingHereYet);
 
         doodles = new ArrayList<>();
-        doodleAdapter = new DoodleAdapter(this, doodles);
+        doodleAdapter = new DoodleAdapter(this, doodles, false);
         galleryRecyclerView.setAdapter(doodleAdapter);
         fragmentManager = getSupportFragmentManager();
 

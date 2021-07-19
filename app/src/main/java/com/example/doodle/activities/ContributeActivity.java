@@ -52,7 +52,7 @@ public class ContributeActivity extends AppCompatActivity {
         selectButton = findViewById(R.id.selectButton);
 
         doodles = new ArrayList<>();
-        doodleAdapter = new DoodleAdapter(this, doodles);
+        doodleAdapter = new DoodleAdapter(this, doodles, true);
         selectViewPager.setAdapter(doodleAdapter);
 
         progressDialog = new ProgressDialog(ContributeActivity.this);
