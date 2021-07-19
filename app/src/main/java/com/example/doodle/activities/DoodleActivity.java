@@ -8,17 +8,20 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.divyanshu.draw.widget.DrawView;
 import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
 import com.example.doodle.models.Doodle;
@@ -43,7 +46,7 @@ public class DoodleActivity extends AppCompatActivity {
     private RelativeLayout doodleRelativeLayout;
     private Toolbar toolbar;
     private ImageView parentImageView;
-    private DrawingView doodleDrawingView;
+    private DrawView doodleDrawView;
     private Button undoButton;
     private Button redoButton;
     private Button colorButton;
@@ -67,7 +70,7 @@ public class DoodleActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         parentImageView = findViewById(R.id.parentImageView);
-        doodleDrawingView = findViewById(R.id.doodleDrawingView);
+        doodleDrawView = findViewById(R.id.doodleDrawView);
         undoButton = findViewById(R.id.undoButton);
         redoButton = findViewById(R.id.redoButton);
         colorButton = findViewById(R.id.colorButton);
@@ -86,17 +89,17 @@ public class DoodleActivity extends AppCompatActivity {
         inGame = getIntent().getBooleanExtra(IN_GAME, false);
 
         // Prepare canvas
-        doodleDrawingView.initializePen();
-        doodleDrawingView.setPenSize(STROKE_WIDTH);
-        doodleDrawingView.setPenColor(getResources().getColor(R.color.black));
+        doodleDrawView.clearCanvas();
+        doodleDrawView.setStrokeWidth(STROKE_WIDTH);
+        doodleDrawView.setColor(getResources().getColor(R.color.black));
 
-        String filePath = getExternalFilesDir(Environment.DIRECTORY_PICTURES).toString();
-        String fileName = "doodle" + System.currentTimeMillis();
-        String fullPath = filePath + "/" + fileName + ".png";
+        undoButton.setOnClickListener(v -> doodleDrawView.undo());
+
+        redoButton.setOnClickListener(v -> doodleDrawView.redo());
 
         doneButton.setOnClickListener(v -> {
-            doodleDrawingView.saveImage(filePath, fileName, Bitmap.CompressFormat.PNG, 100);
-            Bitmap drawingBitmap = BitmapFactory.decodeFile(fullPath);
+            Bitmap drawingBitmap = doodleDrawView.getBitmap();
+            drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
         });
     }
@@ -174,6 +177,25 @@ public class DoodleActivity extends AppCompatActivity {
                 if (parentBitmap != null) parentImageView.setImageBitmap(parentBitmap);
             }
         });
+    }
+
+    // Convert transparentColor to be transparent in a Bitmap.
+    public static Bitmap makeTransparent(Bitmap bitmap, int transparentColor) {
+        int width =  bitmap.getWidth();
+        int height = bitmap.getHeight();
+        Bitmap transparentBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        int [] allpixels = new int [transparentBitmap.getHeight() * transparentBitmap.getWidth()];
+        bitmap.getPixels(allpixels, 0, transparentBitmap.getWidth(), 0, 0, transparentBitmap.getWidth(),transparentBitmap.getHeight());
+        transparentBitmap.setPixels(allpixels, 0, width, 0, 0, width, height);
+
+        for (int i = 0; i < transparentBitmap.getHeight() * transparentBitmap.getWidth(); i++){
+            if (allpixels[i] == transparentColor) {
+                allpixels[i] = Color.alpha(Color.TRANSPARENT);
+            }
+        }
+
+        transparentBitmap.setPixels(allpixels, 0, transparentBitmap.getWidth(), 0, 0, transparentBitmap.getWidth(), transparentBitmap.getHeight());
+        return transparentBitmap;
     }
 
     private Bitmap getBitmapFromDoodle(Doodle doodle) {
@@ -277,6 +299,7 @@ public class DoodleActivity extends AppCompatActivity {
         canvas.drawBitmap(drawingBitmap, 0, 0, null);
         return saveBitmapToParseFile(bmOverlay);
     }
+
     private ParseFile saveBitmapToParseFile(Bitmap bitmap) {
         String fileName = "doodle" + System.currentTimeMillis() + ".png";
         Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, 1000);
