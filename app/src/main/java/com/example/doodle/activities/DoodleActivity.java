@@ -44,6 +44,9 @@ public class DoodleActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ImageView parentImageView;
     private DrawingView doodleDrawingView;
+    private Button undoButton;
+    private Button redoButton;
+    private Button colorButton;
     private Button doneButton;
 
     private Doodle parentDoodle;
@@ -65,6 +68,9 @@ public class DoodleActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         parentImageView = findViewById(R.id.parentImageView);
         doodleDrawingView = findViewById(R.id.doodleDrawingView);
+        undoButton = findViewById(R.id.undoButton);
+        redoButton = findViewById(R.id.redoButton);
+        colorButton = findViewById(R.id.colorButton);
         doneButton = findViewById(R.id.doneButton);
 
         findingProgressDialog = new ProgressDialog(DoodleActivity.this);
