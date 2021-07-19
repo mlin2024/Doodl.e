@@ -11,6 +11,8 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Toolbar text color. -->
+        <item name="android:actionMenuTextColor">@color/white</item>
         <!-- Font. -->
         <item name="android:fontFamily">@font/visby_round_cf_heavy</item>
         <!-- Toolbar overflow icon. -->

@@ -49,6 +49,11 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.profile_menu, menu);
+
+        // Add username next to profile icon
+        menu.findItem(R.id.username).setTitle(ParseUser.getCurrentUser().getUsername());
+        // Make the username text unclickable
+        menu.findItem(R.id.username).setEnabled(false);
         return true;
     }
 

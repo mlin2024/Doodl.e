@@ -4,15 +4,18 @@
     tools:context="com.example.doodle.activities.HomeActivity">
 
     <item
+        android:id="@+id/username"
+        android:title=""
+        app:showAsAction="always|withText" />
+
+    <item
         android:id="@+id/profileMenuItem"
         android:title="@string/Profile"
-        android:tooltipText="@string/Profile"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/logoutMenuItem"
         android:title="@string/Logout"
-        android:tooltipText="@string/Logout"
         app:showAsAction="never" />
 
 </menu>
