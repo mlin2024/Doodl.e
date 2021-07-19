@@ -15,11 +15,15 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/selectViewPager"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/selectButton"
         android:layout_below="@+id/contributeToolbar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
         android:orientation="horizontal" />
 
     <Button
