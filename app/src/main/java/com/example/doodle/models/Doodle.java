@@ -11,8 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @ParseClassName("Doodle")
-public class Doodle extends ParseObject implements Serializable {
-    // TODO: find way for it to not implement serializable because it can't do that
+public class Doodle extends ParseObject {
     public static final String TAG = "Doodle";
     public static final String KEY_ARTIST = "artist";
     public static final String KEY_IMAGE = "image";
