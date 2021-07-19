@@ -9,18 +9,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.example.doodle.R;
 import com.example.doodle.adapters.DoodleAdapter;
 import com.example.doodle.models.Doodle;
+import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,8 +124,9 @@ public class ContributeActivity extends AppCompatActivity {
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
         // Don't include doodles with the current user as the artist
         query.whereNotEqualTo(Doodle.KEY_ARTIST, ParseUser.getCurrentUser());
-        // TODO: don't include doodles whose root is included in the list of doodles the user has contributed to
-        // query.whereNotContainedIn(Doodle.KEY_ROOT, ParseUser.getCurrentUser().getContributedTo());
+        // Don't include doodles that the current user has already edited an ancestor of
+        Player player = new Player(ParseUser.getCurrentUser());
+        query.whereNotContainedIn(Doodle.KEY_ROOT, player.getRootsContributedTo());
         // Limit query to NUM_TO_LOAD items
         query.setLimit(NUM_TO_LOAD);
 

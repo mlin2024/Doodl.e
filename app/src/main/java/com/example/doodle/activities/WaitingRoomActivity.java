@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.doodle.R;
+import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseUser;
 
@@ -30,7 +31,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
     private Button startGameButton;
 
     private String gameCode;
-    private List<ParseUser> players;
+    private List<Player> players;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

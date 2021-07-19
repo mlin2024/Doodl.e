@@ -4,23 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
-import android.content.ContentUris;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.ImageDecoder;
 import android.graphics.Matrix;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -29,28 +22,23 @@ import android.widget.Toast;
 import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
 import com.example.doodle.models.Doodle;
+import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
 import com.mukesh.DrawingView;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 public class DoodleActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
     public static final float STROKE_WIDTH = 15;
     public static final String PARENT_DOODLE_ID = "ParentDoodleId";
     public static final String IN_GAME = "inGame";
-    public static final String SET_ROOT = "setRoot";
 
     private RelativeLayout doodleRelativeLayout;
     private Toolbar toolbar;
@@ -216,9 +204,7 @@ public class DoodleActivity extends AppCompatActivity {
         if (parentDoodle != null) childDoodle.setTailLength(parentDoodle.getTailLength() + 1);
         // The root is the same as its parent
         // If it has no parent, its root is equal to its objectId, which will be set after it is saved
-        // For now set its root equal to setRoot so we know we have to set it
         if (parentDoodle != null) childDoodle.setRoot(parentDoodle.getRoot());
-        else childDoodle.setRoot(SET_ROOT);
         // inGame is same as the parent
         // If it has no parent, inGame is passed in by intent
         if (parentDoodle != null) childDoodle.setInGame(parentDoodle.getInGame());
@@ -233,7 +219,8 @@ public class DoodleActivity extends AppCompatActivity {
             }
             else { // Saving doodle succeeded
                 // Now if it has no parent, set its root equal to its objectId
-                setRootToObjectId();
+                if (parentDoodle == null) setRootToObjectId();
+                else addToUserRootsContributedTo(parentDoodle.getRoot());
 
                 Toast.makeText(this, R.string.doodle_submitted, Toast.LENGTH_SHORT).show();
                 goHomeActivity();
@@ -245,27 +232,37 @@ public class DoodleActivity extends AppCompatActivity {
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
         // Include data referred by user key
-        query.whereEqualTo(Doodle.KEY_ROOT, SET_ROOT);
+        query.whereEqualTo(Doodle.KEY_ROOT, null);
         // Start an asynchronous call for the doodle
-        query.findInBackground((foundDoodles, e) -> {
+        query.getFirstInBackground((doodle, e) -> {
             if (e != null) { // Query has failed
                 Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
             }
             else { // Query has succeeded
-                for (Doodle doodle: foundDoodles) {
-                    doodle.setRoot(doodle.getObjectId());
-                    doodle.saveInBackground(e1 -> {
-                        if (e1 != null) {
-                            Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
-                        }
-                    });
-                }
+                String root = doodle.getObjectId();
+                doodle.setRoot(root);
+                saveDoodleInBackground(doodle);
+                addToUserRootsContributedTo(root);
+            }
+        });
+    }
+
+    // Adds the given root to the current user's list of roots contributed to
+    private void addToUserRootsContributedTo (String root) {
+        Player player = new Player(ParseUser.getCurrentUser());
+        player.addRootContributedTo(root);
+        player.saveInBackground(doodleRelativeLayout);
+    }
+
+    private void saveDoodleInBackground(Doodle doodle) {
+        doodle.saveInBackground(e -> {
+            if (e != null) {
+                Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
             }
         });
     }
 
     private ParseFile combineBitmapsToParseFile(Bitmap drawingBitmap, Bitmap parentBitmap) {
-        // TODO: get this to work - currently it is just drawing the entire drawingBitmap on top of the parentBitmap, completely concealing it
         // If it has no parent, there is nothing to overlay it with
         if (parentBitmap == null) return saveBitmapToParseFile(drawingBitmap);
         Bitmap bmOverlay = Bitmap.createBitmap(drawingBitmap.getWidth(), drawingBitmap.getHeight(), drawingBitmap.getConfig());

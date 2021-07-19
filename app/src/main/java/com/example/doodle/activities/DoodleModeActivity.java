@@ -12,11 +12,9 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.example.doodle.R;
-import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseUser;
 
-import java.io.Serializable;
 
 public class DoodleModeActivity extends AppCompatActivity {
     public static final String TAG = "DoodleModeActivity";
