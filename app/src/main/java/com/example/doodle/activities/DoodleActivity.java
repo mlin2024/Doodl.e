@@ -2,21 +2,24 @@ package com.example.doodle.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -24,18 +27,19 @@ import android.widget.Toast;
 import com.divyanshu.draw.widget.DrawView;
 import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
+import com.example.doodle.fragments.ColorPickerFragment;
+import com.example.doodle.models.ColorViewModel;
 import com.example.doodle.models.Doodle;
 import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
-import com.mukesh.DrawingView;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 
 public class DoodleActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
@@ -50,6 +54,8 @@ public class DoodleActivity extends AppCompatActivity {
     private Button undoButton;
     private Button redoButton;
     private Button colorButton;
+    private ExpandableLayout colorPickerExpandableLayout;
+    private FrameLayout colorPickerFrameLayout;
     private Button doneButton;
 
     private Doodle parentDoodle;
@@ -57,6 +63,10 @@ public class DoodleActivity extends AppCompatActivity {
     private boolean inGame;
     private ProgressDialog findingProgressDialog;
     private ProgressDialog savingProgressDialog;
+    private FragmentManager fragmentManager;
+    private Fragment colorPickerFragment;
+    private ViewModelProvider viewModelProvider;
+    private ColorViewModel colorViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +84,23 @@ public class DoodleActivity extends AppCompatActivity {
         undoButton = findViewById(R.id.undoButton);
         redoButton = findViewById(R.id.redoButton);
         colorButton = findViewById(R.id.colorButton);
+        colorPickerExpandableLayout = findViewById(R.id.colorPickerExpandableLayout);
+        colorPickerFrameLayout = findViewById(R.id.colorPickerFrameLayout);
         doneButton = findViewById(R.id.doneButton);
 
         findingProgressDialog = new ProgressDialog(DoodleActivity.this);
         findingProgressDialog.setMessage(getResources().getString(R.string.finding_doodle));
         savingProgressDialog = new ProgressDialog(DoodleActivity.this);
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
+
+        // Set up color picker fragment
+        fragmentManager = getSupportFragmentManager();
+        colorPickerFragment = new ColorPickerFragment();
+        fragmentManager.beginTransaction().add(R.id.colorPickerFrameLayout, colorPickerFragment).show(colorPickerFragment).commit();
+
+        // Set up view model
+        viewModelProvider = new ViewModelProvider(this);
+        colorViewModel = viewModelProvider.get(ColorViewModel.class);
 
         // Get parent doodle from intent
         String parentDoodleId = getIntent().getStringExtra(PARENT_DOODLE_ID);
@@ -93,9 +114,23 @@ public class DoodleActivity extends AppCompatActivity {
         doodleDrawView.setStrokeWidth(STROKE_WIDTH);
         doodleDrawView.setColor(getResources().getColor(R.color.black));
 
-        undoButton.setOnClickListener(v -> doodleDrawView.undo());
+        undoButton.setOnClickListener(v -> {
+            doodleDrawView.undo();
+        });
 
-        redoButton.setOnClickListener(v -> doodleDrawView.redo());
+        redoButton.setOnClickListener(v -> {
+            doodleDrawView.redo();
+        });
+
+        colorButton.setOnClickListener(v -> {
+            if (colorPickerExpandableLayout.isExpanded()) colorPickerExpandableLayout.collapse();
+            else colorPickerExpandableLayout.expand();
+            colorViewModel.getSelectedItem().observe(this, color -> {
+                Log.i(TAG, "color = " + color);
+                colorButton.setBackgroundTintList(color);
+                doodleDrawView.setColor(color.getDefaultColor());
+            });
+        });
 
         doneButton.setOnClickListener(v -> {
             Bitmap drawingBitmap = doodleDrawView.getBitmap();

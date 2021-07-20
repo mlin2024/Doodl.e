@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/doodleRelativeLayout"
@@ -80,13 +81,34 @@
 
     <Button
         android:id="@+id/colorButton"
-        android:layout_width="35dp"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/canvasRelativeLayout"
         android:layout_alignEnd="@+id/canvasRelativeLayout"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
-        app:cornerRadius="50dp" />
+        android:background="@drawable/button_round"
+        app:backgroundTint="@color/black"/>
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/colorPickerExpandableLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/colorButton"
+        android:layout_alignEnd="@+id/colorButton"
+        android:layout_marginBottom="5dp"
+        app:el_duration="1000"
+        app:el_expanded="false"
+        app:el_parallax="0.5">
+
+        <FrameLayout
+            android:id="@+id/colorPickerFrameLayout"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="0dp">
+        </FrameLayout>
+
+    </net.cachapa.expandablelayout.ExpandableLayout>
 
     <Button
         android:id="@+id/doneButton"

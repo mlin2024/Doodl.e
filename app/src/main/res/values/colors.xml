@@ -5,6 +5,22 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- All doodle color options -->
+
+    <color name="pink">#FFFF99C9</color>
+    <color name="red">#FFE63232</color>
+    <color name="orange">#FFFF9100</color>
+    <color name="yellow_orange">#FFFFC800</color>
+    <color name="yellow">#FFFFF563</color>
+    <color name="light_green">#FF8DFF6E</color>
+    <color name="dark_green">#FF16A63C</color>
+    <color name="teal">#FF388F8B</color>
+    <color name="light_blue">#FF5FEDEB</color>
+    <color name="dark_blue">#FF053AAD</color>
+    <color name="purple">#FF750DD6</color>
+    <color name="brown">#FF6E3F19</color>
+    <color name="grey">#FF828282</color>
+    <color name="black">#FF000000</color>
 </resources>
