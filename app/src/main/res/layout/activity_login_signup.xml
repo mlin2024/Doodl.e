@@ -7,116 +7,121 @@
     android:layout_height="match_parent"
     tools:context=".activities.LoginSignupActivity">
 
-    <LinearLayout
-        android:id="@+id/loginSignupLinearLayout"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="vertical">
+        android:layout_centerVertical="true">
 
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/loginSignupLinearLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/app_name"
-            android:textSize="96sp" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/loginButton"
-            style="@style/CustomButton.Doodle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="@string/Log_In" />
-
-        <net.cachapa.expandablelayout.ExpandableLayout
-            android:id="@+id/loginExpandableLayout"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            app:el_duration="1000"
-            app:el_expanded="false"
-            app:el_parallax="0.5">
-
-            <EditText
-                android:id="@+id/usernameEditTextLogin"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:hint="@string/username"
-                android:imeOptions="actionNext"
-                android:singleLine="true" />
-
-            <EditText
-                android:id="@+id/passwordEditTextLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40dp"
-                android:hint="@string/password"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:singleLine="true" />
+                android:text="@string/app_name"
+                android:textSize="96sp" />
 
             <Button
-                android:id="@+id/loginGoButton"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="right|fill_vertical"
-                app:icon="@drawable/ic_baseline_arrow_forward_24"
-                app:iconGravity="textEnd"
-                app:iconPadding="0dp" />
-        </net.cachapa.expandablelayout.ExpandableLayout>
-
-        <Button
-            android:id="@+id/signupButton"
-            style="@style/CustomButton.Doodle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="@string/Sign_Up" />
-
-        <net.cachapa.expandablelayout.ExpandableLayout
-            android:id="@+id/signupExpandableLayout"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            app:el_duration="1000"
-            app:el_expanded="false"
-            app:el_parallax="0.5">
-
-            <EditText
-                android:id="@+id/usernameEditTextSignup"
-                android:layout_width="match_parent"
+                android:id="@+id/loginButton"
+                style="@style/CustomButton.Doodle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:hint="@string/username"
-                android:imeOptions="actionNext"
-                android:singleLine="true" />
+                android:layout_marginTop="20dp"
+                android:text="@string/Log_In" />
 
-            <EditText
-                android:id="@+id/passwordEditTextSignup"
-                android:layout_width="match_parent"
+            <net.cachapa.expandablelayout.ExpandableLayout
+                android:id="@+id/loginExpandableLayout"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40dp"
-                android:hint="@string/password"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:singleLine="true" />
+                app:el_duration="1000"
+                app:el_expanded="false"
+                app:el_parallax="0.5">
+
+                <EditText
+                    android:id="@+id/usernameEditTextLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:hint="@string/username"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+
+                <EditText
+                    android:id="@+id/passwordEditTextLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40dp"
+                    android:hint="@string/password"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:singleLine="true" />
+
+                <Button
+                    android:id="@+id/loginGoButton"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right|fill_vertical"
+                    app:icon="@drawable/ic_baseline_arrow_forward_24"
+                    app:iconGravity="textEnd"
+                    app:iconPadding="0dp" />
+            </net.cachapa.expandablelayout.ExpandableLayout>
 
             <Button
-                android:id="@+id/signupGoButton"
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="right|fill_vertical"
-                app:icon="@drawable/ic_baseline_arrow_forward_24"
-                app:iconGravity="textEnd"
-                app:iconPadding="0dp" />
-        </net.cachapa.expandablelayout.ExpandableLayout>
-    </LinearLayout>
+                android:id="@+id/signupButton"
+                style="@style/CustomButton.Doodle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="@string/Sign_Up" />
+
+            <net.cachapa.expandablelayout.ExpandableLayout
+                android:id="@+id/signupExpandableLayout"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:el_duration="1000"
+                app:el_expanded="false"
+                app:el_parallax="0.5">
+
+                <EditText
+                    android:id="@+id/usernameEditTextSignup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:hint="@string/username"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+
+                <EditText
+                    android:id="@+id/passwordEditTextSignup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="40dp"
+                    android:hint="@string/password"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:singleLine="true" />
+
+                <Button
+                    android:id="@+id/signupGoButton"
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right|fill_vertical"
+                    app:icon="@drawable/ic_baseline_arrow_forward_24"
+                    app:iconGravity="textEnd"
+                    app:iconPadding="0dp" />
+            </net.cachapa.expandablelayout.ExpandableLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>
