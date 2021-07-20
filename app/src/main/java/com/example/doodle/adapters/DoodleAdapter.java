@@ -10,13 +10,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.doodle.R;
-import com.example.doodle.activities.GalleryActivity;
 import com.example.doodle.models.Doodle;
 import com.parse.ParseFile;
 
@@ -40,8 +37,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull @org.jetbrains.annotations.NotNull ViewGroup parent, int viewType) {
         View view;
-        if (usedForViewPager) view = LayoutInflater.from(context).inflate(R.layout.item_doodle_bordered, parent, false);
-        else view = LayoutInflater.from(context).inflate(R.layout.item_doodle, parent, false);
+        view = LayoutInflater.from(context).inflate(R.layout.item_doodle, parent, false);
         return new ViewHolder(view);
     }
 
