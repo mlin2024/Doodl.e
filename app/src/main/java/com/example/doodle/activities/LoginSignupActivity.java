@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,6 +42,7 @@ public class LoginSignupActivity extends AppCompatActivity {
 
     public Animation shake;
     private ProgressDialog progressDialog;
+    private TextWatcher textWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,23 @@ public class LoginSignupActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(LoginSignupActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.verifying_credentials));
 
+        // Text watcher to disable the go button unless both username and password have been filled in
+        textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+            @Override
+            public void afterTextChanged(Editable editable) {
+                checkForEmptyFields();
+            }
+        };
+        usernameEditTextLogin.addTextChangedListener(textWatcher);
+        passwordEditTextLogin.addTextChangedListener(textWatcher);
+        usernameEditTextSignup.addTextChangedListener(textWatcher);
+        passwordEditTextSignup.addTextChangedListener(textWatcher);
+        checkForEmptyFields();
+
         loginButton.setOnClickListener(v -> {
             if (loginExpandableLayout.isExpanded()) loginExpandableLayout.collapse();
             else loginExpandableLayout.expand();
@@ -85,31 +105,28 @@ public class LoginSignupActivity extends AppCompatActivity {
             String username = usernameEditTextLogin.getText().toString();
             String password = passwordEditTextLogin.getText().toString();
             hideSoftKeyboard(loginSignupRelativeLayout);
-            if (username.isEmpty()) {
-                Snackbar.make(loginSignupRelativeLayout, R.string.Username_is_required, Snackbar.LENGTH_LONG).show();
-                loginSignupLinearLayout.startAnimation(shake);
-            }
-            else if (password.isEmpty()) {
-                Snackbar.make(loginSignupRelativeLayout, R.string.Password_is_required, Snackbar.LENGTH_LONG).show();
-                loginSignupLinearLayout.startAnimation(shake);
-            }
-            else loginUser(username, password);
+            loginUser(username, password);
         });
 
         signupGoButton.setOnClickListener(v -> {
             String username = usernameEditTextSignup.getText().toString();
             String password = passwordEditTextSignup.getText().toString();
             hideSoftKeyboard(loginSignupRelativeLayout);
-            if (username.isEmpty()) {
-                Snackbar.make(loginSignupRelativeLayout, R.string.Username_is_required, Snackbar.LENGTH_LONG).show();
-                loginSignupLinearLayout.startAnimation(shake);
-            }
-            else if (password.isEmpty()) {
-                Snackbar.make(loginSignupRelativeLayout, R.string.Password_is_required, Snackbar.LENGTH_LONG).show();
-                loginSignupLinearLayout.startAnimation(shake);
-            }
-            else signupUser(username, password);
+            signupUser(username, password);
         });
+    }
+
+    // Checks if the username and password fields are empty, and enables the button only if they are both populated
+    private void checkForEmptyFields() {
+        String loginUsername = usernameEditTextLogin.getText().toString();
+        String loginPassword = passwordEditTextLogin.getText().toString();
+        if (loginUsername.isEmpty() || loginPassword.isEmpty()) loginGoButton.setEnabled(false);
+        else loginGoButton.setEnabled(true);
+
+        String signupUsername = usernameEditTextSignup.getText().toString();
+        String signupPassword = passwordEditTextSignup.getText().toString();
+        if (signupUsername.isEmpty() || signupPassword.isEmpty()) signupGoButton.setEnabled(false);
+        else signupGoButton.setEnabled(true);
     }
 
     // Uses parse method logInInBackground to attempt to log in with the credentials given
