@@ -29,11 +29,13 @@ public class LoginSignupActivity extends AppCompatActivity {
 
     private RelativeLayout loginSignupRelativeLayout;
     private LinearLayout loginSignupLinearLayout;
+    private ExpandableLayout loginButtonExpandableLayout;
     private Button loginButton;
     private ExpandableLayout loginExpandableLayout;
     private EditText usernameEditTextLogin;
     private EditText passwordEditTextLogin;
     private Button loginGoButton;
+    private ExpandableLayout signupButtonExpandableLayout;
     private Button signupButton;
     private ExpandableLayout signupExpandableLayout;
     private EditText usernameEditTextSignup;
@@ -55,11 +57,13 @@ public class LoginSignupActivity extends AppCompatActivity {
 
         loginSignupRelativeLayout = findViewById(R.id.loginSignupRelativeLayout);
         loginSignupLinearLayout = findViewById(R.id.loginSignupLinearLayout);
+        loginButtonExpandableLayout = findViewById(R.id.loginButtonExpandableLayout);
         loginButton = findViewById(R.id.loginButton);
         loginExpandableLayout = findViewById(R.id.loginExpandableLayout);
         usernameEditTextLogin = findViewById(R.id.usernameEditTextLogin);
         passwordEditTextLogin = findViewById(R.id.passwordEditTextLogin);
         loginGoButton = findViewById(R.id.loginGoButton);
+        signupButtonExpandableLayout = findViewById(R.id.signupButtonExpandableLayout);
         signupButton = findViewById(R.id.signupButton);
         signupExpandableLayout = findViewById(R.id.signupExpandableLayout);
         usernameEditTextSignup = findViewById(R.id.usernameEditTextSignup);
@@ -88,17 +92,19 @@ public class LoginSignupActivity extends AppCompatActivity {
         checkForEmptyFields();
 
         loginButton.setOnClickListener(v -> {
-            if (loginExpandableLayout.isExpanded()) loginExpandableLayout.collapse();
-            else loginExpandableLayout.expand();
+            loginExpandableLayout.expand();
+            loginButtonExpandableLayout.collapse();
             clearEditTexts();
             signupExpandableLayout.collapse();
+            signupButtonExpandableLayout.expand();
         });
 
         signupButton.setOnClickListener(v -> {
-            if (signupExpandableLayout.isExpanded()) signupExpandableLayout.collapse();
-            else signupExpandableLayout.expand();
+            signupExpandableLayout.expand();
+            signupButtonExpandableLayout.collapse();
             clearEditTexts();
             loginExpandableLayout.collapse();
+            loginButtonExpandableLayout.expand();
         });
 
         loginGoButton.setOnClickListener(v -> {
