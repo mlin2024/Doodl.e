@@ -20,9 +20,7 @@ import com.example.doodle.models.Doodle;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder>{
@@ -103,7 +101,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
 
                 // Set up popup detail fragment
                 Dialog dialog = new Dialog(context);
-                dialog.setContentView(R.layout.fragment_doodle_detail);
+                dialog.setContentView(R.layout.doodle_detail);
 
                 Button backButton = dialog.findViewById(R.id.backButton);
                 TabLayout versionTabLayout = dialog.findViewById(R.id.versionTabLayout);

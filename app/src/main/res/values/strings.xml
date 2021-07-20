@@ -49,4 +49,5 @@
     <string name="failed_to_load_doodles">Failed to load doodles, please try again</string>
     <string name="loading_doodles">Loading doodles...</string>
     <string name="finding_doodle">Finding doodle...</string>
+    <string name="no_doodles_to_contribute_to">No doodles to contribute to...</string>
 </resources>

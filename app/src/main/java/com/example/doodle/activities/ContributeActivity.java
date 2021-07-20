@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.doodle.R;
 import com.example.doodle.adapters.DoodleAdapter;
@@ -31,6 +33,7 @@ public class ContributeActivity extends AppCompatActivity {
 
     private RelativeLayout contributeRelativeLayout;
     private Toolbar toolbar;
+    private TextView noDoodlesToContributeTo;
     private ViewPager2 selectViewPager;
     private TabLayout selectTabLayout;
     private Button selectButton;
@@ -50,6 +53,7 @@ public class ContributeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        noDoodlesToContributeTo = findViewById(R.id.noDoodlesToContributeTo);
         selectViewPager = findViewById(R.id.selectViewPager);
         selectTabLayout = findViewById(R.id.selectTabLayout);
         selectButton = findViewById(R.id.selectButton);
@@ -150,6 +154,9 @@ public class ContributeActivity extends AppCompatActivity {
                 doodleAdapter.clear();
                 // Save received posts to list and notify adapter of new data
                 doodleAdapter.addAll(foundDoodles);
+                // Show empty message if gallery is empty
+                if (doodles.size() == 0) noDoodlesToContributeTo.setVisibility(View.VISIBLE);
+                selectButton.setEnabled(false);
             }
         });
     }
