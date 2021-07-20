@@ -36,7 +36,6 @@ public class GalleryActivity extends AppCompatActivity {
     private List<Doodle> doodles;
     private DoodleAdapter doodleAdapter;
     private ProgressDialog progressDialog;
-    public static FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,6 @@ public class GalleryActivity extends AppCompatActivity {
         doodles = new ArrayList<>();
         doodleAdapter = new DoodleAdapter(this, doodles, false);
         galleryRecyclerView.setAdapter(doodleAdapter);
-        fragmentManager = getSupportFragmentManager();
 
         // Allows for optimizations
         galleryRecyclerView.setHasFixedSize(true);

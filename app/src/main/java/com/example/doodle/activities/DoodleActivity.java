@@ -201,7 +201,7 @@ public class DoodleActivity extends AppCompatActivity {
         // Start an asynchronous call for the doodle
         query.getInBackground(objectId, (foundDoodle, e) -> {
             if (e != null) { // Query has failed
-                Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
+                Toast.makeText(this, getResources().getString(R.string.error_finding_doodle), Toast.LENGTH_SHORT).show();
                 findingProgressDialog.dismiss();
                 finish();
             }
