@@ -17,6 +17,8 @@ import com.example.doodle.adapters.DoodleAdapter;
 import com.example.doodle.models.Doodle;
 import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -30,6 +32,7 @@ public class ContributeActivity extends AppCompatActivity {
     private RelativeLayout contributeRelativeLayout;
     private Toolbar toolbar;
     private ViewPager2 selectViewPager;
+    private TabLayout selectTabLayout;
     private Button selectButton;
 
     private List<Doodle> doodles;
@@ -48,6 +51,7 @@ public class ContributeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         selectViewPager = findViewById(R.id.selectViewPager);
+        selectTabLayout = findViewById(R.id.selectTabLayout);
         selectButton = findViewById(R.id.selectButton);
 
         doodles = new ArrayList<>();
@@ -56,6 +60,9 @@ public class ContributeActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(ContributeActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.loading_doodles));
+
+        // Set up TabLayout
+        new TabLayoutMediator(selectTabLayout, selectViewPager, true, true, (tab, position) -> {}).attach();
 
         // Grab doodles to populate the ViewPager
         queryDoodles();
