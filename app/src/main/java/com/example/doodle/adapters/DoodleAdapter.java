@@ -87,6 +87,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
             if (image != null) {
                 Glide.with(context)
                         .load(image.getUrl())
+                        .placeholder(R.drawable.placeholder)
                         .into(doodleImageView);
             }
             timestampTextView.setText(doodle.getTimestamp());
@@ -132,6 +133,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 if (image != null) {
                     Glide.with(context)
                             .load(image.getUrl())
+                            .placeholder(R.drawable.placeholder)
                             .into(doodleImageView);
                 }
                 timestampTextView.setText(doodle.getTimestamp());
@@ -157,6 +159,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                         if (image != null) {
                             Glide.with(context)
                                     .load(image.getUrl())
+                                    .placeholder(R.drawable.placeholder)
                                     .into(doodleImageView);
                         }
                         timestampTextView.setText(currentDoodle.getTimestamp());
