@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.divyanshu.draw.widget.DrawView;
-import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
 import com.example.doodle.fragments.ColorPickerFragment;
 import com.example.doodle.models.ColorViewModel;
@@ -179,6 +178,8 @@ public class DoodleActivity extends AppCompatActivity {
         finish();
     }
 
+    // Asynchronously finds the parent doodle from the database given its objectId, putting up a ProgressDialog
+    // until it is found, and puts its image behind the canvas
     private void findSingleDoodleByObjectId(String objectId) {
         if (objectId == null) return;
 
@@ -286,7 +287,7 @@ public class DoodleActivity extends AppCompatActivity {
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
         // Include data referred by user key
-        // The doodle we want to change the root of is distinguished by its root being KEY_ROOT
+        // The doodle we want to change the root of is distinguished by having a null root
         query.whereEqualTo(Doodle.KEY_ROOT, null);
         // Start an asynchronous call for the doodle
         query.getFirstInBackground((doodle, e) -> {
@@ -333,11 +334,10 @@ public class DoodleActivity extends AppCompatActivity {
     // Converts a bitmap to a ParseFile
     private ParseFile saveBitmapToParseFile(Bitmap bitmap) {
         String fileName = "doodle" + System.currentTimeMillis() + ".png";
-        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, 1000);
         // Configure byte output stream
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        // Compress the image further
-        resizedBitmap.compress(Bitmap.CompressFormat.PNG, 40, bytes);
+        // Compress the image
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes);
         // Save to ParseFile
         ParseFile parseFile = new ParseFile(fileName, bytes.toByteArray());
         return parseFile;
