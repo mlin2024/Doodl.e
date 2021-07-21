@@ -94,17 +94,17 @@ public class LoginSignupActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             loginExpandableLayout.expand();
             loginButtonExpandableLayout.collapse();
-            clearEditTexts();
             signupExpandableLayout.collapse();
             signupButtonExpandableLayout.expand();
+            clearEditTexts();
         });
 
         signupButton.setOnClickListener(v -> {
             signupExpandableLayout.expand();
             signupButtonExpandableLayout.collapse();
-            clearEditTexts();
             loginExpandableLayout.collapse();
             loginButtonExpandableLayout.expand();
+            clearEditTexts();
         });
 
         loginGoButton.setOnClickListener(v -> {
