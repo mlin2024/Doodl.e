@@ -19,6 +19,8 @@
         <item name="android:actionOverflowButtonStyle">@style/OverflowButton</item>
         <!-- Home as Up icon. -->
         <item name="android:homeAsUpIndicator">@drawable/ic_baseline_arrow_back_24</item>
+        <!-- Toolbar text. -->
+        <item name="actionButtonStyle">@style/AppTheme.Widget.ActionButton</item>
     </style>
 
     <style name="OverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
@@ -29,5 +31,10 @@
         <item name="android:width">250dp</item>
         <item name="android:height">80dp</item>
         <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="AppTheme.Widget.ActionButton" parent="@style/Widget.AppCompat.ActionButton">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">16sp</item>
     </style>
 </resources>
