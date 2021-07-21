@@ -50,4 +50,7 @@
     <string name="loading_doodles">Loading doodles...</string>
     <string name="finding_doodle">Finding doodle...</string>
     <string name="no_doodles_to_contribute_to">No doodles to contribute to...</string>
+    <string name="loading_doodle">Loading doodle...</string>
+    <string name="loading_doodle_history">Loading doodle history...</string>
+    <string name="error_loading_history">There was an error loading the history of this doodle, please try again</string>
 </resources>

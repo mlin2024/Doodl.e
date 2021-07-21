@@ -1,12 +1,17 @@
 package com.example.doodle.adapters;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,11 +21,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.doodle.R;
+import com.example.doodle.activities.DoodleActivity;
 import com.example.doodle.models.Doodle;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -73,11 +81,18 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
         private ImageView doodleImageView;
         private TextView timestampTextView;
 
+        private Dialog dialog;
+        private Doodle doodle;
+        private ProgressDialog loadingProgressDialog;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             if (usedForViewPager) itemView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             doodleImageView = itemView.findViewById(R.id.doodleImageView);
             timestampTextView = itemView.findViewById(R.id.timestampTextView);
+
+            loadingProgressDialog = new ProgressDialog(context);
+            loadingProgressDialog.setMessage(context.getResources().getString(R.string.loading_doodle_history));
 
             itemView.setOnClickListener(this);
         }
@@ -98,13 +113,24 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
         public void onClick(View v) {
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) { // Check if position is valid
+
                 // Get doodle
-                Doodle doodle = doodles.get(position);
+                doodle = doodles.get(position);
 
                 // Set up dialog
-                Dialog dialog = new Dialog(context);
+                dialog = new Dialog(context);
                 dialog.setContentView(R.layout.doodle_detail);
 
+                // Asynchronously load the doodle's history
+                loadingProgressDialog.show();
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(setupHistoryDialog);
+            }
+        }
+
+        // Sets up the dialog that contains the doodle's history
+        Runnable setupHistoryDialog = new Runnable() {
+            public void run() {
                 Button backButton = dialog.findViewById(R.id.backButton);
                 TabLayout versionTabLayout = dialog.findViewById(R.id.versionTabLayout);
                 Button forwardButton = dialog.findViewById(R.id.forwardButton);
@@ -114,22 +140,13 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 int tailLength = doodle.getTailLength();
 
                 // Recursively find the history of this doodle
-                Doodle[] doodleHistory = new Doodle[tailLength];
-                Doodle currentDoodleInHistory = doodle;
-                for (int i = 0; i < tailLength; i++) {
-                    doodleHistory[doodle.getTailLength() - i - 1] = currentDoodleInHistory;
-                    try {
-                        currentDoodleInHistory = (Doodle) currentDoodleInHistory.fetchIfNeeded().getParseObject(Doodle.KEY_PARENT);
-                    } catch (ParseException e) {
-                        Toast.makeText(context, context.getResources().getString(R.string.error_finding_doodle), Toast.LENGTH_SHORT).show();
-                    }
-                }
+                Doodle[] doodleHistory = findDoodleHistory(doodle);
 
                 // Lambda function that disables the appropriate buttons if at first/last tab
-                Runnable disableAppropriateButtons = () -> {
-                    if (versionTabLayout.getSelectedTabPosition() == 0) backButton.setEnabled(false);
+                Consumer<Integer> disableAppropriateButtons = (tab) -> {
+                    if (tab == 0) backButton.setEnabled(false);
                     else backButton.setEnabled(true);
-                    if (versionTabLayout.getSelectedTabPosition() == tailLength - 1) forwardButton.setEnabled(false);
+                    if (tab == tailLength - 1) forwardButton.setEnabled(false);
                     else forwardButton.setEnabled(true);
                 };
 
@@ -147,33 +164,35 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 };
 
                 // Add a tab for each doodle in the history
-                for (int i = 0; i < tailLength; i++) versionTabLayout.addTab(versionTabLayout.newTab());
-
-                // Disable appropriate button if at first/last tab
-                disableAppropriateButtons.run();
+                for (int i = 0; i < tailLength; i++)
+                    versionTabLayout.addTab(versionTabLayout.newTab());
 
                 // Set selected tab to last tab
                 versionTabLayout.selectTab(versionTabLayout.getTabAt(tailLength - 1));
                 loadTab.accept(tailLength - 1);
+
+                // Disable appropriate button if at first/last tab
+                disableAppropriateButtons.accept(versionTabLayout.getSelectedTabPosition());
 
                 // Listen for whenever the tab is changed
                 versionTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
                         // Disable appropriate button if at first/last tab
-                        disableAppropriateButtons.run();
+                        disableAppropriateButtons.accept(tab.getPosition());
 
                         // Load the appropriate doodle
                         loadTab.accept(tab.getPosition());
                     }
 
                     @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {}
+                    public void onTabUnselected(TabLayout.Tab tab) {
+                    }
 
                     @Override
                     public void onTabReselected(TabLayout.Tab tab) {
                         // Disable appropriate button if at first/last tab
-                        disableAppropriateButtons.run();
+                        disableAppropriateButtons.accept(tab.getPosition());
                     }
                 });
 
@@ -189,8 +208,26 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                     tab.select();
                 });
 
+                Log.i(TAG, "hid");
+                loadingProgressDialog.dismiss();
                 dialog.show();
             }
+        };
+
+        // Recursively finds the history of this doodle
+        private Doodle[] findDoodleHistory(Doodle doodle) {
+            int tailLength = doodle.getTailLength();
+            Doodle[] doodleHistory = new Doodle[tailLength];
+            Doodle currentDoodleInHistory = doodle;
+            for (int i = 0; i < tailLength; i++) {
+                doodleHistory[doodle.getTailLength() - i - 1] = currentDoodleInHistory;
+                try {
+                    currentDoodleInHistory = (Doodle) currentDoodleInHistory.fetchIfNeeded().getParseObject(Doodle.KEY_PARENT);
+                } catch (ParseException e) {
+                    Snackbar.make(itemView, context.getResources().getString(R.string.error_loading_history), Snackbar.LENGTH_LONG).show();
+                }
+            }
+            return doodleHistory;
         }
     }
 }
