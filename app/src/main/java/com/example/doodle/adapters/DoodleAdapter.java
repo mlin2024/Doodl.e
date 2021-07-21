@@ -22,6 +22,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder>{
     public static final String TAG = "DoodleAdapter";
@@ -100,7 +101,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 // Get doodle
                 Doodle doodle = doodles.get(position);
 
-                // Set up popup detail fragment
+                // Set up dialog
                 Dialog dialog = new Dialog(context);
                 dialog.setContentView(R.layout.doodle_detail);
 
@@ -124,45 +125,46 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                     }
                 }
 
+                // Lambda function that disables the appropriate buttons if at first/last tab
+                Runnable disableAppropriateButtons = () -> {
+                    if (versionTabLayout.getSelectedTabPosition() == 0) backButton.setEnabled(false);
+                    else backButton.setEnabled(true);
+                    if (versionTabLayout.getSelectedTabPosition() == tailLength - 1) forwardButton.setEnabled(false);
+                    else forwardButton.setEnabled(true);
+                };
+
+                // Lambda function that loads the appropriate data into the view
+                Consumer<Integer> loadTab = (tab) -> {
+                    Doodle currentDoodle = doodleHistory[tab];
+                    ParseFile image = currentDoodle.getImage();
+                    if (image != null) {
+                        Glide.with(context)
+                                .load(image.getUrl())
+                                .placeholder(R.drawable.placeholder)
+                                .into(doodleImageView);
+                    }
+                    timestampTextView.setText(currentDoodle.getTimestamp());
+                };
+
                 // Add a tab for each doodle in the history
                 for (int i = 0; i < tailLength; i++) versionTabLayout.addTab(versionTabLayout.newTab());
 
+                // Disable appropriate button if at first/last tab
+                disableAppropriateButtons.run();
+
                 // Set selected tab to last tab
                 versionTabLayout.selectTab(versionTabLayout.getTabAt(tailLength - 1));
-                ParseFile image = doodle.getImage();
-                if (image != null) {
-                    Glide.with(context)
-                            .load(image.getUrl())
-                            .placeholder(R.drawable.placeholder)
-                            .into(doodleImageView);
-                }
-                timestampTextView.setText(doodle.getTimestamp());
+                loadTab.accept(tailLength - 1);
 
-                // Disable appropriate button if at first/last tab
-                if (versionTabLayout.getSelectedTabPosition() == 0) backButton.setEnabled(false);
-                else backButton.setEnabled(true);
-                if (versionTabLayout.getSelectedTabPosition() == tailLength - 1) forwardButton.setEnabled(false);
-                else forwardButton.setEnabled(true);
-
+                // Listen for whenever the tab is changed
                 versionTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
                         // Disable appropriate button if at first/last tab
-                        if (tab.getPosition() == 0) backButton.setEnabled(false);
-                        else backButton.setEnabled(true);
-                        if (tab.getPosition() == tailLength - 1) forwardButton.setEnabled(false);
-                        else forwardButton.setEnabled(true);
+                        disableAppropriateButtons.run();
 
                         // Load the appropriate doodle
-                        Doodle currentDoodle = doodleHistory[tab.getPosition()];
-                        ParseFile image = currentDoodle.getImage();
-                        if (image != null) {
-                            Glide.with(context)
-                                    .load(image.getUrl())
-                                    .placeholder(R.drawable.placeholder)
-                                    .into(doodleImageView);
-                        }
-                        timestampTextView.setText(currentDoodle.getTimestamp());
+                        loadTab.accept(tab.getPosition());
                     }
 
                     @Override
@@ -171,10 +173,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                     @Override
                     public void onTabReselected(TabLayout.Tab tab) {
                         // Disable appropriate button if at first/last tab
-                        if (tab.getPosition() == 0) backButton.setEnabled(false);
-                        else backButton.setEnabled(true);
-                        if (tab.getPosition() == tailLength - 1) forwardButton.setEnabled(false);
-                        else forwardButton.setEnabled(true);
+                        disableAppropriateButtons.run();
                     }
                 });
 
