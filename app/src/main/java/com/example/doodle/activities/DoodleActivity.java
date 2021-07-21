@@ -90,8 +90,10 @@ public class DoodleActivity extends AppCompatActivity {
 
         findingProgressDialog = new ProgressDialog(DoodleActivity.this);
         findingProgressDialog.setMessage(getResources().getString(R.string.finding_doodle));
+        findingProgressDialog.setCancelable(false);
         savingProgressDialog = new ProgressDialog(DoodleActivity.this);
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
+        savingProgressDialog.setCancelable(false);
 
         // Set up color picker fragment
         fragmentManager = getSupportFragmentManager();
@@ -178,6 +180,7 @@ public class DoodleActivity extends AppCompatActivity {
     private void logout() {
         ProgressDialog logoutProgressDialog = new ProgressDialog(DoodleActivity.this);
         logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
+        logoutProgressDialog.setCancelable(false);
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();

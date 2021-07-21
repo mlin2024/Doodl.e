@@ -136,6 +136,7 @@ public class GameModeActivity extends AppCompatActivity {
     private void logout() {
         ProgressDialog logoutProgressDialog = new ProgressDialog(GameModeActivity.this);
         logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
+        logoutProgressDialog.setCancelable(false);
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();

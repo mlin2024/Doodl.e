@@ -64,6 +64,7 @@ public class ContributeActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(ContributeActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.loading_doodles));
+        progressDialog.setCancelable(false);
 
         // Set up TabLayout
         new TabLayoutMediator(selectTabLayout, selectViewPager, true, true, (tab, position) -> {}).attach();
@@ -117,6 +118,7 @@ public class ContributeActivity extends AppCompatActivity {
     private void logout() {
         ProgressDialog logoutProgressDialog = new ProgressDialog(ContributeActivity.this);
         logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
+        logoutProgressDialog.setCancelable(false);
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();

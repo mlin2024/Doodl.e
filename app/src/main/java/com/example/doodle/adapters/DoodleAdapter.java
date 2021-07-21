@@ -93,6 +93,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
 
             loadingProgressDialog = new ProgressDialog(context);
             loadingProgressDialog.setMessage(context.getResources().getString(R.string.loading_doodle_history));
+            loadingProgressDialog.setCancelable(false);
 
             itemView.setOnClickListener(this);
         }

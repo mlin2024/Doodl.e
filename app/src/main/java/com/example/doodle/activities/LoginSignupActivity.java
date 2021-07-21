@@ -73,6 +73,7 @@ public class LoginSignupActivity extends AppCompatActivity {
         shake = AnimationUtils.loadAnimation(LoginSignupActivity.this, R.anim.shake);
         progressDialog = new ProgressDialog(LoginSignupActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.verifying_credentials));
+        progressDialog.setCancelable(false);
 
         // Text watcher to disable the go button unless both username and password have been filled in
         textWatcher = new TextWatcher() {

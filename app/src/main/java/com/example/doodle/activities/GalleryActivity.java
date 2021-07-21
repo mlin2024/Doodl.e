@@ -64,6 +64,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(GalleryActivity.this);
         progressDialog.setMessage(getResources().getString(R.string.loading_gallery));
+        progressDialog.setCancelable(false);
 
         // Grab doodles
         queryDoodles();
@@ -105,6 +106,7 @@ public class GalleryActivity extends AppCompatActivity {
     private void logout() {
         ProgressDialog logoutProgressDialog = new ProgressDialog(GalleryActivity.this);
         logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
+        logoutProgressDialog.setCancelable(false);
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();
