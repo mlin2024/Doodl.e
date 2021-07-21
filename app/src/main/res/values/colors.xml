@@ -8,7 +8,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- All doodle color options -->
-
     <color name="pink">#FFFF99C9</color>
     <color name="red">#FFE63232</color>
     <color name="orange">#FFFF9100</color>
@@ -23,4 +22,5 @@
     <color name="brown">#FF6E3F19</color>
     <color name="grey">#FF828282</color>
     <color name="black">#FF000000</color>
+    <color name="transparent">#80FFFFFF</color>
 </resources>

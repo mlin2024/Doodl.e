@@ -80,6 +80,20 @@
         app:iconSize="30dp" />
 
     <Button
+        android:id="@+id/eraserButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/canvasRelativeLayout"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@id/colorButton"
+        android:background="@drawable/button_round"
+        android:backgroundTint="@android:color/transparent"
+        android:foreground="@drawable/ic_adjust_black_24dp"
+        android:foregroundTint="@color/button_transparent"
+        app:backgroundTint="@color/button_black" />
+
+    <Button
         android:id="@+id/colorButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -88,7 +102,9 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/button_round"
-        app:backgroundTint="@color/black"/>
+        android:foreground="@drawable/ic_adjust_black_24dp"
+        android:foregroundTint="@color/white"
+        app:backgroundTint="@color/black" />
 
     <net.cachapa.expandablelayout.ExpandableLayout
         android:id="@+id/colorPickerExpandableLayout"

@@ -1,5 +1,6 @@
 package com.example.doodle.activities;
 
+import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -17,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -24,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.divyanshu.draw.widget.DrawView;
+import com.divyanshu.draw.widget.MyPath;
 import com.example.doodle.R;
 import com.example.doodle.fragments.ColorPickerFragment;
 import com.example.doodle.models.ColorViewModel;
@@ -52,6 +56,7 @@ public class DoodleActivity extends AppCompatActivity {
     private DrawView doodleDrawView;
     private Button undoButton;
     private Button redoButton;
+    private Button eraserButton;
     private Button colorButton;
     private ExpandableLayout colorPickerExpandableLayout;
     private FrameLayout colorPickerFrameLayout;
@@ -67,6 +72,7 @@ public class DoodleActivity extends AppCompatActivity {
     private Fragment colorPickerFragment;
     private ViewModelProvider viewModelProvider;
     private ColorViewModel colorViewModel;
+    private ColorStateList currentColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,34 +82,49 @@ public class DoodleActivity extends AppCompatActivity {
         // Initialize the views in the layout
         doodleRelativeLayout = findViewById(R.id.doodleRelativeLayout);
         toolbar = findViewById(R.id.doodleToolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         parentImageView = findViewById(R.id.parentImageView);
         doodleDrawView = findViewById(R.id.doodleDrawView);
         undoButton = findViewById(R.id.undoButton);
         redoButton = findViewById(R.id.redoButton);
+        eraserButton = findViewById(R.id.eraserButton);
         colorButton = findViewById(R.id.colorButton);
         colorPickerExpandableLayout = findViewById(R.id.colorPickerExpandableLayout);
         colorPickerFrameLayout = findViewById(R.id.colorPickerFrameLayout);
         doneButton = findViewById(R.id.doneButton);
 
+        // Initialize other member variables
+        parentDoodle = null;
+        parentBitmap = null;
+        inGame = false;
         findingProgressDialog = new ProgressDialog(DoodleActivity.this);
+        savingProgressDialog = new ProgressDialog(DoodleActivity.this);
+        fragmentManager = getSupportFragmentManager();
+        colorPickerFragment = new ColorPickerFragment();
+        viewModelProvider = new ViewModelProvider(this);
+        // Set up ViewModel for color picker fragment
+        colorViewModel = viewModelProvider.get(ColorViewModel.class);
+        currentColor = getResources().getColorStateList(R.color.button_black, getTheme());
+
+        // Set up toolbar
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // Set up eraser button
+        eraserButton.setSelected(false);
+
+        // Set up color button
+        eraserButton.setSelected(true);
+
+        // Set up ProgressDialogs
         findingProgressDialog.setMessage(getResources().getString(R.string.finding_doodle));
         findingProgressDialog.setCancelable(false);
-        savingProgressDialog = new ProgressDialog(DoodleActivity.this);
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
         savingProgressDialog.setCancelable(false);
 
         // Set up color picker fragment
-        fragmentManager = getSupportFragmentManager();
-        colorPickerFragment = new ColorPickerFragment();
         fragmentManager.beginTransaction().add(R.id.colorPickerFrameLayout, colorPickerFragment).show(colorPickerFragment).commit();
-
-        // Set up view model
-        viewModelProvider = new ViewModelProvider(this);
-        colorViewModel = viewModelProvider.get(ColorViewModel.class);
 
         // Get parent doodle from intent
         String parentDoodleId = getIntent().getStringExtra(PARENT_DOODLE_ID);
@@ -112,10 +133,10 @@ public class DoodleActivity extends AppCompatActivity {
         // Get inGame from intent
         inGame = getIntent().getBooleanExtra(IN_GAME, false);
 
-        // Prepare canvas
+        // Set up canvas
         doodleDrawView.clearCanvas();
         doodleDrawView.setStrokeWidth(STROKE_WIDTH);
-        doodleDrawView.setColor(getResources().getColor(R.color.black));
+        doodleDrawView.setColor(currentColor.getDefaultColor());
 
         undoButton.setOnClickListener(v -> {
             doodleDrawView.undo();
@@ -125,19 +146,47 @@ public class DoodleActivity extends AppCompatActivity {
             doodleDrawView.redo();
         });
 
+        eraserButton.setOnClickListener(v -> {
+            // Eraser button is selected
+            eraserButton.setSelected(true);
+            colorButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getTheme()));
+
+            // Color button is unselected
+            colorButton.setSelected(false);
+            eraserButton.setForegroundTintList(getResources().getColorStateList(R.color.button_white, getTheme()));
+
+            // Change pen color to eraser color
+            doodleDrawView.setColor(getResources().getColor(R.color.transparent, getTheme()));
+        });
+
         colorButton.setOnClickListener(v -> {
-            if (colorPickerExpandableLayout.isExpanded()) colorPickerExpandableLayout.collapse();
-            else colorPickerExpandableLayout.expand();
-            colorViewModel.getSelectedItem().observe(this, color -> {
-                Log.i(TAG, "color = " + color);
-                colorButton.setBackgroundTintList(color);
-                doodleDrawView.setColor(color.getDefaultColor());
-            });
+            // If it's not selected, select it
+            if (colorButton.isSelected() == false) {
+                // Color button is selected
+                colorButton.setSelected(true);
+                colorButton.setForegroundTintList(getResources().getColorStateList(R.color.button_white, getTheme()));
+
+                // Eraser button is unselected
+                eraserButton.setSelected(false);
+                eraserButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getTheme()));
+                doodleDrawView.setColor(currentColor.getDefaultColor());
+            }
+            // If it's already selected, click will expand/retract the color picker ExpandableLayout
+            else {
+                if (colorPickerExpandableLayout.isExpanded())
+                    colorPickerExpandableLayout.collapse();
+                else colorPickerExpandableLayout.expand();
+                colorViewModel.getSelectedItem().observe(this, color -> {
+                    currentColor = color;
+                    colorButton.setBackgroundTintList(color);
+                    doodleDrawView.setColor(color.getDefaultColor());
+                });
+            }
         });
 
         doneButton.setOnClickListener(v -> {
             Bitmap drawingBitmap = doodleDrawView.getBitmap();
-            drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
+            //drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
         });
     }
