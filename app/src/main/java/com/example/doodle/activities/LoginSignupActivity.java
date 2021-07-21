@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.example.doodle.R;
-import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseUser;
 
@@ -27,6 +26,7 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 public class LoginSignupActivity extends AppCompatActivity {
     public static final String TAG = "LoginSignupActivity";
 
+    // Views in the layout
     private RelativeLayout loginSignupRelativeLayout;
     private LinearLayout loginSignupLinearLayout;
     private ExpandableLayout loginButtonExpandableLayout;
@@ -42,8 +42,9 @@ public class LoginSignupActivity extends AppCompatActivity {
     private EditText passwordEditTextSignup;
     private Button signupGoButton;
 
+    // Other necessary member variables
     public Animation shake;
-    private ProgressDialog progressDialog;
+    private ProgressDialog verifyingProgressDialog;
     private TextWatcher textWatcher;
 
     @Override
@@ -55,6 +56,7 @@ public class LoginSignupActivity extends AppCompatActivity {
             goHomeActivity();
         }
 
+        // Initialize the views in the layout
         loginSignupRelativeLayout = findViewById(R.id.loginSignupRelativeLayout);
         loginSignupLinearLayout = findViewById(R.id.loginSignupLinearLayout);
         loginButtonExpandableLayout = findViewById(R.id.loginButtonExpandableLayout);
@@ -70,12 +72,10 @@ public class LoginSignupActivity extends AppCompatActivity {
         passwordEditTextSignup = findViewById(R.id.passwordEditTextSignup);
         signupGoButton = findViewById(R.id.signupGoButton);
 
+        // Initialize other member variables
         shake = AnimationUtils.loadAnimation(LoginSignupActivity.this, R.anim.shake);
-        progressDialog = new ProgressDialog(LoginSignupActivity.this);
-        progressDialog.setMessage(getResources().getString(R.string.verifying_credentials));
-        progressDialog.setCancelable(false);
-
-        // Text watcher to disable the go button unless both username and password have been filled in
+        verifyingProgressDialog = new ProgressDialog(LoginSignupActivity.this);
+        // TextWatcher to disable the go button unless both username and password have been filled in
         textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
@@ -86,6 +86,12 @@ public class LoginSignupActivity extends AppCompatActivity {
                 checkForEmptyFields();
             }
         };
+
+        // Set up ProgressDialog
+        verifyingProgressDialog.setMessage(getResources().getString(R.string.verifying_credentials));
+        verifyingProgressDialog.setCancelable(false);
+
+        // Set up TextWatcher
         usernameEditTextLogin.addTextChangedListener(textWatcher);
         passwordEditTextLogin.addTextChangedListener(textWatcher);
         usernameEditTextSignup.addTextChangedListener(textWatcher);
@@ -138,9 +144,9 @@ public class LoginSignupActivity extends AppCompatActivity {
 
     // Uses parse method logInInBackground to attempt to log in with the credentials given
     private void loginUser(String username, String password) {
-        progressDialog.show();
+        verifyingProgressDialog.show();
         ParseUser.logInInBackground(username, password, (user, e) -> {
-            progressDialog.dismiss();
+            verifyingProgressDialog.dismiss();
             if (e != null) { // The login failed
                 Snackbar.make(loginSignupRelativeLayout, R.string.login_failed, Snackbar.LENGTH_LONG).show();
                 loginSignupLinearLayout.startAnimation(shake);
@@ -160,9 +166,9 @@ public class LoginSignupActivity extends AppCompatActivity {
         // Set core properties
         user.setUsername(username);
         user.setPassword(password);
-        progressDialog.show();
+        verifyingProgressDialog.show();
         user.signUpInBackground(e -> {
-            progressDialog.dismiss();
+            verifyingProgressDialog.dismiss();
             if (e != null) { // The signup failed
                 Snackbar.make(loginSignupRelativeLayout, R.string.signup_failed, Snackbar.LENGTH_LONG).show();
                 loginSignupLinearLayout.startAnimation(shake);

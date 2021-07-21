@@ -19,7 +19,8 @@ import com.parse.ParseUser;
 public class ProfileActivity extends AppCompatActivity {
     public static final String TAG = "ProfileActivity";
 
-    RelativeLayout profileRelativeLayout;
+    // Views in the layout
+    private RelativeLayout profileRelativeLayout;
     private Toolbar toolbar;
     private TextView profileUsernameTextView;
     private Button galleryButton;
@@ -29,15 +30,20 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Initialize the views in the layout
         profileRelativeLayout = findViewById(R.id.profileRelativeLayout);
         toolbar = findViewById(R.id.profileToolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        profileUsernameTextView = findViewById(R.id.profileUsernameTextView);
+        galleryButton = findViewById(R.id.galleryButton);
+
+        // Set up toolbar
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        profileUsernameTextView = findViewById(R.id.profileUsernameTextView);
+
+        // Set up username TextView
         profileUsernameTextView.setText(ParseUser.getCurrentUser().getUsername());
-        galleryButton = findViewById(R.id.galleryButton);
 
         galleryButton.setOnClickListener(v -> {
             goGalleryActivity();
@@ -77,6 +83,20 @@ public class ProfileActivity extends AppCompatActivity {
         finish();
     }
 
+    // Starts an intent to go to the login/signup activity
+    private void goLoginSignupActivity() {
+        Intent intent = new Intent(this, LoginSignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the gallery activity
+    private void goGalleryActivity() {
+        Intent intent = new Intent(this, GalleryActivity.class);
+        startActivity(intent);
+    }
+
+    // Logs out user and sends them back to login/signup page
     private void logout() {
         ProgressDialog logoutProgressDialog = new ProgressDialog(ProfileActivity.this);
         logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
@@ -92,18 +112,5 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    // Starts an intent to go to the login/signup activity
-    private void goLoginSignupActivity() {
-        Intent intent = new Intent(this, LoginSignupActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
-
-    // Starts an intent to go to the gallery activity
-    private void goGalleryActivity() {
-        Intent intent = new Intent(this, GalleryActivity.class);
-        startActivity(intent);
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loginSignupRelativeLayout"
@@ -162,8 +163,11 @@
                     app:icon="@drawable/ic_baseline_arrow_forward_24"
                     app:iconGravity="textEnd"
                     app:iconPadding="8dp" />
+
             </net.cachapa.expandablelayout.ExpandableLayout>
+
         </LinearLayout>
+
     </ScrollView>
 
 </RelativeLayout>

@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -47,6 +46,7 @@ public class DoodleActivity extends AppCompatActivity {
     public static final String PARENT_DOODLE_ID = "ParentDoodleId";
     public static final String IN_GAME = "inGame";
 
+    // Views in the layout
     private RelativeLayout doodleRelativeLayout;
     private Toolbar toolbar;
     private ImageView parentImageView;
@@ -58,6 +58,7 @@ public class DoodleActivity extends AppCompatActivity {
     private FrameLayout colorPickerFrameLayout;
     private Button doneButton;
 
+    // Other necessary member variables
     private Doodle parentDoodle;
     private Bitmap parentBitmap;
     private boolean inGame;
@@ -73,6 +74,7 @@ public class DoodleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doodle);
 
+        // Initialize the views in the layout
         doodleRelativeLayout = findViewById(R.id.doodleRelativeLayout);
         toolbar = findViewById(R.id.doodleToolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
@@ -177,23 +179,6 @@ public class DoodleActivity extends AppCompatActivity {
         finish();
     }
 
-    private void logout() {
-        ProgressDialog logoutProgressDialog = new ProgressDialog(DoodleActivity.this);
-        logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
-        logoutProgressDialog.setCancelable(false);
-        logoutProgressDialog.show();
-        ParseUser.logOutInBackground(e -> {
-            logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(doodleRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
-            }
-            else {
-                goLoginSignupActivity();
-                finish();
-            }
-        });
-    }
-
     private void findSingleDoodleByObjectId(String objectId) {
         if (objectId == null) return;
 
@@ -217,7 +202,7 @@ public class DoodleActivity extends AppCompatActivity {
         });
     }
 
-    // Convert transparentColor to be transparent in a Bitmap.
+    // Convert transparentColor to be transparent in a Bitmap
     public static Bitmap makeTransparent(Bitmap bitmap, int transparentColor) {
         int width =  bitmap.getWidth();
         int height = bitmap.getHeight();
@@ -236,6 +221,7 @@ public class DoodleActivity extends AppCompatActivity {
         return transparentBitmap;
     }
 
+    // Takes the image from a Doodle and converts it to a bitmap
     private Bitmap getBitmapFromDoodle(Doodle doodle) {
         if (doodle == null) return null;
         else {
@@ -252,6 +238,7 @@ public class DoodleActivity extends AppCompatActivity {
         }
     }
 
+    // Saves the current doodle to the database
     private void saveDoodle(Doodle parentDoodle, Bitmap parentBitmap, Bitmap drawingBitmap) {
         if (parentDoodle == null) Log.e(TAG, "parentDoodle is null");
 
@@ -294,10 +281,12 @@ public class DoodleActivity extends AppCompatActivity {
         });
     }
 
+    // Sets the root of a doodle to its objectId
     private void setRootToObjectId() {
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
         // Include data referred by user key
+        // The doodle we want to change the root of is distinguished by its root being KEY_ROOT
         query.whereEqualTo(Doodle.KEY_ROOT, null);
         // Start an asynchronous call for the doodle
         query.getFirstInBackground((doodle, e) -> {
@@ -307,7 +296,7 @@ public class DoodleActivity extends AppCompatActivity {
             else { // Query has succeeded
                 String root = doodle.getObjectId();
                 doodle.setRoot(root);
-                saveDoodleInBackground(doodle);
+                updateDoodle(doodle);
                 addToUserRootsContributedTo(root);
             }
         });
@@ -320,7 +309,8 @@ public class DoodleActivity extends AppCompatActivity {
         player.saveInBackground(doodleRelativeLayout);
     }
 
-    private void saveDoodleInBackground(Doodle doodle) {
+    // Updates the doodle's data in the database
+    private void updateDoodle(Doodle doodle) {
         doodle.saveInBackground(e -> {
             if (e != null) {
                 Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
@@ -328,9 +318,11 @@ public class DoodleActivity extends AppCompatActivity {
         });
     }
 
+    // Layers drawingBitmap on top of parentBitmap and returns the result as a ParseFile
     private ParseFile combineBitmapsToParseFile(Bitmap drawingBitmap, Bitmap parentBitmap) {
         // If it has no parent, there is nothing to overlay it with
         if (parentBitmap == null) return saveBitmapToParseFile(drawingBitmap);
+
         Bitmap bmOverlay = Bitmap.createBitmap(drawingBitmap.getWidth(), drawingBitmap.getHeight(), drawingBitmap.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
         canvas.drawBitmap(parentBitmap, new Matrix(), null);
@@ -338,6 +330,7 @@ public class DoodleActivity extends AppCompatActivity {
         return saveBitmapToParseFile(bmOverlay);
     }
 
+    // Converts a bitmap to a ParseFile
     private ParseFile saveBitmapToParseFile(Bitmap bitmap) {
         String fileName = "doodle" + System.currentTimeMillis() + ".png";
         Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(bitmap, 1000);
@@ -368,5 +361,23 @@ public class DoodleActivity extends AppCompatActivity {
     private void goProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
+    }
+
+    // Log out user and send them back to login/signup page
+    private void logout() {
+        ProgressDialog logoutProgressDialog = new ProgressDialog(DoodleActivity.this);
+        logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
+        logoutProgressDialog.setCancelable(false);
+        logoutProgressDialog.show();
+        ParseUser.logOutInBackground(e -> {
+            logoutProgressDialog.dismiss();
+            if (e != null) {
+                Snackbar.make(doodleRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            }
+            else {
+                goLoginSignupActivity();
+                finish();
+            }
+        });
     }
 }

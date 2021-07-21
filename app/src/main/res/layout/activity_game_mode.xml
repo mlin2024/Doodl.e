@@ -131,6 +131,7 @@
                 app:iconGravity="end" />
 
         </net.cachapa.expandablelayout.ExpandableLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

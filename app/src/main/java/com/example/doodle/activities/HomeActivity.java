@@ -6,38 +6,38 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.example.doodle.R;
-import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseUser;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String TAG = "HomeActivity";
 
+    // Views in the layout
     private RelativeLayout homeRelativeLayout;
     private Toolbar toolbar;
     private Button doodleModeButton;
     private Button gameModeButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        // Initialize the views in the layout
         homeRelativeLayout = findViewById(R.id.homeRelativeLayout);
         toolbar = findViewById(R.id.homeToolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        setSupportActionBar(toolbar);
         doodleModeButton = findViewById(R.id.doodleModeButton);
         gameModeButton = findViewById(R.id.gameModeButton);
+
+        // Set up toolbar
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
+        setSupportActionBar(toolbar);
 
         doodleModeButton.setOnClickListener(v -> {
             goDoodleModeActivity();
@@ -86,23 +86,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    private void logout() {
-        ProgressDialog logoutProgressDialog = new ProgressDialog(HomeActivity.this);
-        logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
-        logoutProgressDialog.setCancelable(false);
-        logoutProgressDialog.show();
-        ParseUser.logOutInBackground(e -> {
-            logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(homeRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
-            }
-            else {
-                goLoginSignupActivity();
-                finish();
-            }
-        });
-    }
-
     // Starts an intent to go to the login/signup activity
     private void goLoginSignupActivity() {
         Intent intent = new Intent(this, LoginSignupActivity.class);
@@ -126,5 +109,23 @@ public class HomeActivity extends AppCompatActivity {
     private void goGameModeActivity() {
         Intent intent = new Intent(this, GameModeActivity.class);
         startActivity(intent);
+    }
+
+    // Logs out user and sends them back to login/signup page
+    private void logout() {
+        ProgressDialog logoutProgressDialog = new ProgressDialog(HomeActivity.this);
+        logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
+        logoutProgressDialog.setCancelable(false);
+        logoutProgressDialog.show();
+        ParseUser.logOutInBackground(e -> {
+            logoutProgressDialog.dismiss();
+            if (e != null) {
+                Snackbar.make(homeRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            }
+            else {
+                goLoginSignupActivity();
+                finish();
+            }
+        });
     }
 }

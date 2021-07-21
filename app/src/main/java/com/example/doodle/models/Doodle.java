@@ -22,7 +22,6 @@ public class Doodle extends ParseObject {
     public static final String KEY_ROOT = "root";
     public static final String KEY_IN_GAME = "inGame";
 
-
     public ParseUser getArtist() {
         return getParseUser(KEY_ARTIST);
     }

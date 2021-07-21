@@ -23,13 +23,15 @@ import java.util.List;
 public class WaitingRoomActivity extends AppCompatActivity {
     public static final String TAG = "WaitingRoomActivity";
 
+    // Views in the layout
     private RelativeLayout waitingRoomRelativeLayout;
     private Toolbar toolbar;
-    private TextView gameCodeTextViewWR;
+    private TextView gameCodeWaitingRoomTextView;
     private RecyclerView playersRecyclerView;
     private TextView numPlayersTextView;
     private Button startGameButton;
 
+    // Other necessary member variables
     private String gameCode;
     private List<Player> players;
 
@@ -38,23 +40,30 @@ public class WaitingRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_room);
 
+        // Initialize the views in the layout
         waitingRoomRelativeLayout = findViewById(R.id.waitingRoomRelativeLayout);
         toolbar = findViewById(R.id.waitingRoomToolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        gameCodeWaitingRoomTextView = findViewById(R.id.gameCodeWaitingRoomTextView);
+        playersRecyclerView = findViewById(R.id.playersRecyclerView);
+        numPlayersTextView = findViewById(R.id.numPlayersTextView);
+        startGameButton = findViewById(R.id.startGameButton);
+
+        // Initialize other member variables
+        // Unwrap the game code that was passed in by the intent
+        gameCode = (String) getIntent().getExtras().getSerializable(GameModeActivity.GAME_CODE_TAG);
+        players = new ArrayList<>();
+
+        // Set up toolbar
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        gameCodeTextViewWR = findViewById(R.id.gameCodeTextViewWR);
-        playersRecyclerView = findViewById(R.id.playersRecyclerView);
-        numPlayersTextView = findViewById(R.id.numPlayersTextView);
+
+        // Set up num players TextView
         numPlayersTextView.setText(getResources().getString(R.string.Players) + " 0");
-        startGameButton = findViewById(R.id.startGameButton);
 
-        players = new ArrayList<>();
-
-        // Unwrap the game code that was passed in by the intent
-        gameCode = (String) getIntent().getExtras().getSerializable(GameModeActivity.GAME_CODE_TAG);
-        gameCodeTextViewWR.setText(gameCode);
+        // Set up game code TextView
+        gameCodeWaitingRoomTextView.setText(gameCode);
 
         // TODO: repeat this periodically
         refreshPlayers();
@@ -88,6 +97,31 @@ public class WaitingRoomActivity extends AppCompatActivity {
         finish();
     }
 
+    // Refreshes the player list
+    private void refreshPlayers() {
+        numPlayersTextView.setText(getResources().getString(R.string.Players) + " " + players.size());
+    }
+
+    // Starts an intent to go to the login/signup activity
+    private void goLoginSignupActivity() {
+        Intent intent = new Intent(this, LoginSignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the profile activity
+    private void goProfileActivity() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the game activity
+    private void goGameActivity() {
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+    }
+
+    // Logs out user and sends them back to login/signup page
     private void logout() {
         ProgressDialog logoutProgressDialog = new ProgressDialog(WaitingRoomActivity.this);
         logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
@@ -103,29 +137,5 @@ public class WaitingRoomActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    // Starts an intent to go to the login/signup activity
-    private void goLoginSignupActivity() {
-        Intent intent = new Intent(this, LoginSignupActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
-
-    // Refreshes the player list
-    private void refreshPlayers() {
-        numPlayersTextView.setText(getResources().getString(R.string.Players) + " " + players.size());
-    }
-
-    // Starts an intent to go to the profile activity
-    private void goProfileActivity() {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
-    }
-
-    // Starts an intent to go to the game activity
-    private void goGameActivity() {
-        Intent intent = new Intent(this, GameActivity.class);
-        startActivity(intent);
     }
 }

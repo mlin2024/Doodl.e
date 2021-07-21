@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/waitingRoomRelativeLayout"
@@ -23,7 +24,6 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/gameCodeTextViewPrefixWR"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -31,13 +31,14 @@
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/gameCodeTextViewWR"
+            android:id="@+id/gameCodeWaitingRoomTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:textColor="@color/teal_700"
             android:textSize="34sp"
             tools:text="AFXP" />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

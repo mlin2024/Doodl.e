@@ -16,6 +16,7 @@ import com.parse.ParseUser;
 public class GameActivity extends AppCompatActivity {
     public static final String TAG = "GameActivity";
 
+    // Views in the layout
     private RelativeLayout gameRelativeLayout;
     private Toolbar toolbar;
 
@@ -24,9 +25,12 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        // Initialize the views in the layout
         gameRelativeLayout = findViewById(R.id.gameRelativeLayout);
         toolbar = findViewById(R.id.gameToolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+
+        // Set up toolbar
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -56,6 +60,20 @@ public class GameActivity extends AppCompatActivity {
         finish();
     }
 
+    // Starts an intent to go to the login/signup activity
+    private void goLoginSignupActivity() {
+        Intent intent = new Intent(this, LoginSignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the profile activity
+    private void goProfileActivity() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    // Logs out user and sends them back to login/signup page
     private void logout() {
         ProgressDialog logoutProgressDialog = new ProgressDialog(GameActivity.this);
         logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
@@ -71,18 +89,5 @@ public class GameActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    // Starts an intent to go to the login/signup activity
-    private void goLoginSignupActivity() {
-        Intent intent = new Intent(this, LoginSignupActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
-
-    // Starts an intent to go to the profile activity
-    private void goProfileActivity() {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
     }
 }

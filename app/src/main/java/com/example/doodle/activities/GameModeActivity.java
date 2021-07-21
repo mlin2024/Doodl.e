@@ -26,6 +26,7 @@ public class GameModeActivity extends AppCompatActivity {
     public static final String TAG = "GameModeActivity";
     public static final String GAME_CODE_TAG = "gameCode";
 
+    // Views in the layout
     private RelativeLayout gameModeRelativeLayout;
     private Toolbar toolbar;
     private Button createGameButton;
@@ -44,21 +45,26 @@ public class GameModeActivity extends AppCompatActivity {
 
         String gameCode = generateRandomGameCode();
 
+        // Initialize the views in the layout
         gameModeRelativeLayout = findViewById(R.id.gameModeRelativeLayout);
         toolbar = findViewById(R.id.gameModeToolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         createGameButton = findViewById(R.id.createGameButton);
         createGameExpandableLayout = findViewById(R.id.createGameExpandableLayout);
         gameCodeTextView = findViewById(R.id.gameCodeTextView);
-        gameCodeTextView.setText(gameCode);
         createGameButtonGo = findViewById(R.id.createGameButtonGo);
         joinGameButton = findViewById(R.id.joinGameButton);
         joinGameExpandableLayout = findViewById(R.id.joinGameExpandableLayout);
         gameCodeEditText = findViewById(R.id.gameCodeEditText);
         joinGameButtonGo = findViewById(R.id.joinGameButtonGo);
+
+        // Set up toolbar
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // Set up game code TextView
+        gameCodeTextView.setText(gameCode);
 
         createGameButton.setOnClickListener(v -> {
             if (createGameExpandableLayout.isExpanded()) createGameExpandableLayout.collapse();
@@ -128,26 +134,10 @@ public class GameModeActivity extends AppCompatActivity {
         finish();
     }
 
+    // Generates a random 4-character code for the game
     private String generateRandomGameCode() {
         // TODO: implement generating random game code
         return "AFXP";
-    }
-
-    private void logout() {
-        ProgressDialog logoutProgressDialog = new ProgressDialog(GameModeActivity.this);
-        logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
-        logoutProgressDialog.setCancelable(false);
-        logoutProgressDialog.show();
-        ParseUser.logOutInBackground(e -> {
-            logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(gameModeRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
-            }
-            else {
-                goLoginSignupActivity();
-                finish();
-            }
-        });
     }
 
     // Starts an intent to go to the login/signup activity
@@ -168,6 +158,24 @@ public class GameModeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, WaitingRoomActivity.class);
         intent.putExtra(GAME_CODE_TAG, gameCode);
         startActivity(intent);
+    }
+
+    // Logs out user and sends them back to login/signup page
+    private void logout() {
+        ProgressDialog logoutProgressDialog = new ProgressDialog(GameModeActivity.this);
+        logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
+        logoutProgressDialog.setCancelable(false);
+        logoutProgressDialog.show();
+        ParseUser.logOutInBackground(e -> {
+            logoutProgressDialog.dismiss();
+            if (e != null) {
+                Snackbar.make(gameModeRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            }
+            else {
+                goLoginSignupActivity();
+                finish();
+            }
+        });
     }
 
     // Minimizes the soft keyboard

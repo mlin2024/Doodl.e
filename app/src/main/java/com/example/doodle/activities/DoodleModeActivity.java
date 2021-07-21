@@ -19,6 +19,7 @@ import com.parse.ParseUser;
 public class DoodleModeActivity extends AppCompatActivity {
     public static final String TAG = "DoodleModeActivity";
 
+    // Views in the layout
     private RelativeLayout doodleModeRelativeLayout;
     private Toolbar toolbar;
     private Button createDoodleButton;
@@ -29,14 +30,17 @@ public class DoodleModeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doodle_mode);
 
+        // Initialize the views in the layout
         doodleModeRelativeLayout = findViewById(R.id.doodleModeRelativeLayout);
         toolbar = findViewById(R.id.doodleModeToolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        createDoodleButton = findViewById(R.id.createDoodleButton);
+        contributeDoodleButton = findViewById(R.id.contributeDoodleButton);
+
+        // Set up toolbar
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        createDoodleButton = findViewById(R.id.createDoodleButton);
-        contributeDoodleButton = findViewById(R.id.contributeDoodleButton);
 
         createDoodleButton.setOnClickListener(v -> {
             goDoodleActivity();
@@ -83,23 +87,6 @@ public class DoodleModeActivity extends AppCompatActivity {
         finish();
     }
 
-    private void logout() {
-        ProgressDialog logoutProgressDialog = new ProgressDialog(DoodleModeActivity.this);
-        logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
-        logoutProgressDialog.setCancelable(false);
-        logoutProgressDialog.show();
-        ParseUser.logOutInBackground(e -> {
-            logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(doodleModeRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
-            }
-            else {
-                goLoginSignupActivity();
-                finish();
-            }
-        });
-    }
-
     // Starts an intent to go to the login/signup activity
     private void goLoginSignupActivity() {
         Intent intent = new Intent(this, LoginSignupActivity.class);
@@ -125,5 +112,23 @@ public class DoodleModeActivity extends AppCompatActivity {
     private void goContributeActivity() {
         Intent intent = new Intent(this, ContributeActivity.class);
         startActivity(intent);
+    }
+
+    // Logs out user and sends them back to login/signup page
+    private void logout() {
+        ProgressDialog logoutProgressDialog = new ProgressDialog(DoodleModeActivity.this);
+        logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
+        logoutProgressDialog.setCancelable(false);
+        logoutProgressDialog.show();
+        ParseUser.logOutInBackground(e -> {
+            logoutProgressDialog.dismiss();
+            if (e != null) {
+                Snackbar.make(doodleModeRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            }
+            else {
+                goLoginSignupActivity();
+                finish();
+            }
+        });
     }
 }
