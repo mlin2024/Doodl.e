@@ -34,8 +34,12 @@
 * [x] User can choose between Doodle Mode and Game Mode
 * [x] User can view their profile
 * [x] User can choose to either create a new doodle or contribute to an existing doodle
+* [x] User can choose a doodle from a selection of doodles from the database that they've never edited before
+  * [x] User can see the timestamp of each doodle in the selection
+  * [x] User can view a detail view of each doodle, including the doodle's full history
 * [x] User can draw a new doodle
 * [x] User can contribute to the doodle that they chose in the contribute screen
+* [x] User can undo/redo their strokes
 * [x] User can send out their new doodle/contribution to the database
 * [ ] User can choose to either create a new game or join an existing game
 * [ ] User can create a new game and receive the game code
@@ -47,11 +51,12 @@
 * [ ] User can add their Twitter to allow automatic posting of their doodles
 * [x] User can choose to view their gallery
 * [x] User can view a gallery of all the doodles they've done
+  * [x] User can see the timestamp of each doodle in the gallery
+  * [x] User can view a detail view of each doodle, including the doodle's full history
 * [ ] User can receive a notification whenever one of their doodles is contributed to
 
 **Optional Nice-to-have Stories**
 
-* [ ] User can undo/redo their strokes
 * [ ] User can choose their drawing color out of a list of colors (previously used colors cannot be chosen)
 * [ ] When receiving an existing doodle from the database, user can view a timelapse of the work already done on the doodle
 
@@ -70,12 +75,13 @@
    * User can draw a new doodle
    * User can contribute to the doodle that they chose in the contribute screen
    * User can send out their new doodle/contribution to the database
-   * *User can undo/redo their strokes*
+   * User can undo/redo their strokes
    * *User can choose their drawing color out of a list of colors (previously used colors cannot be chosen)*
    * *When receiving an existing doodle from the database, user can view a timelapse of the work already done on the doodle*
 * Contribute Screen
    * User can choose a doodle from a selection of doodles from the database that they've never edited before
    * User can see the timestamp of each doodle in the selection
+   * User can view a detail view of each doodle, including the doodle's full history
 * Game Mode Screen
    * User can choose to either create a new game or join an existing game
    * User can create a new game and receive the game code
@@ -91,6 +97,8 @@
    * User can choose to view their gallery
 * Gallery Screen
    * User can view a gallery of all the doodles they've done
+   * User can see the timestamp of each doodle in the gallery
+   * User can view a detail view of each doodle, including the doodle's full history
 
 ### 3. Navigation
 
