@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left|center_vertical"
                     android:background="@drawable/button_left_triangle"
-                    android:backgroundTint="@color/button_orange" />
+                    app:backgroundTint="@color/button_light_blue" />
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/versionTabLayout"
@@ -60,7 +60,7 @@
                     android:layout_gravity="right|center_vertical"
                     android:layout_toRightOf="@id/versionTabLayout"
                     android:background="@drawable/button_right_triangle"
-                    android:backgroundTint="@color/button_orange" />
+                    app:backgroundTint="@color/button_light_blue" />
 
             </LinearLayout>
 

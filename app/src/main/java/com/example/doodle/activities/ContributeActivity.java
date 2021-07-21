@@ -155,8 +155,10 @@ public class ContributeActivity extends AppCompatActivity {
                 // Save received posts to list and notify adapter of new data
                 doodleAdapter.addAll(foundDoodles);
                 // Show empty message if gallery is empty
-                if (doodles.size() == 0) noDoodlesToContributeTo.setVisibility(View.VISIBLE);
-                selectButton.setEnabled(false);
+                if (doodles.size() == 0) {
+                    noDoodlesToContributeTo.setVisibility(View.VISIBLE);
+                    selectButton.setEnabled(false);
+                }
             }
         });
     }
