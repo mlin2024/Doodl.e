@@ -22,5 +22,5 @@
     <color name="brown">#FF6E3F19</color>
     <color name="grey">#FF828282</color>
     <color name="black">#FF000000</color>
-    <color name="transparent">#80FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -56,7 +57,7 @@ public class DoodleActivity extends AppCompatActivity {
     private DrawView doodleDrawView;
     private Button undoButton;
     private Button redoButton;
-    private Button eraserButton;
+    private ImageButton eraserButton;
     private Button colorButton;
     private ExpandableLayout colorPickerExpandableLayout;
     private FrameLayout colorPickerFrameLayout;
@@ -115,7 +116,7 @@ public class DoodleActivity extends AppCompatActivity {
         eraserButton.setSelected(false);
 
         // Set up color button
-        eraserButton.setSelected(true);
+        colorButton.setSelected(true);
 
         // Set up ProgressDialogs
         findingProgressDialog.setMessage(getResources().getString(R.string.finding_doodle));
