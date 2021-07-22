@@ -1,6 +1,5 @@
 package com.example.doodle.activities;
 
-import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -19,7 +18,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -28,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.divyanshu.draw.widget.DrawView;
-import com.divyanshu.draw.widget.MyPath;
 import com.example.doodle.R;
 import com.example.doodle.fragments.ColorPickerFragment;
 import com.example.doodle.models.ColorViewModel;
@@ -63,7 +60,7 @@ public class DoodleActivity extends AppCompatActivity {
     private Button mediumButton;
     private Button largeButton;
     private ImageButton eraserButton;
-    private Button colorButton;
+    private ImageButton colorButton;
     private ExpandableLayout colorPickerExpandableLayout;
     private FrameLayout colorPickerFrameLayout;
     private Button doneButton;
@@ -80,6 +77,7 @@ public class DoodleActivity extends AppCompatActivity {
     private ColorViewModel colorViewModel;
     private ColorStateList currentColor;
     private Button currentSizeButton;
+    private ImageButton currentPenButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,22 +113,16 @@ public class DoodleActivity extends AppCompatActivity {
         colorViewModel = viewModelProvider.get(ColorViewModel.class);
         currentColor = getResources().getColorStateList(R.color.button_black, getTheme());
         currentSizeButton = mediumButton;
+        currentPenButton = colorButton;
 
         // Set up toolbar
-        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        // Set up size buttons
-        smallButton.setSelected(false);
-        mediumButton.setSelected(true);
-        largeButton.setSelected(false);
-
-        // Set up eraser button
+        // Set up pen buttons
         eraserButton.setSelected(false);
-
-        // Set up color button
         colorButton.setSelected(true);
 
         // Set up ProgressDialogs
@@ -180,13 +172,9 @@ public class DoodleActivity extends AppCompatActivity {
         });
 
         eraserButton.setOnClickListener(v -> {
-            // Eraser button is selected
-            eraserButton.setSelected(true);
-            eraserButton.setForegroundTintList(getResources().getColorStateList(R.color.button_white, getTheme()));
+            colorPickerExpandableLayout.collapse();
 
-            // Color button is unselected
-            colorButton.setSelected(false);
-            colorButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getTheme()));
+            handlePenButtonChange(eraserButton);
 
             // Change pen color to eraser color
             doodleDrawView.setColor(getResources().getColor(R.color.transparent, getTheme()));
@@ -195,13 +183,7 @@ public class DoodleActivity extends AppCompatActivity {
         colorButton.setOnClickListener(v -> {
             // If it's not selected, select it
             if (colorButton.isSelected() == false) {
-                // Color button is selected
-                colorButton.setSelected(true);
-                colorButton.setForegroundTintList(getResources().getColorStateList(R.color.button_white, getTheme()));
-
-                // Eraser button is unselected
-                eraserButton.setSelected(false);
-                eraserButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getTheme()));
+                handlePenButtonChange(colorButton);
 
                 // Change pen color to the current color
                 doodleDrawView.setColor(currentColor.getDefaultColor());
@@ -264,11 +246,26 @@ public class DoodleActivity extends AppCompatActivity {
 
     private void handleSizeButtonChange(Button button) {
         // Hide the icon on the previously selected button
-        currentSizeButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getTheme()));
+        currentSizeButton.setForeground(null);
 
         // Display the icon on the newly selected button
         currentSizeButton = button;
-        currentSizeButton.setForegroundTintList(getResources().getColorStateList(R.color.button_black, getTheme()));
+        currentSizeButton.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getTheme()));
+    }
+
+    private void handlePenButtonChange(ImageButton button) {
+        // Set previously selected button to unselected
+        currentPenButton.setSelected(false);
+
+        // Hide the icon on the previously selected button
+        currentPenButton.setForeground(null);
+
+        // Display the icon on the newly selected button
+        currentPenButton = button;
+        currentPenButton.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getTheme()));
+
+        // Set the newly selected button to selected
+        currentPenButton.setSelected(true);
     }
 
     // Asynchronously finds the parent doodle from the database given its objectId, putting up a ProgressDialog

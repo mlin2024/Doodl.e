@@ -6,6 +6,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
 
     <!-- All doodle color options -->
     <color name="pink">#FFFF99C9</color>
@@ -21,6 +22,6 @@
     <color name="purple">#FF750DD6</color>
     <color name="brown">#FF6E3F19</color>
     <color name="grey">#FF828282</color>
-    <color name="black">#FF000000</color>
+    <color name="blackish">#FF333333</color>
     <color name="transparent">#00FFFFFF</color>
 </resources>

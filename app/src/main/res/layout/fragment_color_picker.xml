@@ -21,9 +21,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_pink"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_pink" />
 
         <Button
             android:id="@+id/redButton"
@@ -32,9 +30,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/pinkButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_red"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_red" />
 
         <Button
             android:id="@+id/orangeButton"
@@ -43,9 +39,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/redButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_orange"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_orange" />
 
         <Button
             android:id="@+id/yellowOrangeButton"
@@ -54,9 +48,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/orangeButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_yellow_orange"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_yellow_orange" />
 
         <Button
             android:id="@+id/yellowButton"
@@ -65,9 +57,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/yellowOrangeButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_yellow"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_yellow" />
 
         <Button
             android:id="@+id/lightGreenButton"
@@ -76,9 +66,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/yellowButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_light_green"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_light_green" />
 
         <Button
             android:id="@+id/darkGreenButton"
@@ -87,9 +75,7 @@
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/lightGreenButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_dark_green"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_dark_green" />
 
         <Button
             android:id="@+id/tealButton"
@@ -99,9 +85,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_teal"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_teal" />
 
         <Button
             android:id="@+id/lightBlueButton"
@@ -112,9 +96,7 @@
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/tealButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_light_blue"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_light_blue" />
 
         <Button
             android:id="@+id/darkBlueButton"
@@ -125,9 +107,7 @@
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/lightBlueButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_dark_blue"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_dark_blue" />
 
         <Button
             android:id="@+id/purpleButton"
@@ -138,9 +118,7 @@
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/darkBlueButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_purple"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_purple" />
 
         <Button
             android:id="@+id/brownButton"
@@ -151,9 +129,7 @@
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/purpleButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_brown"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_brown" />
 
         <Button
             android:id="@+id/greyButton"
@@ -164,9 +140,7 @@
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/brownButton"
             android:background="@drawable/button_round"
-            app:backgroundTint="@color/button_grey"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_transparent" />
+            app:backgroundTint="@color/button_grey" />
 
         <Button
             android:id="@+id/blackButton"
@@ -177,9 +151,8 @@
             android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/greyButton"
             android:background="@drawable/button_round"
-            android:foreground="@drawable/ic_adjust_black_24dp"
-            android:foregroundTint="@color/button_white"
-            app:backgroundTint="@color/button_black" />
+            app:backgroundTint="@color/button_black"
+            android:foreground="@drawable/transparent_circle_indicator" />
 
     </RelativeLayout>
 

@@ -7,14 +7,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.doodle.R;
-import com.example.doodle.activities.DoodleActivity;
 import com.example.doodle.models.ColorViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +37,7 @@ public class ColorPickerFragment extends Fragment {
     private Button blackButton;
 
     // Other necessary member variables
-    private Button currentButton;
+    private Button currentColorButton;
     private ViewModelProvider viewModelProvider;
     private ColorViewModel colorViewModel;
 
@@ -77,7 +75,7 @@ public class ColorPickerFragment extends Fragment {
         blackButton = view.findViewById(R.id.blackButton);
 
         // Initialize other member variables
-        currentButton = blackButton;
+        currentColorButton = blackButton;
         // Set up view model
         viewModelProvider = new ViewModelProvider(requireActivity());
         colorViewModel = viewModelProvider.get(ColorViewModel.class);
@@ -104,10 +102,10 @@ public class ColorPickerFragment extends Fragment {
         colorViewModel.selectItem(getResources().getColorStateList(colorStateListId, getActivity().getTheme()));
 
         // Hide the icon on the previously selected button
-        currentButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getActivity().getTheme()));
+        currentColorButton.setForeground(null);
 
         // Display the icon on the newly selected button
-        currentButton = button;
-        currentButton.setForegroundTintList(getResources().getColorStateList(R.color.button_white, getActivity().getTheme()));
+        currentColorButton = button;
+        currentColorButton.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getActivity().getTheme()));
     }
 }
