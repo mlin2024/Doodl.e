@@ -39,9 +39,9 @@ public class ColorPickerFragment extends Fragment {
     private Button blackButton;
 
     // Other necessary member variables
+    private Button currentButton;
     private ViewModelProvider viewModelProvider;
     private ColorViewModel colorViewModel;
-
 
     public ColorPickerFragment() {}
 
@@ -76,25 +76,38 @@ public class ColorPickerFragment extends Fragment {
         greyButton = view.findViewById(R.id.greyButton);
         blackButton = view.findViewById(R.id.blackButton);
 
+        // Initialize other member variables
+        currentButton = blackButton;
         // Set up view model
         viewModelProvider = new ViewModelProvider(requireActivity());
         colorViewModel = viewModelProvider.get(ColorViewModel.class);
 
         // Set up click listeners for each color button
-        pinkButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_pink, getActivity().getTheme())));
-        redButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_red, getActivity().getTheme())));
-        orangeButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_orange, getActivity().getTheme())));
-        yellowOrangeButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_yellow_orange, getActivity().getTheme())));
-        yellowButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_yellow, getActivity().getTheme())));
-        lightGreenButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_light_green, getActivity().getTheme())));
-        darkGreenButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_dark_green, getActivity().getTheme())));
-        tealButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_teal, getActivity().getTheme())));
-        lightBlueButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_light_blue, getActivity().getTheme())));
-        darkBlueButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_dark_blue, getActivity().getTheme())));
-        purpleButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_purple, getActivity().getTheme())));
-        brownButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_brown, getActivity().getTheme())));
-        greyButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_grey, getActivity().getTheme())));
-        blackButton.setOnClickListener(v -> colorViewModel.selectItem(getResources().getColorStateList(R.color.button_black, getActivity().getTheme())));
+        pinkButton.setOnClickListener(v -> handleClick(pinkButton, R.color.button_pink));
+        redButton.setOnClickListener(v -> handleClick(redButton, R.color.button_red));
+        orangeButton.setOnClickListener(v -> handleClick(orangeButton, R.color.button_orange));
+        yellowOrangeButton.setOnClickListener(v -> handleClick(yellowOrangeButton, R.color.button_yellow_orange));
+        yellowButton.setOnClickListener(v -> handleClick(yellowButton, R.color.button_yellow));
+        lightGreenButton.setOnClickListener(v -> handleClick(lightGreenButton, R.color.button_light_green));
+        darkGreenButton.setOnClickListener(v -> handleClick(darkGreenButton, R.color.button_dark_green));
+        tealButton.setOnClickListener(v -> handleClick(tealButton, R.color.button_teal));
+        lightBlueButton.setOnClickListener(v -> handleClick(lightBlueButton, R.color.button_light_blue));
+        darkBlueButton.setOnClickListener(v -> handleClick(darkBlueButton, R.color.button_dark_blue));
+        purpleButton.setOnClickListener(v -> handleClick(purpleButton, R.color.button_purple));
+        brownButton.setOnClickListener(v -> handleClick(brownButton, R.color.button_brown));
+        greyButton.setOnClickListener(v -> handleClick(greyButton, R.color.button_grey));
+        blackButton.setOnClickListener(v -> handleClick(blackButton, R.color.button_black));
+    }
 
+    // Makes the currently selected button have the foreground icon
+    public void handleClick(Button button, int colorStateListId) {
+        colorViewModel.selectItem(getResources().getColorStateList(colorStateListId, getActivity().getTheme()));
+
+        // Hide the icon on the previously selected button
+        currentButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getActivity().getTheme()));
+
+        // Display the icon on the newly selected button
+        currentButton = button;
+        currentButton.setForegroundTintList(getResources().getColorStateList(R.color.button_white, getActivity().getTheme()));
     }
 }
