@@ -46,7 +46,9 @@ import java.io.ByteArrayOutputStream;
 
 public class DoodleActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
-    public static final float STROKE_WIDTH = 15;
+    public static final float STROKE_WIDTH_SMALL = 10;
+    public static final float STROKE_WIDTH_MEDIUM = 20;
+    public static final float STROKE_WIDTH_LARGE = 30;
     public static final String PARENT_DOODLE_ID = "ParentDoodleId";
     public static final String IN_GAME = "inGame";
 
@@ -57,6 +59,9 @@ public class DoodleActivity extends AppCompatActivity {
     private DrawView doodleDrawView;
     private Button undoButton;
     private Button redoButton;
+    private Button smallButton;
+    private Button mediumButton;
+    private Button largeButton;
     private ImageButton eraserButton;
     private Button colorButton;
     private ExpandableLayout colorPickerExpandableLayout;
@@ -74,6 +79,7 @@ public class DoodleActivity extends AppCompatActivity {
     private ViewModelProvider viewModelProvider;
     private ColorViewModel colorViewModel;
     private ColorStateList currentColor;
+    private Button currentSizeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +93,9 @@ public class DoodleActivity extends AppCompatActivity {
         doodleDrawView = findViewById(R.id.doodleDrawView);
         undoButton = findViewById(R.id.undoButton);
         redoButton = findViewById(R.id.redoButton);
+        smallButton = findViewById(R.id.smallButton);
+        mediumButton = findViewById(R.id.mediumButton);
+        largeButton = findViewById(R.id.largeButton);
         eraserButton = findViewById(R.id.eraserButton);
         colorButton = findViewById(R.id.colorButton);
         colorPickerExpandableLayout = findViewById(R.id.colorPickerExpandableLayout);
@@ -105,12 +114,18 @@ public class DoodleActivity extends AppCompatActivity {
         // Set up ViewModel for color picker fragment
         colorViewModel = viewModelProvider.get(ColorViewModel.class);
         currentColor = getResources().getColorStateList(R.color.button_black, getTheme());
+        currentSizeButton = mediumButton;
 
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // Set up size buttons
+        smallButton.setSelected(false);
+        mediumButton.setSelected(true);
+        largeButton.setSelected(false);
 
         // Set up eraser button
         eraserButton.setSelected(false);
@@ -136,7 +151,7 @@ public class DoodleActivity extends AppCompatActivity {
 
         // Set up canvas
         doodleDrawView.clearCanvas();
-        doodleDrawView.setStrokeWidth(STROKE_WIDTH);
+        doodleDrawView.setStrokeWidth(STROKE_WIDTH_MEDIUM);
         doodleDrawView.setColor(currentColor.getDefaultColor());
 
         undoButton.setOnClickListener(v -> {
@@ -147,14 +162,31 @@ public class DoodleActivity extends AppCompatActivity {
             doodleDrawView.redo();
         });
 
+        smallButton.setOnClickListener(v -> {
+            handleSizeButtonChange(smallButton);
+            doodleDrawView.setStrokeWidth(STROKE_WIDTH_SMALL);
+        });
+
+        mediumButton.setOnClickListener(v -> {
+            handleSizeButtonChange(mediumButton);
+            doodleDrawView.setStrokeWidth(STROKE_WIDTH_MEDIUM);
+
+        });
+
+        largeButton.setOnClickListener(v -> {
+            handleSizeButtonChange(largeButton);
+            doodleDrawView.setStrokeWidth(STROKE_WIDTH_LARGE);
+
+        });
+
         eraserButton.setOnClickListener(v -> {
             // Eraser button is selected
             eraserButton.setSelected(true);
-            colorButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getTheme()));
+            eraserButton.setForegroundTintList(getResources().getColorStateList(R.color.button_white, getTheme()));
 
             // Color button is unselected
             colorButton.setSelected(false);
-            eraserButton.setForegroundTintList(getResources().getColorStateList(R.color.button_white, getTheme()));
+            colorButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getTheme()));
 
             // Change pen color to eraser color
             doodleDrawView.setColor(getResources().getColor(R.color.transparent, getTheme()));
@@ -170,6 +202,8 @@ public class DoodleActivity extends AppCompatActivity {
                 // Eraser button is unselected
                 eraserButton.setSelected(false);
                 eraserButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getTheme()));
+
+                // Change pen color to the current color
                 doodleDrawView.setColor(currentColor.getDefaultColor());
             }
             // If it's already selected, click will expand/retract the color picker ExpandableLayout
@@ -226,6 +260,15 @@ public class DoodleActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    private void handleSizeButtonChange(Button button) {
+        // Hide the icon on the previously selected button
+        currentSizeButton.setForegroundTintList(getResources().getColorStateList(R.color.button_transparent, getTheme()));
+
+        // Display the icon on the newly selected button
+        currentSizeButton = button;
+        currentSizeButton.setForegroundTintList(getResources().getColorStateList(R.color.button_black, getTheme()));
     }
 
     // Asynchronously finds the parent doodle from the database given its objectId, putting up a ProgressDialog

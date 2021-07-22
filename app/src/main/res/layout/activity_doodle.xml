@@ -21,6 +21,7 @@
         android:layout_below="@+id/doodleToolbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/black"
         android:padding="1dp">
 
@@ -52,67 +53,130 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/undoButton"
-        android:layout_width="60dp"
+    <LinearLayout
+        android:id="@+id/undoRedoLinearLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/canvasRelativeLayout"
-        android:layout_alignStart="@+id/canvasRelativeLayout"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="10dp"
-        app:icon="@drawable/ic_baseline_undo_24"
-        app:iconGravity="textEnd"
-        app:iconPadding="0dp"
-        app:iconSize="30dp" />
+        android:layout_below="@id/canvasRelativeLayout"
+        android:layout_alignLeft="@id/canvasRelativeLayout"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/redoButton"
-        android:layout_width="60dp"
+        <Button
+            android:id="@+id/undoButton"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            app:icon="@drawable/ic_baseline_undo_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="30dp" />
+
+        <Button
+            android:id="@+id/redoButton"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="5dp"
+            app:icon="@drawable/ic_baseline_redo_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="30dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sizeLinearLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/undoButton"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="205dp"
-        android:layout_toEndOf="@+id/undoButton"
-        app:icon="@drawable/ic_baseline_redo_24"
-        app:iconGravity="textEnd"
-        app:iconPadding="0dp"
-        app:iconSize="30dp" />
+        android:layout_below="@id/canvasRelativeLayout"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
 
-    <ImageButton
-        android:id="@+id/eraserButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/canvasRelativeLayout"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
-        android:layout_toStartOf="@id/colorButton"
-        android:background="@drawable/button_round"
-        android:src="@drawable/button_transparent_texture"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:foreground="@drawable/ic_adjust_black_24dp"
-        android:foregroundTint="@color/button_transparent" />
+        <Button
+            android:id="@+id/smallButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="left|center_vertical"
+            android:background="@drawable/button_round"
+            android:foreground="@drawable/transparent_circle_indicator"
+            android:foregroundTint="@color/button_transparent"
+            app:backgroundTint="@color/button_white"
+            app:icon="@drawable/ic_baseline_brightness_1_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="7dp"
+            app:iconTint="@color/black" />
 
-    <Button
-        android:id="@+id/colorButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/canvasRelativeLayout"
-        android:layout_alignEnd="@+id/canvasRelativeLayout"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/button_round"
-        android:foreground="@drawable/ic_adjust_black_24dp"
-        android:foregroundTint="@color/white"
-        app:backgroundTint="@color/black" />
+        <Button
+            android:id="@+id/mediumButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:background="@drawable/button_round"
+            android:foreground="@drawable/transparent_circle_indicator"
+            android:foregroundTint="@color/button_black"
+            app:backgroundTint="@color/button_white"
+            app:icon="@drawable/ic_baseline_brightness_1_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="13dp"
+            app:iconTint="@color/black" />
+
+        <Button
+            android:id="@+id/largeButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right|center_vertical"
+            android:background="@drawable/button_round"
+            android:foreground="@drawable/transparent_circle_indicator"
+            android:foregroundTint="@color/button_transparent"
+            app:backgroundTint="@color/button_white"
+            app:icon="@drawable/ic_baseline_brightness_1_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="20dp"
+            app:iconTint="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/colorLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/canvasRelativeLayout"
+        android:layout_alignRight="@id/canvasRelativeLayout"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/eraserButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right|center_vertical"
+            android:adjustViewBounds="true"
+            android:background="@drawable/button_round"
+            android:foreground="@drawable/ic_adjust_black_24dp"
+            android:foregroundTint="@color/button_transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/button_transparent_texture" />
+
+        <Button
+            android:id="@+id/colorButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/button_round"
+            android:foreground="@drawable/ic_adjust_black_24dp"
+            android:foregroundTint="@color/white"
+            app:backgroundTint="@color/black" />
+
+    </LinearLayout>
 
     <net.cachapa.expandablelayout.ExpandableLayout
         android:id="@+id/colorPickerExpandableLayout"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_above="@id/colorButton"
-        android:layout_alignEnd="@+id/colorButton"
+        android:layout_above="@id/colorLinearLayout"
+        android:layout_alignRight="@id/colorLinearLayout"
         android:layout_marginBottom="5dp"
         app:el_duration="1000"
         app:el_expanded="false"
@@ -121,9 +185,7 @@
         <FrameLayout
             android:id="@+id/colorPickerFrameLayout"
             android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:layout_marginEnd="0dp">
-        </FrameLayout>
+            android:layout_height="100dp"></FrameLayout>
 
     </net.cachapa.expandablelayout.ExpandableLayout>
 
