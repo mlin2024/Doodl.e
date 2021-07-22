@@ -203,7 +203,7 @@ public class DoodleActivity extends AppCompatActivity {
 
         doneButton.setOnClickListener(v -> {
             Bitmap drawingBitmap = doodleDrawView.getBitmap();
-            //drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
+            drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
         });
     }
