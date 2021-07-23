@@ -141,6 +141,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 ImageView doodleImageView = dialog.findViewById(R.id.doodleImageView);
                 TextView timestampTextView = dialog.findViewById(R.id.timestampTextView);
                 Button seeContributionsButton = dialog.findViewById(R.id.seeContributionsButton);
+                Button Xbutton = dialog.findViewById(R.id.Xbutton);
 
                 int tailLength = doodle.getTailLength();
 
@@ -217,6 +218,8 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                     // Go to the contributions gallery and show this doodle's children
                     goContributionsGalleryActivity(doodleHistory[versionTabLayout.getSelectedTabPosition()]);
                 });
+
+                Xbutton.setOnClickListener(v -> dialog.dismiss());
 
                 loadingProgressDialog.dismiss();
                 dialog.show();

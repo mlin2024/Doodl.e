@@ -5,6 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
+    android:layout_margin="5dp"
     android:background="@color/white"
     android:padding="5dp">
 
@@ -78,5 +79,18 @@
         android:textSize="18sp"
         app:icon="@drawable/ic_baseline_arrow_forward_24"
         app:iconGravity="textEnd" />
+
+    <Button
+        android:id="@+id/Xbutton"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_round"
+        app:backgroundTint="@color/button_black"
+        app:icon="@drawable/ic_close_black_24dp"
+        app:iconGravity="textEnd"
+        app:iconPadding="0dp"
+        app:iconSize="20dp"
+        app:iconTint="@color/button_white" />
 
 </RelativeLayout>
