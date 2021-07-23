@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -45,4 +46,8 @@ dependencies {
     implementation 'com.github.divyanshub024:AndroidDraw:v0.1'
     implementation 'org.parceler:parceler-api:1.1.12'
     annotationProcessor 'org.parceler:parceler:1.1.12'
+    implementation 'com.google.firebase:firebase-core:18.0.0'
+    implementation 'com.google.firebase:firebase-messaging:18.0.0'
+    implementation "com.github.parse-community.Parse-SDK-Android:fcm:1.21.0"
+    implementation 'com.parse.bolts:bolts-android:1.2.1'
 }

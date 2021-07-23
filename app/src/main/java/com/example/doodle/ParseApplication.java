@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.example.doodle.models.Doodle;
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 
 public class ParseApplication extends Application {
@@ -21,5 +22,9 @@ public class ParseApplication extends Application {
                 .clientKey(getString(R.string.back4app_client_key))
                 .server(getString(R.string.back4app_server_url))
                 .build());
+
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("GCMSenderId", getResources().getString(R.string.firebase_sender_id));
+        installation.saveInBackground();
     }
 }
