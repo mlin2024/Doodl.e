@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.divyanshu.draw.widget.DrawView;
 import com.example.doodle.R;
 import com.example.doodle.fragments.ColorPickerFragment;
@@ -39,6 +40,8 @@ import com.parse.ParseUser;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import org.parceler.Parcels;
+
 import java.io.ByteArrayOutputStream;
 
 public class DoodleActivity extends AppCompatActivity {
@@ -46,7 +49,7 @@ public class DoodleActivity extends AppCompatActivity {
     public static final float STROKE_WIDTH_SMALL = 10;
     public static final float STROKE_WIDTH_MEDIUM = 20;
     public static final float STROKE_WIDTH_LARGE = 30;
-    public static final String PARENT_DOODLE_ID = "ParentDoodleId";
+    public static final String PARENT_DOODLE = "ParentDoodle";
     public static final String IN_GAME = "inGame";
 
     // Views in the layout
@@ -66,10 +69,7 @@ public class DoodleActivity extends AppCompatActivity {
     private Button doneButton;
 
     // Other necessary member variables
-    private Doodle parentDoodle;
-    private Bitmap parentBitmap;
     private boolean inGame;
-    private ProgressDialog findingProgressDialog;
     private ProgressDialog savingProgressDialog;
     private FragmentManager fragmentManager;
     private Fragment colorPickerFragment;
@@ -101,10 +101,7 @@ public class DoodleActivity extends AppCompatActivity {
         doneButton = findViewById(R.id.doneButton);
 
         // Initialize other member variables
-        parentDoodle = null;
-        parentBitmap = null;
         inGame = false;
-        findingProgressDialog = new ProgressDialog(DoodleActivity.this);
         savingProgressDialog = new ProgressDialog(DoodleActivity.this);
         fragmentManager = getSupportFragmentManager();
         colorPickerFragment = new ColorPickerFragment();
@@ -121,25 +118,31 @@ public class DoodleActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+
+        // Get parent doodle from intent
+        Doodle parentDoodle = getIntent().getParcelableExtra(PARENT_DOODLE);
+        Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
+
+        // Get inGame from intent
+        inGame = getIntent().getBooleanExtra(IN_GAME, false);
+
+        // Set up parent ImageView (if parentDoodle exists)
+        if (parentDoodle != null)
+            Glide.with(this)
+                .load(parentDoodle.getImage().getUrl())
+                .placeholder(R.drawable.placeholder)
+                .into(parentImageView);
+
         // Set up pen buttons
         eraserButton.setSelected(false);
         colorButton.setSelected(true);
 
-        // Set up ProgressDialogs
-        findingProgressDialog.setMessage(getResources().getString(R.string.finding_doodle));
-        findingProgressDialog.setCancelable(false);
+        // Set up ProgressDialog
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
         savingProgressDialog.setCancelable(false);
 
         // Set up color picker fragment
         fragmentManager.beginTransaction().add(R.id.colorPickerFrameLayout, colorPickerFragment).show(colorPickerFragment).commit();
-
-        // Get parent doodle from intent
-        String parentDoodleId = getIntent().getStringExtra(PARENT_DOODLE_ID);
-        findSingleDoodleByObjectId(parentDoodleId);
-
-        // Get inGame from intent
-        inGame = getIntent().getBooleanExtra(IN_GAME, false);
 
         // Set up canvas
         doodleDrawView.clearCanvas();
@@ -268,31 +271,6 @@ public class DoodleActivity extends AppCompatActivity {
         currentPenButton.setSelected(true);
     }
 
-    // Asynchronously finds the parent doodle from the database given its objectId, putting up a ProgressDialog
-    // until it is found, and puts its image behind the canvas
-    private void findSingleDoodleByObjectId(String objectId) {
-        if (objectId == null) return;
-
-        // Specify what type of data we want to query - Doodle.class
-        ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
-
-        findingProgressDialog.show();
-        // Start an asynchronous call for the doodle
-        query.getInBackground(objectId, (foundDoodle, e) -> {
-            if (e != null) { // Query has failed
-                Toast.makeText(this, getResources().getString(R.string.error_finding_doodle), Toast.LENGTH_SHORT).show();
-                findingProgressDialog.dismiss();
-                finish();
-            }
-            else { // Query has succeeded
-                parentDoodle = foundDoodle;
-                parentBitmap = getBitmapFromDoodle(parentDoodle);
-                // Put the parent drawing on the canvas if it exists
-                if (parentBitmap != null) parentImageView.setImageBitmap(parentBitmap);
-            }
-        });
-    }
-
     // Convert transparentColor to be transparent in a Bitmap
     public static Bitmap makeTransparent(Bitmap bitmap, int transparentColor) {
         int width =  bitmap.getWidth();
@@ -319,11 +297,9 @@ public class DoodleActivity extends AppCompatActivity {
             try {
                 byte[] bitmapData = doodle.getImage().getData();
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapData, 0, bitmapData.length);
-                findingProgressDialog.dismiss();
                 return bitmap;
             } catch (ParseException e) {
                 Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
-                findingProgressDialog.dismiss();
                 return null;
             }
         }

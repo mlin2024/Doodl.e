@@ -1,5 +1,6 @@
 package com.example.doodle.models;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -24,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 @ParseClassName("Doodle")
-public class Doodle extends ParseObject {
+public class Doodle extends ParseObject implements Parcelable {
     public static final String TAG = "Doodle";
     public static final String KEY_ARTIST = "artist";
     public static final String KEY_IMAGE = "image";
@@ -122,34 +123,5 @@ public class Doodle extends ParseObject {
         }
 
         return "";
-    }
-
-    // Gets the list of all the doodles that have this doodle as a parent
-    public ArrayList<Doodle> getChildren() throws ParseException {
-        // Specify what type of data we want to query - Doodle.class
-        ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
-        // Include doodles with the current doodle as  the parent
-        query.whereEqualTo(Doodle.KEY_PARENT, this);
-
-        // Start a synchronous call for doodles and return the result
-        return (ArrayList<Doodle>) query.find();
-    }
-
-    // Gets the list of all the doodles that have the given doodle as a parent
-    public ArrayList<Doodle> getDoodlesWithParent(Doodle parent) throws ParseException {
-        ArrayList<Doodle> siblings = new ArrayList<>();
-        // Specifically add the current doodle as the first element in the ArrayList
-        siblings.add(this);
-
-        // Specify what type of data we want to query - Doodle.class
-        ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
-        // Include doodles with the doodle's parent doodle as a parent
-        query.whereEqualTo(Doodle.KEY_PARENT, parent);
-        // Don't include this doodle
-        query.whereNotEqualTo(Doodle.KEY_OBJECT_ID, getObjectId());
-
-        // Start a synchronous call for doodles and add them all to the ArrayList
-        siblings.addAll(query.find());
-        return siblings;
     }
 }

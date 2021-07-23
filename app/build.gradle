@@ -41,7 +41,8 @@ dependencies {
     implementation 'com.github.cachapa:ExpandableLayout:2.9.2'
     implementation "com.github.parse-community.Parse-SDK-Android:parse:1.26.0"
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    implementation 'com.github.mukeshsolanki:DrawingView-Android:1.0.13'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'com.github.divyanshub024:AndroidDraw:v0.1'
+    implementation 'org.parceler:parceler-api:1.1.12'
+    annotationProcessor 'org.parceler:parceler:1.1.12'
 }

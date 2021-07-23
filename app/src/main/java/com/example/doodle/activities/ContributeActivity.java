@@ -24,6 +24,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,8 +181,8 @@ public class ContributeActivity extends AppCompatActivity {
     // Starts an intent to go to the doodle activity
     private void goDoodleActivity(Doodle parentDoodle) {
         Intent intent = new Intent(this, DoodleActivity.class);
-        // Pass the parent doodle ID
-        intent.putExtra(DoodleActivity.PARENT_DOODLE_ID, (String) parentDoodle.getObjectId());
+        // Pass the parent doodle
+        intent.putExtra(DoodleActivity.PARENT_DOODLE, parentDoodle);
         // Don't pass in anything for inGame, it defaults to false
         startActivity(intent);
     }

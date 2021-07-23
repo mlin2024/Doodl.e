@@ -53,4 +53,10 @@
     <string name="loading_doodle">Loading doodle...</string>
     <string name="loading_doodle_history">Loading doodle history...</string>
     <string name="error_loading_history">There was an error loading the history of this doodle, please try again</string>
+    <string name="no_contributions_yet">No contributions yet...</string>
+    <string name="original_doodle">Original Doodle:</string>
+    <string name="contributions">Contributions:</string>
+    <string name="Contributions">Contributions</string>
+    <string name="loading_contributions">Loading contributions...</string>
+    <string name="see_contributions">See contributions to this doodle!</string>
 </resources>

@@ -5,50 +5,50 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:layout_margin="3dp"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:padding="5dp">
 
-    <Button
-        android:id="@+id/parentButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignLeft="@id/doodleImageView"
-        android:background="@drawable/arrow_left_float"
-        app:backgroundTint="@color/button_light_blue" />
+    <LinearLayout
+        android:id="@+id/versionLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
 
-    <Button
-        android:id="@+id/childButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignRight="@id/doodleImageView"
-        android:background="@drawable/arrow_right_float"
-        app:backgroundTint="@color/button_light_blue" />
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:background="@drawable/button_left_triangle"
+            app:backgroundTint="@color/button_light_blue" />
 
-    <Button
-        android:id="@+id/prevSiblingButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignTop="@id/doodleImageView"
-        android:layout_toRightOf="@id/doodleImageView"
-        android:background="@android:drawable/arrow_up_float"
-        app:backgroundTint="@color/button_light_blue" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/versionTabLayout"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_toRightOf="@id/backButton"
+            app:tabBackground="@drawable/tab_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp" />
 
-    <Button
-        android:id="@+id/nextSiblingButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignBottom="@id/doodleImageView"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_toRightOf="@id/doodleImageView"
-        android:background="@android:drawable/arrow_down_float"
-        app:backgroundTint="@color/button_light_blue" />
+        <Button
+            android:id="@+id/forwardButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_toRightOf="@id/versionTabLayout"
+            android:background="@drawable/button_right_triangle"
+            app:backgroundTint="@color/button_light_blue" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/doodleImageView"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/parentButton"
+        android:layout_below="@id/versionLinearLayout"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
@@ -64,5 +64,19 @@
         android:layout_below="@+id/doodleImageView"
         android:layout_alignStart="@+id/doodleImageView"
         tools:text="just now" />
+
+    <Button
+        android:id="@+id/seeContributionsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timestampTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:layout_marginTop="5dp"
+        android:text="@string/see_contributions"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        app:icon="@drawable/ic_baseline_arrow_forward_24"
+        app:iconGravity="textEnd" />
 
 </RelativeLayout>

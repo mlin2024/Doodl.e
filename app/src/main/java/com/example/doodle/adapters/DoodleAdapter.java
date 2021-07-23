@@ -3,6 +3,7 @@ package com.example.doodle.adapters;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -11,22 +12,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.doodle.R;
+import com.example.doodle.activities.ContributionsGalleryActivity;
+import com.example.doodle.activities.DoodleActivity;
 import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder>{
     public static final String TAG = "DoodleAdapter";
@@ -78,15 +86,8 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
         private TextView timestampTextView;
 
         private Dialog dialog;
-        private Doodle currentDoodle;
-        private Doodle parent;
-        private Doodle[] ancestors;
-        private ArrayList<Doodle> children;
-        private ArrayList<Doodle> siblings;
-        private int currentAncestor;
-        private int currentSibling;
+        private Doodle doodle;
         private ProgressDialog loadingProgressDialog;
-
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -94,10 +95,8 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
             doodleImageView = itemView.findViewById(R.id.doodleImageView);
             timestampTextView = itemView.findViewById(R.id.timestampTextView);
 
-            // Set up ProgressDialog
             loadingProgressDialog = new ProgressDialog(context);
             loadingProgressDialog.setMessage(context.getResources().getString(R.string.loading_doodle_history));
-            loadingProgressDialog.setCancelable(false);
 
             itemView.setOnClickListener(this);
         }
@@ -120,18 +119,11 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
             if (position != RecyclerView.NO_POSITION) { // Check if position is valid
 
                 // Get doodle
-                currentDoodle = doodles.get(position);
-
-                // Initialize the currently blank family tree, only known is current doodle at the end
-                ancestors = new Doodle[currentDoodle.getTailLength()];
-                Arrays.fill(ancestors, null);
-                currentAncestor = currentDoodle.getTailLength() - 1;
-                ancestors[currentAncestor] = currentDoodle;
+                doodle = doodles.get(position);
 
                 // Set up dialog
                 dialog = new Dialog(context);
                 dialog.setContentView(R.layout.doodle_detail);
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                 // Asynchronously load the doodle's history
                 loadingProgressDialog.show();
@@ -143,173 +135,116 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
         // Sets up the dialog that contains the doodle's history
         Runnable setupHistoryDialog = new Runnable() {
             public void run() {
-                Button parentButton = dialog.findViewById(R.id.parentButton);
-                Button childButton = dialog.findViewById(R.id.childButton);
-                Button prevSiblingButton = dialog.findViewById(R.id.prevSiblingButton);
-                Button nextSiblingButton = dialog.findViewById(R.id.nextSiblingButton);
+                Button backButton = dialog.findViewById(R.id.backButton);
+                TabLayout versionTabLayout = dialog.findViewById(R.id.versionTabLayout);
+                Button forwardButton = dialog.findViewById(R.id.forwardButton);
                 ImageView doodleImageView = dialog.findViewById(R.id.doodleImageView);
                 TextView timestampTextView = dialog.findViewById(R.id.timestampTextView);
+                Button seeContributionsButton = dialog.findViewById(R.id.seeContributionsButton);
 
-                Runnable initializeDoodle = () -> {
-                    // Find all the relations of this doodle
-                    try {
-                        // Find parent
-                        // If it is the very first one, it has no parent
-                        if (currentAncestor == 0) parent = null;
-                        // Else, if parent is part of the original doodle's ancestors, provide it
-                        else if (currentAncestor - 1 <= ancestors.length - 1) {
-                            // If parent is not yet loaded into family tree, load it in
-                            if (ancestors[currentAncestor - 1] == null) ancestors[currentAncestor - 1] = (Doodle) currentDoodle.fetchIfNeeded().get(Doodle.KEY_PARENT);
-                            parent = ancestors[currentAncestor - 1];
-                        }
-                        // Else, just find it
-                        else parent = (Doodle) currentDoodle.fetchIfNeeded().get(Doodle.KEY_PARENT);
+                int tailLength = doodle.getTailLength();
 
-                        // Find children
-                        // If child is part of original doodle's ancestors, only provide that one child as the child
-                        if (currentAncestor + 1 <= ancestors.length - 1) {
-                            // It is physically impossible to be here and not have the child already loaded in
-                            // Just grab the one child and put it in the ArrayList
-                            children = new ArrayList<>();
-                            children.add(ancestors[currentAncestor + 1]);
-                        }
-                        // Else, load the full list of children
-                        else children = currentDoodle.getChildren();
+                // Recursively find the history of this doodle
+                Doodle[] doodleHistory = findDoodleHistory(doodle);
 
-                        // Find siblings
-                        // If current doodle is part of original doodle's ancestors, don't load any siblings
-                        if (currentAncestor < ancestors.length) siblings = new ArrayList<>();
-
-                        // Else, load its siblings
-                        else siblings = currentDoodle.getDoodlesWithParent(parent);
-
-                    } catch (ParseException e) {
-                        Snackbar.make(itemView, context.getResources().getString(R.string.error_loading_history), Snackbar.LENGTH_LONG).show();
-                        e.printStackTrace();
-                    }
-
-                    currentSibling = 0;
-
-                    Log.d(TAG, "initializeDoodle:\n\tcurrentDoodle = " + currentDoodle + "\n\tparent = " + parent + "\n\tchildren = " + children.toString() + "\n\tsiblings = " + siblings.toString());
+                // Lambda function that disables the appropriate buttons if at first/last tab
+                Consumer<Integer> disableAppropriateButtons = (tab) -> {
+                    if (tab == 0) backButton.setEnabled(false);
+                    else backButton.setEnabled(true);
+                    if (tab == tailLength - 1) forwardButton.setEnabled(false);
+                    else forwardButton.setEnabled(true);
                 };
 
                 // Lambda function that loads the appropriate data into the view
-                Runnable loadDoodle = () -> {
-                    try {
-                        Log.d(TAG, "Loading doodle " + currentDoodle);
-                        ParseFile image = null;
-                        image = currentDoodle.fetchIfNeeded().getParseFile(Doodle.KEY_IMAGE);
-                        if (image != null) {
-                            Glide.with(context)
-                                    .load(image.getUrl())
-                                    .placeholder(R.drawable.placeholder)
-                                    .into(doodleImageView);
-                        }
-                        timestampTextView.setText(currentDoodle.getTimestamp());
-                    } catch (ParseException e) {
-                        Snackbar.make(itemView, context.getResources().getString(R.string.error_loading_history), Snackbar.LENGTH_LONG).show();
-                        e.printStackTrace();
+                Consumer<Integer> loadTab = (tab) -> {
+                    Doodle currentDoodle = doodleHistory[tab];
+                    ParseFile image = currentDoodle.getImage();
+                    if (image != null) {
+                        Glide.with(context)
+                                .load(image.getUrl())
+                                .placeholder(R.drawable.placeholder)
+                                .into(doodleImageView);
                     }
+                    timestampTextView.setText(currentDoodle.getTimestamp());
                 };
 
-                // Lambda function that disables the appropriate buttons if at first/last doodle
-                Runnable disableAppropriateButtons = () -> {
-                    // If it has no parent, you can't go back
-                    if (parent == null) parentButton.setEnabled(false);
-                    else parentButton.setEnabled(true);
+                // Add a tab for each doodle in the history
+                for (int i = 0; i < tailLength; i++)
+                    versionTabLayout.addTab(versionTabLayout.newTab());
 
-                    // If it has no children, you can't go forward
-                    if (children.size() == 0) childButton.setEnabled(false);
-                    else childButton.setEnabled(true);
+                // Set selected tab to last tab
+                versionTabLayout.selectTab(versionTabLayout.getTabAt(tailLength - 1));
+                loadTab.accept(tailLength - 1);
 
-                    // If it has no siblings or its only sibling is itself, you can't go to next/previous sibling
-                    if (siblings == null || siblings.size() <= 1) {
-                        prevSiblingButton.setEnabled(false);
-                        nextSiblingButton.setEnabled(false);
-                    }
-                    else {
-                        prevSiblingButton.setEnabled(true);
-                        nextSiblingButton.setEnabled(true);
-                    }
-                };
+                // Disable appropriate button if at first/last tab
+                disableAppropriateButtons.accept(versionTabLayout.getSelectedTabPosition());
 
-                Log.d(TAG, "\nLoading doodle for first time:\n\tcurrentAncestor = " + currentAncestor + "\n\tcurrentSibling = " + currentSibling);
-                // Initialize the current doodle
-                initializeDoodle.run();
-                // Load the current doodle
-                loadDoodle.run();
-                // Disable appropriate button if at first/last doodle
-                disableAppropriateButtons.run();
-
-                parentButton.setOnClickListener(v1 -> {
-                    currentAncestor--;
-                    currentDoodle = parent;
-                    Log.d(TAG, "Back button pressed:\n\tcurrentAncestor = " + currentAncestor + "\n\tcurrentSibling = " + currentSibling);
-
-                    // Initialize and load the appropriate doodle
-                    initializeDoodle.run();
-                    loadDoodle.run();
-
-                    // Disable appropriate button if at first/last doodle
-                    disableAppropriateButtons.run();
-                });
-
-                childButton.setOnClickListener(v1 -> {
-                    currentAncestor++;
-                    currentDoodle = children.get(0);
-                    Log.d(TAG, "Forward button pressed:\n\tcurrentAncestor = " + currentAncestor + "\n\tcurrentSibling = " + currentSibling);
-
-                    // Initialize and load the appropriate doodle
-                    initializeDoodle.run();
-                    loadDoodle.run();
-
-                    // Disable appropriate button if at first/last doodle
-                    disableAppropriateButtons.run();
-                });
-
-                prevSiblingButton.setOnClickListener(v1 -> {
-                    try {
-                        currentSibling--;
-                        // Loop around if out of bounds
-                        if (currentSibling < 0) currentSibling = siblings.size() - 1;
-                        currentDoodle = siblings.get(currentSibling);
-                        Log.d(TAG, "Up button pressed:\n\tcurrentAncestor = " + currentAncestor + "\n\tcurrentSibling = " + currentSibling);
-                        children = currentDoodle.getChildren();
+                // Listen for whenever the tab is changed
+                versionTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        // Disable appropriate button if at first/last tab
+                        disableAppropriateButtons.accept(tab.getPosition());
 
                         // Load the appropriate doodle
-                        loadDoodle.run();
+                        loadTab.accept(tab.getPosition());
+                    }
 
-                        // Disable appropriate button if at first/last doodle
-                        disableAppropriateButtons.run();
-                    } catch (ParseException e) {
-                        Snackbar.make(itemView, context.getResources().getString(R.string.error_loading_history), Snackbar.LENGTH_LONG).show();
-                        e.printStackTrace();
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+                        // Disable appropriate button if at first/last tab
+                        disableAppropriateButtons.accept(tab.getPosition());
                     }
                 });
 
-                nextSiblingButton.setOnClickListener(v1 -> {
-                    try {
-                        currentSibling++;
-                        // Loop around if out of bounds
-                        if (currentSibling > siblings.size() - 1) currentSibling = 0;
-                        currentDoodle = siblings.get(currentSibling);
-                        Log.d(TAG, "Down button pressed:\n\tcurrentAncestor = " + currentAncestor + "\n\tcurrentSibling = " + currentSibling);
-                        children = currentDoodle.getChildren();
+                backButton.setOnClickListener(v -> {
+                    int currentIndex = versionTabLayout.getSelectedTabPosition();
+                    TabLayout.Tab tab = versionTabLayout.getTabAt(currentIndex - 1);
+                    tab.select();
+                });
 
-                        // Load the appropriate doodle
-                        loadDoodle.run();
+                forwardButton.setOnClickListener(v -> {
+                    int currentIndex = versionTabLayout.getSelectedTabPosition();
+                    TabLayout.Tab tab = versionTabLayout.getTabAt(currentIndex + 1);
+                    tab.select();
+                });
 
-                        // Disable appropriate button if at first/last doodle
-                        disableAppropriateButtons.run();
-                    } catch (ParseException e) {
-                        Snackbar.make(itemView, context.getResources().getString(R.string.error_loading_history), Snackbar.LENGTH_LONG).show();
-                        e.printStackTrace();
-                    }
+                seeContributionsButton.setOnClickListener(v -> {
+                    // Go to the contributions gallery and show this doodle's children
+                    goContributionsGalleryActivity(doodleHistory[versionTabLayout.getSelectedTabPosition()]);
                 });
 
                 loadingProgressDialog.dismiss();
                 dialog.show();
             }
         };
+
+        // Recursively finds the history of this doodle
+        private Doodle[] findDoodleHistory(Doodle doodle) {
+            int tailLength = doodle.getTailLength();
+            Doodle[] doodleHistory = new Doodle[tailLength];
+            Doodle currentDoodleInHistory = doodle;
+            for (int i = 0; i < tailLength; i++) {
+                doodleHistory[doodle.getTailLength() - i - 1] = currentDoodleInHistory;
+                try {
+                    currentDoodleInHistory = (Doodle) currentDoodleInHistory.fetchIfNeeded().getParseObject(Doodle.KEY_PARENT);
+                } catch (ParseException e) {
+                    Snackbar.make(itemView, context.getResources().getString(R.string.error_loading_history), Snackbar.LENGTH_LONG).show();
+                }
+            }
+            return doodleHistory;
+        }
+
+        // Starts an intent to go to the contributions gallery activity
+        private void goContributionsGalleryActivity(Doodle doodle) {
+            Intent intent = new Intent(context, ContributionsGalleryActivity.class);
+            // Pass in the doodle
+            intent.putExtra(ContributionsGalleryActivity.ORIGINAL_DOODLE, doodle);
+            context.startActivity(intent);
+        }
     }
 }

@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Doodle">
         <activity
+            android:name=".activities.ContributionsGalleryActivity"
+            android:label="@string/Contributions" />
+        <activity
             android:name=".activities.GameActivity"
             android:label="@string/Game" />
         <activity
