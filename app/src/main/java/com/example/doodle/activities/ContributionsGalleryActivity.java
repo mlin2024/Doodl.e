@@ -2,6 +2,7 @@ package com.example.doodle.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -87,6 +88,7 @@ public class ContributionsGalleryActivity extends AppCompatActivity {
 
         // Set up RecyclerView
         contributionsGalleryRecyclerView.setAdapter(doodleAdapter);
+        ViewCompat.setNestedScrollingEnabled(contributionsGalleryRecyclerView, false);
 
         // Set up ProgressDialog
         loadingProgressDialog.setMessage(getResources().getString(R.string.loading_contributions));

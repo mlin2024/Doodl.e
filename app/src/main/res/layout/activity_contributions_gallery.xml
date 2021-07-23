@@ -13,10 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/contributionsGalleryToolbar">
+        android:layout_below="@id/contributionsGalleryToolbar"
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,7 +87,9 @@
                 android:text="@string/no_contributions_yet"
                 android:textSize="20sp"
                 android:visibility="invisible" />
+
         </LinearLayout>
-    </ScrollView>
+
+    </androidx.core.widget.NestedScrollView>
 
 </RelativeLayout>
