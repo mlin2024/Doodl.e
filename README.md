@@ -211,7 +211,11 @@
 ## Video Walkthroughs
 ### Week 4 Update
 
-<img src='Week4Update.gif' title='Week 4 update' width='' alt='Week 4 update' />
+<img src='Week4Update.gif' title='Week 4 Update' width='' alt='Week 4 Update' />
+
+### Week 5 Update
+
+<img src='Week5Update.gif' title='Week 5 Update' width='' alt='Week 5 Update' />
 
 GIFs created with [LiceCap](https://www.cockos.com/licecap/).
 
