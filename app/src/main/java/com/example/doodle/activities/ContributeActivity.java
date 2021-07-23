@@ -133,6 +133,9 @@ public class ContributeActivity extends AppCompatActivity {
         // Don't include doodles that the current user has already edited an ancestor of
         Player player = new Player(ParseUser.getCurrentUser());
         query.whereNotContainedIn(Doodle.KEY_ROOT, player.getRootsContributedTo());
+        // Don't include doodles with a tail longer than 4
+        query.whereLessThanOrEqualTo(Doodle.KEY_TAIL_LENGTH, 4);
+        // TODO: figure out how to not include doodles with more than 1 sibling
         // Limit query to NUM_TO_LOAD items
         query.setLimit(NUM_TO_LOAD);
         // Order doodles by creation date (oldest first)

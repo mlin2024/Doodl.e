@@ -26,7 +26,6 @@ import com.parse.ParseFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder>{
@@ -144,10 +143,10 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
         // Sets up the dialog that contains the doodle's history
         Runnable setupHistoryDialog = new Runnable() {
             public void run() {
-                Button backButton = dialog.findViewById(R.id.backButton);
-                Button forwardButton = dialog.findViewById(R.id.forwardButton);
-                Button upButton = dialog.findViewById(R.id.upButton);
-                Button downButton = dialog.findViewById(R.id.downButton);
+                Button parentButton = dialog.findViewById(R.id.parentButton);
+                Button childButton = dialog.findViewById(R.id.childButton);
+                Button prevSiblingButton = dialog.findViewById(R.id.prevSiblingButton);
+                Button nextSiblingButton = dialog.findViewById(R.id.nextSiblingButton);
                 ImageView doodleImageView = dialog.findViewById(R.id.doodleImageView);
                 TextView timestampTextView = dialog.findViewById(R.id.timestampTextView);
 
@@ -216,21 +215,21 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 // Lambda function that disables the appropriate buttons if at first/last doodle
                 Runnable disableAppropriateButtons = () -> {
                     // If it has no parent, you can't go back
-                    if (parent == null) backButton.setEnabled(false);
-                    else backButton.setEnabled(true);
+                    if (parent == null) parentButton.setEnabled(false);
+                    else parentButton.setEnabled(true);
 
                     // If it has no children, you can't go forward
-                    if (children.size() == 0) forwardButton.setEnabled(false);
-                    else forwardButton.setEnabled(true);
+                    if (children.size() == 0) childButton.setEnabled(false);
+                    else childButton.setEnabled(true);
 
                     // If it has no siblings or its only sibling is itself, you can't go to next/previous sibling
                     if (siblings == null || siblings.size() <= 1) {
-                        upButton.setEnabled(false);
-                        downButton.setEnabled(false);
+                        prevSiblingButton.setEnabled(false);
+                        nextSiblingButton.setEnabled(false);
                     }
                     else {
-                        upButton.setEnabled(true);
-                        downButton.setEnabled(true);
+                        prevSiblingButton.setEnabled(true);
+                        nextSiblingButton.setEnabled(true);
                     }
                 };
 
@@ -242,7 +241,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 // Disable appropriate button if at first/last doodle
                 disableAppropriateButtons.run();
 
-                backButton.setOnClickListener(v1 -> {
+                parentButton.setOnClickListener(v1 -> {
                     currentAncestor--;
                     currentDoodle = parent;
                     Log.d(TAG, "Back button pressed:\n\tcurrentAncestor = " + currentAncestor + "\n\tcurrentSibling = " + currentSibling);
@@ -255,7 +254,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                     disableAppropriateButtons.run();
                 });
 
-                forwardButton.setOnClickListener(v1 -> {
+                childButton.setOnClickListener(v1 -> {
                     currentAncestor++;
                     currentDoodle = children.get(0);
                     Log.d(TAG, "Forward button pressed:\n\tcurrentAncestor = " + currentAncestor + "\n\tcurrentSibling = " + currentSibling);
@@ -268,7 +267,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                     disableAppropriateButtons.run();
                 });
 
-                upButton.setOnClickListener(v1 -> {
+                prevSiblingButton.setOnClickListener(v1 -> {
                     try {
                         currentSibling--;
                         // Loop around if out of bounds
@@ -288,7 +287,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                     }
                 });
 
-                downButton.setOnClickListener(v1 -> {
+                nextSiblingButton.setOnClickListener(v1 -> {
                     try {
                         currentSibling++;
                         // Loop around if out of bounds

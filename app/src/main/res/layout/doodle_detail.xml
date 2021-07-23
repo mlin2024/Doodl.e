@@ -9,7 +9,7 @@
     android:background="@color/white">
 
     <Button
-        android:id="@+id/backButton"
+        android:id="@+id/parentButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignLeft="@id/doodleImageView"
@@ -17,7 +17,7 @@
         app:backgroundTint="@color/button_light_blue" />
 
     <Button
-        android:id="@+id/forwardButton"
+        android:id="@+id/childButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignRight="@id/doodleImageView"
@@ -25,7 +25,7 @@
         app:backgroundTint="@color/button_light_blue" />
 
     <Button
-        android:id="@+id/upButton"
+        android:id="@+id/prevSiblingButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignTop="@id/doodleImageView"
@@ -34,7 +34,7 @@
         app:backgroundTint="@color/button_light_blue" />
 
     <Button
-        android:id="@+id/downButton"
+        android:id="@+id/nextSiblingButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignBottom="@id/doodleImageView"
@@ -48,7 +48,7 @@
         android:id="@+id/doodleImageView"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/backButton"
+        android:layout_below="@id/parentButton"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
