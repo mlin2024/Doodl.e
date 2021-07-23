@@ -56,11 +56,13 @@
   * [x] User can view a gallery of all the doodles they've done
     * [x] User can see the timestamp of each doodle in the gallery
     * [x] User can view a detail view of each doodle, including the doodle's full history
+    * [x] User can view a list of the contributions made to the given doodle
 * [ ] User can receive a notification whenever one of their doodles is contributed to
 
 **Optional Nice-to-have Stories**
 
 * [ ] When receiving an existing doodle from the database, user can view a timelapse of the work already done on the doodle
+* [ ] App is compatible with landscape mode
 
 ### 2. Screen Archetypes
 
@@ -103,6 +105,8 @@
    * User can view a gallery of all the doodles they've done
    * User can see the timestamp of each doodle in the gallery
    * User can view a detail view of each doodle, including the doodle's full history
+* Contribution Gallery Screen
+   *  User can view a list of the contributions made to the given doodle
 
 ### 3. Navigation
 
