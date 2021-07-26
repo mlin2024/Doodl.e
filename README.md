@@ -51,7 +51,6 @@
       * [ ] User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
       * [ ] User can view the full history of each doodle in the game after the game ends
 * [x] User can view their profile
-  * [ ] User can add their Twitter to allow automatic posting of their doodles
   * [x] User can choose to view their gallery
   * [x] User can view a gallery of all the doodles they've done
     * [x] User can see the timestamp of each doodle in the gallery
@@ -99,7 +98,6 @@
    * User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
    * User can view the full history of each doodle in the game after the game ends
 * Profile Screen
-   * User can add their Twitter to allow automatic posting of their doodles
    * User can choose to view their gallery
 * Gallery Screen
    * User can view a gallery of all the doodles they've done
@@ -200,13 +198,6 @@
       - (Update/PUT) Update username
       - (Update/PUT) Update password
       - (Update/PUT) Update twitter
-#### [OPTIONAL:] Existing API Endpoints
-##### Twitter API
-- Base URL - [https://api.twitter.com/1.1](https://api.twitter.com/1.1)
-
-   HTTP Verb | Endpoint | Description
-   ----------|----------|------------
-    `POST`   | /statuses/update.json | post new tweet
     
 ## Video Walkthroughs
 ### Week 4 Update
