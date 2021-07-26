@@ -216,7 +216,6 @@ List an 3rd party libraries, icons, graphics, or other assets you used in your a
 
 - [ExpandableLayout](https://github.com/cachapa/ExpandableLayout) - smooth expanding layouts
 - [DrawingView](https://github.com/mukeshsolanki/DrawingView-Android) - drawing and saving doodles
-- [BitmapScaler](https://gist.github.com/nesquena/3885707fd3773c09f1bb) - scaling bitmaps
 
 
 ## Notes
