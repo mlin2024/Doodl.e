@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,6 +20,7 @@ import android.widget.RelativeLayout;
 
 import com.example.doodle.R;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
@@ -155,6 +157,9 @@ public class LoginSignupActivity extends AppCompatActivity {
             else { // The login succeded
                 clearEditTexts();
                 goHomeActivity();
+
+                // Assign the user to the current installation
+                assignUserToInstallation();
             }
         });
     }
@@ -177,8 +182,19 @@ public class LoginSignupActivity extends AppCompatActivity {
             else { // The signup succeeded
                 clearEditTexts();
                 goHomeActivity();
+
+                // Assign the user to the current installation
+                assignUserToInstallation();
             }
         });
+    }
+
+    // Assigns the user to the current installation
+    private void assignUserToInstallation() {
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        Log.e(TAG, ParseUser.getCurrentUser().getObjectId());
+        installation.put("user", ParseUser.getCurrentUser().getObjectId());
+        installation.saveInBackground();
     }
 
     // Clears the EditTexts

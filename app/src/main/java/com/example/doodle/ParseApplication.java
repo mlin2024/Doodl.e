@@ -6,6 +6,9 @@ import com.example.doodle.models.Doodle;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
+
+import java.util.ArrayList;
 
 public class ParseApplication extends Application {
 

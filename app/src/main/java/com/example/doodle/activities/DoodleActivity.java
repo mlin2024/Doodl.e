@@ -27,14 +27,19 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.divyanshu.draw.widget.DrawView;
+import com.example.doodle.ParseApplication;
 import com.example.doodle.R;
 import com.example.doodle.fragments.ColorPickerFragment;
 import com.example.doodle.models.ColorViewModel;
 import com.example.doodle.models.Doodle;
 import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.FunctionCallback;
+import com.parse.Parse;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseInstallation;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -43,6 +48,7 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 
 public class DoodleActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
@@ -342,8 +348,31 @@ public class DoodleActivity extends AppCompatActivity {
                 if (parentDoodle == null) setRootToObjectId();
                 else addToUserRootsContributedTo(parentDoodle.getRoot());
 
+                // Handle push notification to the artist of the parent doodle
+                if (parentDoodle != null) {
+                    handlePushNotification(parentDoodle.getArtist());
+                }
+
                 Toast.makeText(this, R.string.doodle_submitted, Toast.LENGTH_SHORT).show();
                 goHomeActivity();
+            }
+        });
+    }
+
+    // Sends push notification to the artist of the parent doodle
+    private void handlePushNotification(ParseUser user) {
+        final HashMap<String, String> params = new HashMap<>();
+        params.put("user", user.getObjectId());
+        // Calling the cloud code function
+        ParseCloud.callFunctionInBackground("doodlenotification", params, new FunctionCallback<Object>() {
+            @Override
+            public void done(Object response, ParseException e) {
+                if(e == null) { // Function call succeeded
+                    Log.i(TAG, "Notification sent");
+                }
+                else { // Function call failed
+                    Log.e(TAG, "Notification failed", e);
+                }
             }
         });
     }
