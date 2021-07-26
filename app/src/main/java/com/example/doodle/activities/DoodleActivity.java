@@ -361,7 +361,7 @@ public class DoodleActivity extends AppCompatActivity {
 
     // Sends push notification to the artist of the parent doodle
     private void handlePushNotification(ParseUser user) {
-        final HashMap<String, String> params = new HashMap<>();
+        final HashMap<String, Object> params = new HashMap<>();
         params.put("user", user.getObjectId());
         // Calling the cloud code function
         ParseCloud.callFunctionInBackground("doodlenotification", params, new FunctionCallback<Object>() {
