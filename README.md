@@ -57,7 +57,7 @@
     * [x] User can see the timestamp of each doodle in the gallery
     * [x] User can view a detail view of each doodle, including the doodle's full history
     * [x] User can view a list of the contributions made to the given doodle
-* [ ] User can receive a notification whenever one of their doodles is contributed to
+* [x] User can receive a notification whenever one of their doodles is contributed to
 
 **Optional Nice-to-have Stories**
 
