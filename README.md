@@ -43,11 +43,11 @@
       * [x] User can erase their strokes
       * [x] User can choose their drawing color out of a list of colors
       * [x] User can send out their new doodle/contribution to the database
-  * [ ] User can choose to either create a new game or join an existing game
-    * [ ] User can create a new game and receive the game code
-    * [ ] User can join a game by inputting the game code
-      * [ ] User can view a list of all users currently in the game
-      * [ ] User who created a game can start the game
+  * [x] User can choose to either create a new game or join an existing game
+    * [x] User can create a new game and receive the game code
+    * [x] User can join a game by inputting the game code
+      * [x] User can view a list of all users currently in the game
+      * [x] User who created a game can start the game
       * [ ] User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
       * [ ] User can view the full history of each doodle in the game after the game ends
 * [x] User can view their profile
