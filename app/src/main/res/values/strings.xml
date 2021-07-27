@@ -1,5 +1,6 @@
 <resources>
     <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+    <string name="back4app_live_query_url">wss://doodle.b4a.io</string>
     <string name="App_name">Doodl.e</string>
     <string name="app_name">doodl.e</string>
     <string name="Log_In">Log In</string>
@@ -24,15 +25,11 @@
     <string name="Enter_game_code">Enter game code:</string>
     <string name="Create_Game">Create Game!</string>
     <string name="Join_Game">Join Game!</string>
-    <string name="must_enter_game_code">You must enter a game code!</string>
-    <string name="game_code_too_short">Game code is too short!</string>
     <string name="Doodle">Doodle</string>
     <string name="Game">Game</string>
     <string name="Waiting_Room">Waiting Room</string>
     <string name="Start_Game">Start Game!</string>
     <string name="Players">Players:</string>
-    <string name="Username_is_required">Username is required</string>
-    <string name="Password_is_required">Password is required</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading_gallery">Loading gallery...</string>
     <string name="failed_to_load_gallery">Failed to load gallery, please try again later</string>
@@ -59,4 +56,10 @@
     <string name="Contributions">Contributions</string>
     <string name="loading_contributions">Loading contributions...</string>
     <string name="see_contributions">See contributions to this doodle!</string>
+    <string name="creating_game">Creating game...</string>
+    <string name="error_creating_game">Error creating game, please try again</string>
+    <string name="finding_game">Finding game...</string>
+    <string name="error_finding_game">Couldn\'t find game, please check game code and try again</string>
+    <string name="error_finding_players">Error finding players, please wait</string>
+    <string name="error_joining_game">Error joining game, please try again</string>
 </resources>

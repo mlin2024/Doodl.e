@@ -7,24 +7,39 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.doodle.R;
+import com.example.doodle.adapters.DoodleAdapter;
+import com.example.doodle.models.Doodle;
+import com.example.doodle.models.Game;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameModeActivity extends AppCompatActivity {
     public static final String TAG = "GameModeActivity";
-    public static final String GAME_CODE_TAG = "gameCode";
+    public static final String GAME_TAG = "game";
 
     // Views in the layout
     private RelativeLayout gameModeRelativeLayout;
@@ -37,6 +52,12 @@ public class GameModeActivity extends AppCompatActivity {
     private ExpandableLayout joinGameExpandableLayout;
     private EditText gameCodeEditText;
     private Button joinGameButtonGo;
+
+    // Other necessary member variables
+    private Animation shake;
+    private ProgressDialog creatingProgressDialog;
+    private ProgressDialog findingProgressDialog;
+    private TextWatcher textWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +78,22 @@ public class GameModeActivity extends AppCompatActivity {
         gameCodeEditText = findViewById(R.id.gameCodeEditText);
         joinGameButtonGo = findViewById(R.id.joinGameButtonGo);
 
+        // Initialize other member variables
+        creatingProgressDialog = new ProgressDialog(GameModeActivity.this);
+        findingProgressDialog = new ProgressDialog(GameModeActivity.this);
+        shake = AnimationUtils.loadAnimation(GameModeActivity.this, R.anim.shake);
+        // TextWatcher to disable the join game button unless 4-character game code has been filled in
+        textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+            @Override
+            public void afterTextChanged(Editable editable) {
+                checkGameCodeField();
+            }
+        };
+
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
         setSupportActionBar(toolbar);
@@ -65,6 +102,16 @@ public class GameModeActivity extends AppCompatActivity {
 
         // Set up game code TextView
         gameCodeTextView.setText(gameCode);
+
+        // Set up ProgressDialog
+        creatingProgressDialog.setMessage(getResources().getString(R.string.creating_game));
+        creatingProgressDialog.setCancelable(false);
+        findingProgressDialog.setMessage(getResources().getString(R.string.finding_game));
+        findingProgressDialog.setCancelable(false);
+
+        // Set up TextWatcher
+        gameCodeEditText.addTextChangedListener(textWatcher);
+        checkGameCodeField();
 
         createGameButton.setOnClickListener(v -> {
             if (createGameExpandableLayout.isExpanded()) createGameExpandableLayout.collapse();
@@ -79,24 +126,33 @@ public class GameModeActivity extends AppCompatActivity {
         });
 
         createGameButtonGo.setOnClickListener(v -> {
-            goWaitingRoomActivity(gameCode);
+            try {
+                Game game = new Game();
+                game.setGameCode(gameCode);
+                game.addPlayer(ParseUser.getCurrentUser().fetch());
+
+                // Save game to database
+                creatingProgressDialog.show();
+                game.saveInBackground(e -> {
+                    creatingProgressDialog.dismiss();
+                    if (e != null) { // Creating game failed
+                        Snackbar.make(gameModeRelativeLayout, R.string.error_creating_game, Snackbar.LENGTH_LONG).show();
+                    }
+                    else { // Creating game succeeded
+                        goWaitingRoomActivity(game);
+                    }
+                });
+            } catch (ParseException e) {
+                Snackbar.make(gameModeRelativeLayout, R.string.error_creating_game, Snackbar.LENGTH_LONG).show();
+            }
         });
 
         joinGameButtonGo.setOnClickListener(v -> {
             hideSoftKeyboard(gameModeRelativeLayout);
             String inputtedGameCode = gameCodeEditText.getText().toString();
-            if (inputtedGameCode.isEmpty()) {
-                Snackbar.make(gameModeRelativeLayout, R.string.must_enter_game_code, Snackbar.LENGTH_LONG).show();
-            }
-            else if (inputtedGameCode.length() < 4) {
-                Snackbar.make(gameModeRelativeLayout, R.string.game_code_too_short, Snackbar.LENGTH_LONG).show();
-            }
-            else {
-                goWaitingRoomActivity(inputtedGameCode);
-            }
+            findGameByGameCode(inputtedGameCode);
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,10 +190,49 @@ public class GameModeActivity extends AppCompatActivity {
         finish();
     }
 
+    // Enables the join game button only if the game code field is populated by 4 characters
+    private void checkGameCodeField() {
+        String inputtedGameCode = gameCodeEditText.getText().toString();
+        if (inputtedGameCode.length() < 4) joinGameButtonGo.setEnabled(false);
+        else joinGameButtonGo.setEnabled(true);
+    }
+
     // Generates a random 4-character code for the game
     private String generateRandomGameCode() {
-        // TODO: implement generating random game code
-        return "AFXP";
+        String gameCode = "";
+        for (int i = 0; i < 4; i++) {
+            gameCode += (char)('A' + (Math.random() * 26));
+        }
+        // TODO: make sure a game doesn't already exist with this code
+        return gameCode;
+    }
+
+    private void findGameByGameCode(String gameCode) {
+        // Specify what type of data we want to query - Game.class
+        ParseQuery<Game> query = ParseQuery.getQuery(Game.class);
+        // Find game with gameCode equal to given game code
+        query.whereEqualTo(Game.KEY_GAME_CODE, gameCode);
+
+        findingProgressDialog.show();
+        // Start an asynchronous call for the game
+        query.getFirstInBackground((foundGame, e) -> {
+            findingProgressDialog.dismiss();
+            if (e != null) { // Query has failed
+                Snackbar.make(gameModeRelativeLayout, R.string.error_finding_game, Snackbar.LENGTH_LONG).show();
+                joinGameExpandableLayout.startAnimation(shake);
+                return;
+            }
+            else { // Query has succeeded
+                try {
+                    foundGame.addPlayer(ParseUser.getCurrentUser().fetch());
+                    foundGame.saveInBackground(gameModeRelativeLayout);
+                    Log.e(TAG, "JOINING GAME "+foundGame + " " + foundGame.getObjectId() + " " + foundGame.getPlayers());
+                    goWaitingRoomActivity(foundGame);
+                } catch (ParseException parseException) {
+                    Snackbar.make(gameModeRelativeLayout, R.string.error_joining_game, Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     // Starts an intent to go to the login/signup activity
@@ -154,9 +249,9 @@ public class GameModeActivity extends AppCompatActivity {
     }
 
     // Starts an intent to go to the waiting room activity
-    private void goWaitingRoomActivity(String gameCode) {
+    private void goWaitingRoomActivity(Game game) {
         Intent intent = new Intent(this, WaitingRoomActivity.class);
-        intent.putExtra(GAME_CODE_TAG, gameCode);
+        intent.putExtra(GAME_TAG, game);
         startActivity(intent);
     }
 

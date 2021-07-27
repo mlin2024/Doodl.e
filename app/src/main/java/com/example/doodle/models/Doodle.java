@@ -111,7 +111,7 @@ public class Doodle extends ParseObject implements Parcelable {
             } else if (diff < 90 * MINUTE_MILLIS) {
                 return "an hour ago";
             } else if (diff < 24 * HOUR_MILLIS) {
-                return diff / HOUR_MILLIS + " h";
+                return diff / HOUR_MILLIS + "h";
             } else if (diff < 48 * HOUR_MILLIS) {
                 return "yesterday";
             } else {

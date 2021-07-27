@@ -9,14 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.doodle.R;
@@ -25,8 +23,6 @@ import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,14 +75,13 @@ public class ContributionsGalleryActivity extends AppCompatActivity {
                 .placeholder(R.drawable.placeholder)
                 .into(originalDoodleImageView);
 
+        // Set up gallery RecyclerView
         // This allows for optimizations
         contributionsGalleryRecyclerView.setHasFixedSize(true);
-
         // Define 2 column grid layout with a new GridLayoutManager
         GridLayoutManager gridLayoutManager = new GridLayoutManager(ContributionsGalleryActivity.this, 2);
         contributionsGalleryRecyclerView.setLayoutManager(gridLayoutManager);
-
-        // Set up RecyclerView
+        // Set adapter
         contributionsGalleryRecyclerView.setAdapter(doodleAdapter);
         ViewCompat.setNestedScrollingEnabled(contributionsGalleryRecyclerView, false);
 

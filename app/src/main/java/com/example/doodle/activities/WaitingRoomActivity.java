@@ -2,26 +2,33 @@ package com.example.doodle.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.doodle.R;
-import com.example.doodle.models.Player;
+import com.example.doodle.adapters.PlayerAdapter;
+import com.example.doodle.models.Game;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class WaitingRoomActivity extends AppCompatActivity {
     public static final String TAG = "WaitingRoomActivity";
+    static final long POLL_INTERVAL = TimeUnit.SECONDS.toMillis(2);
 
     // Views in the layout
     private RelativeLayout waitingRoomRelativeLayout;
@@ -32,8 +39,10 @@ public class WaitingRoomActivity extends AppCompatActivity {
     private Button startGameButton;
 
     // Other necessary member variables
-    private String gameCode;
-    private List<Player> players;
+    private Game game;
+    private List<ParseUser> players;
+    private PlayerAdapter playerAdapter;
+    private Handler updateHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +58,12 @@ public class WaitingRoomActivity extends AppCompatActivity {
         startGameButton = findViewById(R.id.startGameButton);
 
         // Initialize other member variables
-        // Unwrap the game code that was passed in by the intent
-        gameCode = (String) getIntent().getExtras().getSerializable(GameModeActivity.GAME_CODE_TAG);
-        players = new ArrayList<>();
+        // Unwrap the game that was passed in by the intent
+        game = null;
+        game = getIntent().getParcelableExtra(GameModeActivity.GAME_TAG);
+        players = game.getPlayers();
+        playerAdapter = new PlayerAdapter(this, players);
+        updateHandler = new Handler();
 
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
@@ -59,18 +71,51 @@ public class WaitingRoomActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        // Set up num players TextView
-        numPlayersTextView.setText(getResources().getString(R.string.Players) + " 0");
-
         // Set up game code TextView
-        gameCodeWaitingRoomTextView.setText(gameCode);
+        gameCodeWaitingRoomTextView.setText(game.getGameCode());
 
-        // TODO: repeat this periodically
-        refreshPlayers();
+        // Set up player RecyclerView
+        // This allows for optimizations
+        playersRecyclerView.setHasFixedSize(true);
+        // Define 2 column grid layout with a new GridLayoutManager
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(WaitingRoomActivity.this, 2);
+        playersRecyclerView.setLayoutManager(gridLayoutManager);
+        // Set adapter
+        playersRecyclerView.setAdapter(playerAdapter);
+
+        // Set up num players TextView
+        numPlayersTextView.setText(getResources().getString(R.string.Players) + " " + players.size());
 
         startGameButton.setOnClickListener(v -> {
             goGameActivity();
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Only start checking for new messages when the app becomes active in foreground
+        updateHandler.postDelayed(updatePlayers, POLL_INTERVAL);
+    }
+
+    @Override
+    protected void onPause() {
+        // Stop background task from refreshing messages, to avoid unnecessary traffic & battery drain
+        updateHandler.removeCallbacksAndMessages(null);
+        super.onPause();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        // Add username next to profile icon
+        menu.findItem(R.id.username).setTitle(ParseUser.getCurrentUser().getUsername());
+        // Make the username text unclickable
+        menu.findItem(R.id.username).setEnabled(false);
+        return true;
     }
 
     @Override
@@ -97,10 +142,20 @@ public class WaitingRoomActivity extends AppCompatActivity {
         finish();
     }
 
-    // Refreshes the player list
-    private void refreshPlayers() {
-        numPlayersTextView.setText(getResources().getString(R.string.Players) + " " + players.size());
-    }
+    private Runnable updatePlayers = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                game.fetch();
+                playerAdapter.clear();
+                playerAdapter.addAll(game.getPlayers());
+                numPlayersTextView.setText(getResources().getString(R.string.Players) + " " + players.size());
+                updateHandler.postDelayed(this, POLL_INTERVAL);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     // Starts an intent to go to the login/signup activity
     private void goLoginSignupActivity() {

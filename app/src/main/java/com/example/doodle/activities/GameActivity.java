@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
@@ -34,6 +35,18 @@ public class GameActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        // Add username next to profile icon
+        menu.findItem(R.id.username).setTitle(ParseUser.getCurrentUser().getUsername());
+        // Make the username text unclickable
+        menu.findItem(R.id.username).setEnabled(false);
+        return true;
     }
 
     @Override

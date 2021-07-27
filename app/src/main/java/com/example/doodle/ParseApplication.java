@@ -3,6 +3,7 @@ package com.example.doodle;
 import android.app.Application;
 
 import com.example.doodle.models.Doodle;
+import com.example.doodle.models.Game;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -18,6 +19,7 @@ public class ParseApplication extends Application {
 
         // Register your parse models
         ParseObject.registerSubclass(Doodle.class);
+        ParseObject.registerSubclass(Game.class);
 
         // Initialize parse
         Parse.initialize(new Parse.Configuration.Builder(this)

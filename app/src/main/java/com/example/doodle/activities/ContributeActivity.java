@@ -7,6 +7,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -183,6 +184,7 @@ public class ContributeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DoodleActivity.class);
         // Pass the parent doodle
         intent.putExtra(DoodleActivity.PARENT_DOODLE, parentDoodle);
+        Log.e(TAG, ""+parentDoodle);
         // Don't pass in anything for inGame, it defaults to false
         startActivity(intent);
     }

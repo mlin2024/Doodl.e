@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.divyanshu.draw.widget.DrawView;
-import com.example.doodle.ParseApplication;
 import com.example.doodle.R;
 import com.example.doodle.fragments.ColorPickerFragment;
 import com.example.doodle.models.ColorViewModel;
@@ -35,17 +34,13 @@ import com.example.doodle.models.Doodle;
 import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.FunctionCallback;
-import com.parse.Parse;
 import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseInstallation;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
-
-import org.parceler.Parcels;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
@@ -127,6 +122,7 @@ public class DoodleActivity extends AppCompatActivity {
 
         // Get parent doodle from intent
         Doodle parentDoodle = getIntent().getParcelableExtra(PARENT_DOODLE);
+        Log.e(TAG, ""+parentDoodle);
         Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
 
         // Get inGame from intent

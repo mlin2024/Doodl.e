@@ -61,14 +61,13 @@ public class GalleryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        // Set up gallery RecyclerView
         // This allows for optimizations
         galleryRecyclerView.setHasFixedSize(true);
-
         // Define 2 column grid layout with a new GridLayoutManager
         GridLayoutManager gridLayoutManager = new GridLayoutManager(GalleryActivity.this, 2);
         galleryRecyclerView.setLayoutManager(gridLayoutManager);
-
-        // Set up RecyclerView
+        // Set adapter
         galleryRecyclerView.setAdapter(doodleAdapter);
 
         // Set up ProgressDialog

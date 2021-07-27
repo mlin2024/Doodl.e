@@ -45,7 +45,7 @@ public class LoginSignupActivity extends AppCompatActivity {
     private Button signupGoButton;
 
     // Other necessary member variables
-    public Animation shake;
+    private Animation shake;
     private ProgressDialog verifyingProgressDialog;
     private TextWatcher textWatcher;
 
@@ -151,7 +151,7 @@ public class LoginSignupActivity extends AppCompatActivity {
             verifyingProgressDialog.dismiss();
             if (e != null) { // The login failed
                 Snackbar.make(loginSignupRelativeLayout, R.string.login_failed, Snackbar.LENGTH_LONG).show();
-                loginSignupLinearLayout.startAnimation(shake);
+                loginExpandableLayout.startAnimation(shake);
                 return;
             }
             else { // The login succeded
@@ -176,7 +176,7 @@ public class LoginSignupActivity extends AppCompatActivity {
             verifyingProgressDialog.dismiss();
             if (e != null) { // The signup failed
                 Snackbar.make(loginSignupRelativeLayout, R.string.signup_failed, Snackbar.LENGTH_LONG).show();
-                loginSignupLinearLayout.startAnimation(shake);
+                signupExpandableLayout.startAnimation(shake);
                 return;
             }
             else { // The signup succeeded
