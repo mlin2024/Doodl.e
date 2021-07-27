@@ -31,7 +31,7 @@
 * [x] User can log in
 * [x] User can sign up for a new account
 * [x] User can logout
-* [x] User can choose between Doodle Mode and Game Mode
+* [x] User can choose between Doodle Mode and *Game Mode*
   * [x] User can choose to either create a new doodle or contribute to an existing doodle
     * [x] User can choose a doodle from a selection of doodles from the database that they've never edited before
       * [x] User can see the timestamp of each doodle in the selection
@@ -39,17 +39,10 @@
     * [x] User can draw a new doodle
     * [x] User can contribute to the doodle that they chose in the contribute screen
       * [x] User can undo/redo their strokes
-      * [ ] User can change the pen thickness between small, medium, and large
+      * [x] User can change the pen thickness between small, medium, and large
       * [x] User can erase their strokes
       * [x] User can choose their drawing color out of a list of colors
       * [x] User can send out their new doodle/contribution to the database
-  * [x] User can choose to either create a new game or join an existing game
-    * [x] User can create a new game and receive the game code
-    * [x] User can join a game by inputting the game code
-      * [x] User can view a list of all users currently in the game
-      * [x] User who created a game can start the game
-      * [ ] User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
-      * [ ] User can view the full history of each doodle in the game after the game ends
 * [x] User can view their profile
   * [x] User can choose to view their gallery
   * [x] User can view a gallery of all the doodles they've done
@@ -62,6 +55,13 @@
 
 * [ ] When receiving an existing doodle from the database, user can view a timelapse of the work already done on the doodle
 * [ ] App is compatible with landscape mode
+* [x] User can choose to either create a new game or join an existing game
+  * [x] User can create a new game and receive the game code
+  * [x] User can join a game by inputting the game code
+    * [x] User can view a list of all users currently in the game
+    * [x] User who created a game can start the game
+    * [ ] User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
+    * [ ] User can view the full history of each doodle in the game after the game ends
 
 ### 2. Screen Archetypes
 
@@ -69,11 +69,11 @@
    * User can log in
    * User can sign up for a new account
 * Home Screen
-   * User can choose between Doodle Mode and Game Mode
+   * User can choose between Doodle Mode and *Game Mode*
    * User can view their profile
    * User can log out
 * Doodle Mode Screen
-   * User can choose to either create a new doodle contribute to an existing doodle
+   * User can choose to either create a new doodle or contribute to an existing doodle
 * Doodle Screen
    * User can draw a new doodle
    * User can contribute to the doodle that they chose in the contribute screen
@@ -87,16 +87,16 @@
    * User can choose a doodle from a selection of doodles from the database that they've never edited before
    * User can see the timestamp of each doodle in the selection
    * User can view a detail view of each doodle, including the doodle's full history
-* Game Mode Screen
-   * User can choose to either create a new game or join an existing game
-   * User can create a new game and receive the game code
-   * User can join a game by inputting the game code
-* Waiting Room Screen
-   * User can view a list of all users currently in the game
-   * User who created a game can start the game
-* Game Screen
-   * User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
-   * User can view the full history of each doodle in the game after the game ends
+* *Game Mode Screen*
+   * *User can choose to either create a new game or join an existing game*
+   * *User can create a new game and receive the game code*
+   * *User can join a game by inputting the game code*
+* *Waiting Room Screen*
+   * *User can view a list of all users currently in the game*
+   * *User who created a game can start the game*
+* *Game Screen*
+   * *User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game*
+   * *User can view the full history of each doodle in the game after the game ends*
 * Profile Screen
    * User can choose to view their gallery
 * Gallery Screen
