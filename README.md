@@ -150,7 +150,7 @@
    | parent        | Pointer to Doodle   | the parent to this doodle (null if this doodle has no parent) |
    | tailLength    | Number    | the length of the doodle's "tail" (i.e. how many doodles preceed it, including itself) (if not inGame, Doodle is unable to be randomly received after tailLength reaches 5)|
    | root          | String    | objectId of the root node |
-   | inGame        | String   | the objectID of the game it's in, if it's in a game (if it is, it cannot be randomly received) |
+   | inGame        | String   | the objectId of the game it's in, if it's in a game (if it is, it cannot be randomly received) |
    | *speedDoodle (optional)* | *File* | *data that can be used to recreate a speed-draw of the doodle's past* |
    
 #### Game
@@ -162,7 +162,7 @@
    | *players*       | *Array of Users* | *users in the game* |
    | *round*         | *Number*   | *current round number (starts at 1)* |
    | *doodles*       | *Array of Doodles* | *doodles submitted in the current round* |
-   | *creator*       | *Pointer to User* | *User who created the game* |
+   | *creator*       | *Pointer to User* | *user who created the game* |
    | *started*       | *Boolean* | *whether or not the game has started yet* |
    
 ### Networking
