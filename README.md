@@ -150,7 +150,7 @@
    | parent        | Pointer to Doodle   | the parent to this doodle (null if this doodle has no parent) |
    | tailLength    | Number    | the length of the doodle's "tail" (i.e. how many doodles preceed it, including itself) (if not inGame, Doodle is unable to be randomly received after tailLength reaches 5)|
    | root          | String    | objectId of the root node |
-   | inGame        | Boolean   | whether or not the doodle is part of a game (if it is, it cannot be randomly received, and is deleted after the game ends) |
+   | inGame        | String   | the objectID of the game it's in, if it's in a game (if it is, it cannot be randomly received) |
    | *speedDoodle (optional)* | *File* | *data that can be used to recreate a speed-draw of the doodle's past* |
    
 #### Game
