@@ -160,7 +160,6 @@
    | *objectId*      | *String*   | *unique id for the game (default field)* |
    | *gameCode*      | *String*   | *unique code for the game* |
    | *players*       | *Array of Users* | *users in the game* |
-   | *doodles*       | *Array of Doodles* | *doodles submitted in the current round* |
    | *creator*       | *Pointer to User* | *user who created the game* |
    | *started*       | *Boolean* | *whether or not the game has started yet* |
    
