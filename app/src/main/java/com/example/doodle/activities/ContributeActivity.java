@@ -43,7 +43,7 @@ public class ContributeActivity extends AppCompatActivity {
     private Button selectButton;
 
     // Other necessary member variables
-    private List<Doodle> doodles;
+    private ArrayList<Doodle> doodles;
     private DoodleAdapter doodleAdapter;
     private ProgressDialog loadingProgressDialog;
 
@@ -139,6 +139,8 @@ public class ContributeActivity extends AppCompatActivity {
         // Don't include doodles with a tail longer than 4
         query.whereLessThanOrEqualTo(Doodle.KEY_TAIL_LENGTH, 4);
         // TODO: figure out how to not include doodles with more than 1 sibling
+        // Don't include doodles that are from a game
+        query.whereEqualTo(Doodle.KEY_IN_GAME, null);
         // Limit query to NUM_TO_LOAD items
         query.setLimit(NUM_TO_LOAD);
         // Order doodles by creation date (oldest first)
@@ -184,8 +186,6 @@ public class ContributeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DoodleActivity.class);
         // Pass the parent doodle
         intent.putExtra(DoodleActivity.PARENT_DOODLE, parentDoodle);
-        Log.e(TAG, ""+parentDoodle);
-        // Don't pass in anything for inGame, it defaults to false
         startActivity(intent);
     }
 

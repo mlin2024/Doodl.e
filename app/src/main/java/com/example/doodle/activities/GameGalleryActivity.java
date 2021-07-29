@@ -2,21 +2,27 @@ package com.example.doodle.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.doodle.R;
 import com.example.doodle.adapters.DoodleAdapter;
+import com.example.doodle.adapters.GameDoodleAdapter;
 import com.example.doodle.models.Doodle;
+import com.example.doodle.models.Game;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -24,36 +30,36 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GalleryActivity extends AppCompatActivity {
-    public static final String TAG = "GalleryActivity";
-    public static final String CURRENT_DOODLE = "currentDoodle";
+public class GameGalleryActivity extends AppCompatActivity {
+    public static final String TAG = "GameGalleryActivity";
 
     // Views in the layout
-    private RelativeLayout galleryRelativeLayout;
+    private RelativeLayout gameGalleryRelativeLayout;
     private Toolbar toolbar;
-    private RecyclerView galleryRecyclerView;
-    private TextView nothingHereYet;
+    private RecyclerView gameGalleryRecyclerView;
 
     // Other necessary member variables
-    private ArrayList<Doodle> doodles;
-    private DoodleAdapter doodleAdapter;
+    private ArrayList<Doodle> gameDoodles;
+    private GameDoodleAdapter gameDoodleAdapter;
+    private Game game;
     private ProgressDialog loadingProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_game_gallery);
 
         // Initialize the views in the layout
-        galleryRelativeLayout = findViewById(R.id.galleryRelativeLayout);
-        toolbar = findViewById(R.id.galleryToolbar);
-        galleryRecyclerView = findViewById(R.id.galleryRecyclerView);
-        nothingHereYet = findViewById(R.id.nothingHereYet);
+        gameGalleryRelativeLayout = findViewById(R.id.gameGalleryRelativeLayout);
+        toolbar = findViewById(R.id.gameGalleryToolbar);
+        gameGalleryRecyclerView = findViewById(R.id.gameGalleryRecyclerView);
 
         // Initialize other member variables
-        doodles = new ArrayList<>();
-        doodleAdapter = new DoodleAdapter(this, doodles, false);
-        loadingProgressDialog = new ProgressDialog(GalleryActivity.this);
+        gameDoodles = new ArrayList<>();
+        gameDoodleAdapter = new GameDoodleAdapter(this, gameDoodles);
+        // Get game from intent
+        game = getIntent().getParcelableExtra(GameModeActivity.GAME_TAG);
+        loadingProgressDialog = new ProgressDialog(GameGalleryActivity.this);
 
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
@@ -63,19 +69,20 @@ public class GalleryActivity extends AppCompatActivity {
 
         // Set up gallery RecyclerView
         // This allows for optimizations
-        galleryRecyclerView.setHasFixedSize(true);
-        // Define 2 column grid layout with a new GridLayoutManager
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(GalleryActivity.this, 2);
-        galleryRecyclerView.setLayoutManager(gridLayoutManager);
+        gameGalleryRecyclerView.setHasFixedSize(true);
+        // Define a single column layout with new linearLayoutManager
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        gameGalleryRecyclerView.setLayoutManager(linearLayoutManager);
         // Set adapter
-        galleryRecyclerView.setAdapter(doodleAdapter);
+        gameGalleryRecyclerView.setAdapter(gameDoodleAdapter);
+        ViewCompat.setNestedScrollingEnabled(gameGalleryRecyclerView, false);
 
         // Set up ProgressDialog
-        loadingProgressDialog.setMessage(getResources().getString(R.string.loading_gallery));
+        loadingProgressDialog.setMessage(getResources().getString(R.string.loading_doodles));
         loadingProgressDialog.setCancelable(false);
 
         // Grab doodles to populate the RecyclerView
-        findDoodlesByCurrentUser();
+        findGameDoodles();
     }
 
     @Override
@@ -111,30 +118,27 @@ public class GalleryActivity extends AppCompatActivity {
         finish();
     }
 
-    // Finds all the doodles created by the current user
-    private void findDoodlesByCurrentUser() {
+    private void findGameDoodles() {
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
-        // Include only doodles by the current user
-        query.whereEqualTo(Doodle.KEY_ARTIST, ParseUser.getCurrentUser());
-        // Order doodles by creation date (newest first)
-        query.addDescendingOrder("createdAt");
+        // Include only doodles from this game
+        query.whereEqualTo(Doodle.KEY_IN_GAME, game.getObjectId());
+        // Include only original doodles (with a tail length of 1)
+        query.whereEqualTo(Doodle.KEY_TAIL_LENGTH, 1);
 
         loadingProgressDialog.show();
         // Start an asynchronous call for doodles
         query.findInBackground((foundDoodles, e) -> {
             loadingProgressDialog.dismiss();
             if (e != null) { // Query has failed
-                Snackbar.make(galleryRelativeLayout, R.string.failed_to_load_gallery, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(gameGalleryRelativeLayout, R.string.failed_to_load_doodles_from_game, Snackbar.LENGTH_LONG).show();
                 return;
             }
             else { // Query has succeeded
                 // Clear out old items before appending in the new ones
-                doodleAdapter.clear();
+                gameDoodleAdapter.clear();
                 // Save received posts to list and notify adapter of new data
-                doodleAdapter.addAll(foundDoodles);
-                // Show empty message if gallery is empty
-                if (doodles.size() == 0) nothingHereYet.setVisibility(View.VISIBLE);
+                gameDoodleAdapter.addAll(foundDoodles);
             }
         });
     }
@@ -148,14 +152,14 @@ public class GalleryActivity extends AppCompatActivity {
 
     // Logs out user and sends them back to login/signup page
     private void logout() {
-        ProgressDialog logoutProgressDialog = new ProgressDialog(GalleryActivity.this);
+        ProgressDialog logoutProgressDialog = new ProgressDialog(GameGalleryActivity.this);
         logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
         logoutProgressDialog.setCancelable(false);
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();
             if (e != null) {
-                Snackbar.make(galleryRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(gameGalleryRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
             }
             else {
                 goLoginSignupActivity();

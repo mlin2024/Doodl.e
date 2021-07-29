@@ -19,8 +19,8 @@ public class Game extends ParseObject implements Parcelable {
     public static final String TAG = "Doodle";
     public static final String KEY_GAME_CODE = "gameCode";
     public static final String KEY_PLAYERS = "players";
-    public static final String KEY_ROUND = "round";
-    public static final String KEY_DOODLES = "doodles";
+    public static final String KEY_CREATOR = "creator";
+    public static final String KEY_STARTED = "started";
 
     public String getGameCode() {
         return getString(KEY_GAME_CODE);
@@ -46,35 +46,27 @@ public class Game extends ParseObject implements Parcelable {
         put(KEY_PLAYERS, players);
     }
 
-    public int getRound() {
-        return getInt(KEY_ROUND);
+    public ParseUser getCreator() {
+        return getParseUser(KEY_CREATOR);
     }
 
-    public void setRound(int round) {
-        put(KEY_ROUND, round);
+    public void setCreator(ParseUser creator) {
+        put(KEY_CREATOR, creator);
     }
 
-    public ArrayList<Doodle> getDoodles() {
-        ArrayList<Doodle> doodles = new ArrayList<>();
-        if (containsKey(KEY_DOODLES)) {
-            for (Doodle doodle : (ArrayList<Doodle>) get(KEY_DOODLES)) {
-                doodles.add(doodle);
-            }
-        }
-        return doodles;
+    public boolean getStarted() {
+        return getBoolean(KEY_STARTED);
     }
 
-    public void addDoodle(Doodle doodle) {
-        ArrayList<Doodle> doodles = getDoodles();
-        doodles.add(doodle);
-        put(KEY_DOODLES, doodles);
+    public void setStarted(boolean started) {
+        put(KEY_STARTED, started);
     }
 
     // Asynchronously saves the user data to the database
     public void saveInBackground(View view) {
         saveInBackground(e -> {
             if (e != null) {
-                Snackbar.make(view, R.string.error_joining_game, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(view, R.string.error_updating_game, Snackbar.LENGTH_LONG).show();
             }
         });
     }

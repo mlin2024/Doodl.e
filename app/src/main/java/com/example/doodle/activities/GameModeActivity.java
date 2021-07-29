@@ -129,6 +129,7 @@ public class GameModeActivity extends AppCompatActivity {
             try {
                 Game game = new Game();
                 game.setGameCode(gameCode);
+                game.setCreator(ParseUser.getCurrentUser().fetch());
                 game.addPlayer(ParseUser.getCurrentUser().fetch());
 
                 // Save game to database
@@ -203,7 +204,7 @@ public class GameModeActivity extends AppCompatActivity {
         for (int i = 0; i < 4; i++) {
             gameCode += (char)('A' + (Math.random() * 26));
         }
-        // TODO: make sure a game doesn't already exist with this code
+        // TODO: make the game code calculated from the object id, so it's guaranteed to be unique
         return gameCode;
     }
 
@@ -226,7 +227,6 @@ public class GameModeActivity extends AppCompatActivity {
                 try {
                     foundGame.addPlayer(ParseUser.getCurrentUser().fetch());
                     foundGame.saveInBackground(gameModeRelativeLayout);
-                    Log.e(TAG, "JOINING GAME "+foundGame + " " + foundGame.getObjectId() + " " + foundGame.getPlayers());
                     goWaitingRoomActivity(foundGame);
                 } catch (ParseException parseException) {
                     Snackbar.make(gameModeRelativeLayout, R.string.error_joining_game, Snackbar.LENGTH_LONG).show();

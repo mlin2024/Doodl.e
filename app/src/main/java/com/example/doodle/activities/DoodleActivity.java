@@ -51,7 +51,6 @@ public class DoodleActivity extends AppCompatActivity {
     public static final float STROKE_WIDTH_MEDIUM = 20;
     public static final float STROKE_WIDTH_LARGE = 30;
     public static final String PARENT_DOODLE = "ParentDoodle";
-    public static final String IN_GAME = "inGame";
 
     // Views in the layout
     private RelativeLayout doodleRelativeLayout;
@@ -70,7 +69,6 @@ public class DoodleActivity extends AppCompatActivity {
     private Button doneButton;
 
     // Other necessary member variables
-    private boolean inGame;
     private ProgressDialog savingProgressDialog;
     private FragmentManager fragmentManager;
     private Fragment colorPickerFragment;
@@ -102,7 +100,6 @@ public class DoodleActivity extends AppCompatActivity {
         doneButton = findViewById(R.id.doneButton);
 
         // Initialize other member variables
-        inGame = false;
         savingProgressDialog = new ProgressDialog(DoodleActivity.this);
         fragmentManager = getSupportFragmentManager();
         colorPickerFragment = new ColorPickerFragment();
@@ -119,25 +116,15 @@ public class DoodleActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
+        // Set up parent ImageView (if parentDoodle exists)
         // Get parent doodle from intent
         Doodle parentDoodle = getIntent().getParcelableExtra(PARENT_DOODLE);
-        Log.e(TAG, ""+parentDoodle);
         Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
-
-        // Get inGame from intent
-        inGame = getIntent().getBooleanExtra(IN_GAME, false);
-
-        // Set up parent ImageView (if parentDoodle exists)
         if (parentDoodle != null)
             Glide.with(this)
                 .load(parentDoodle.getImage().getUrl())
                 .placeholder(R.drawable.placeholder)
                 .into(parentImageView);
-
-        // Set up pen buttons
-        eraserButton.setSelected(false);
-        colorButton.setSelected(true);
 
         // Set up ProgressDialog
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
@@ -147,9 +134,7 @@ public class DoodleActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().add(R.id.colorPickerFrameLayout, colorPickerFragment).show(colorPickerFragment).commit();
 
         // Set up canvas
-        doodleDrawView.clearCanvas();
-        doodleDrawView.setStrokeWidth(STROKE_WIDTH_MEDIUM);
-        doodleDrawView.setColor(currentColor.getDefaultColor());
+        resetCanvas();
 
         undoButton.setOnClickListener(v -> {
             doodleDrawView.undo();
@@ -167,13 +152,11 @@ public class DoodleActivity extends AppCompatActivity {
         mediumButton.setOnClickListener(v -> {
             handleSizeButtonChange(mediumButton);
             doodleDrawView.setStrokeWidth(STROKE_WIDTH_MEDIUM);
-
         });
 
         largeButton.setOnClickListener(v -> {
             handleSizeButtonChange(largeButton);
             doodleDrawView.setStrokeWidth(STROKE_WIDTH_LARGE);
-
         });
 
         eraserButton.setOnClickListener(v -> {
@@ -273,6 +256,19 @@ public class DoodleActivity extends AppCompatActivity {
         currentPenButton.setSelected(true);
     }
 
+    // Resets the canvas to a default state
+    private void resetCanvas() {
+        doodleDrawView.clearCanvas();
+        doodleDrawView.setStrokeWidth(STROKE_WIDTH_MEDIUM);
+        doodleDrawView.setColor(currentColor.getDefaultColor());
+
+        // Set up pen buttons
+        eraserButton.setSelected(false);
+        colorButton.setSelected(true);
+        handlePenButtonChange(colorButton);
+        handleSizeButtonChange(mediumButton);
+    }
+
     // Convert transparentColor to be transparent in a Bitmap
     public static Bitmap makeTransparent(Bitmap bitmap, int transparentColor) {
         int width =  bitmap.getWidth();
@@ -309,8 +305,6 @@ public class DoodleActivity extends AppCompatActivity {
 
     // Saves the current doodle to the database
     private void saveDoodle(Doodle parentDoodle, Bitmap parentBitmap, Bitmap drawingBitmap) {
-        if (parentDoodle == null) Log.e(TAG, "parentDoodle is null");
-
         Doodle childDoodle = new Doodle();
 
         // The artist is the current artist
@@ -327,16 +321,12 @@ public class DoodleActivity extends AppCompatActivity {
         // The root is the same as its parent
         // If it has no parent, its root is equal to its objectId, which will be set after it is saved
         if (parentDoodle != null) childDoodle.setRoot(parentDoodle.getRoot());
-        // inGame is same as the parent
-        // If it has no parent, inGame is passed in by intent
-        if (parentDoodle != null) childDoodle.setInGame(parentDoodle.getInGame());
-        else childDoodle.setInGame(inGame);
 
         savingProgressDialog.show();
         // Save doodle to database
         childDoodle.saveInBackground(e -> {
-            savingProgressDialog.dismiss();
             if (e != null) { // Saving doodle failed
+                savingProgressDialog.dismiss();
                 Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
             }
             else { // Saving doodle succeeded
@@ -348,9 +338,6 @@ public class DoodleActivity extends AppCompatActivity {
                 if (parentDoodle != null) {
                     handlePushNotification(parentDoodle.getArtist());
                 }
-
-                Toast.makeText(this, R.string.doodle_submitted, Toast.LENGTH_SHORT).show();
-                goHomeActivity();
             }
         });
     }
@@ -377,19 +364,20 @@ public class DoodleActivity extends AppCompatActivity {
     private void setRootToObjectId() {
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
-        // Include data referred by user key
         // The doodle we want to change the root of is distinguished by having a null root
         query.whereEqualTo(Doodle.KEY_ROOT, null);
         // Start an asynchronous call for the doodle
         query.getFirstInBackground((doodle, e) -> {
             if (e != null) { // Query has failed
+                savingProgressDialog.dismiss();
                 Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
             }
             else { // Query has succeeded
                 String root = doodle.getObjectId();
                 doodle.setRoot(root);
-                updateDoodle(doodle);
-                addToUserRootsContributedTo(root);
+                doodle.saveInBackground(doodleRelativeLayout, () -> {
+                    addToUserRootsContributedTo(root);
+                });
             }
         });
     }
@@ -398,15 +386,10 @@ public class DoodleActivity extends AppCompatActivity {
     private void addToUserRootsContributedTo (String root) {
         Player player = new Player(ParseUser.getCurrentUser());
         player.addRootContributedTo(root);
-        player.saveInBackground(doodleRelativeLayout);
-    }
-
-    // Updates the doodle's data in the database
-    private void updateDoodle(Doodle doodle) {
-        doodle.saveInBackground(e -> {
-            if (e != null) {
-                Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
-            }
+        player.saveInBackground(doodleRelativeLayout, () -> {
+            savingProgressDialog.dismiss();
+            Toast.makeText(this, R.string.doodle_submitted, Toast.LENGTH_SHORT).show();
+            goHomeActivity();
         });
     }
 

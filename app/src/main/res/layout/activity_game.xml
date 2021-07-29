@@ -14,4 +14,203 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/roundTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gameToolbar"
+        android:layout_alignStart="@+id/canvasRelativeLayout_GAME"
+        android:layout_marginTop="10dp"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="24sp"
+        tools:text="Round 1" />
+
+    <RelativeLayout
+        android:id="@+id/canvasRelativeLayout_GAME"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gameToolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/black"
+        android:padding="1dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/parentImageView_GAME"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_alignStart="@+id/doodleDrawView_GAME"
+                android:layout_alignTop="@+id/doodleDrawView_GAME"
+                android:layout_alignEnd="@id/doodleDrawView_GAME"
+                android:layout_alignBottom="@+id/doodleDrawView_GAME"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <com.divyanshu.draw.widget.DrawView
+                android:id="@+id/doodleDrawView_GAME"
+                android:layout_width="350dp"
+                android:layout_height="350dp"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:id="@+id/waitingForOtherPlayers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/waiting_for_other_players"
+                android:textSize="18sp"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/undoRedoLinearLayout_GAME"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/canvasRelativeLayout_GAME"
+        android:layout_alignLeft="@id/canvasRelativeLayout_GAME"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/undoButton_GAME"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            app:icon="@drawable/ic_baseline_undo_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="30dp" />
+
+        <Button
+            android:id="@+id/redoButton_GAME"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="5dp"
+            app:icon="@drawable/ic_baseline_redo_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="30dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sizeLinearLayout_GAME"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/canvasRelativeLayout_GAME"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/smallButton_GAME"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="left|center_vertical"
+            android:background="@drawable/button_round"
+            app:backgroundTint="@color/button_white"
+            app:icon="@drawable/ic_baseline_brightness_1_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="7dp"
+            app:iconTint="@color/black" />
+
+        <Button
+            android:id="@+id/mediumButton_GAME"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:background="@drawable/button_round"
+            android:foreground="@drawable/transparent_circle_indicator"
+            app:backgroundTint="@color/button_white"
+            app:icon="@drawable/ic_baseline_brightness_1_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="13dp"
+            app:iconTint="@color/black" />
+
+        <Button
+            android:id="@+id/largeButton_GAME"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right|center_vertical"
+            android:background="@drawable/button_round"
+            app:backgroundTint="@color/button_white"
+            app:icon="@drawable/ic_baseline_brightness_1_24"
+            app:iconGravity="textEnd"
+            app:iconPadding="0dp"
+            app:iconSize="20dp"
+            app:iconTint="@color/black" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/penLinearLayout_GAME"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/canvasRelativeLayout_GAME"
+        android:layout_alignRight="@id/canvasRelativeLayout_GAME"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/eraserButton_GAME"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right|center_vertical"
+            android:adjustViewBounds="true"
+            android:background="@drawable/button_round"
+            android:scaleType="fitCenter"
+            android:src="@drawable/button_transparent_texture" />
+
+        <ImageButton
+            android:id="@+id/colorButton_GAME"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/button_round"
+            app:backgroundTint="@color/button_black"
+            android:foreground="@drawable/transparent_circle_indicator" />
+
+    </LinearLayout>
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/colorPickerExpandableLayout_GAME"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/penLinearLayout_GAME"
+        android:layout_alignRight="@id/penLinearLayout_GAME"
+        android:layout_marginBottom="5dp"
+        app:el_duration="1000"
+        app:el_expanded="false"
+        app:el_parallax="0.5">
+
+        <FrameLayout
+            android:id="@+id/colorPickerFrameLayout_GAME"
+            android:layout_width="300dp"
+            android:layout_height="100dp"></FrameLayout>
+
+    </net.cachapa.expandablelayout.ExpandableLayout>
+
+    <Button
+        android:id="@+id/doneButton_GAME"
+        style="@style/CustomButton.Doodle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="@string/Done" />
+
 </RelativeLayout>

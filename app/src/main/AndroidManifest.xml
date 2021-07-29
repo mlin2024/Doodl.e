@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Doodle">
         <activity
+            android:name=".activities.GameGalleryActivity"
+            android:label="@string/game_results" />
+        <activity
             android:name=".activities.ContributionsGalleryActivity"
             android:label="@string/Contributions" />
         <activity
@@ -67,17 +70,19 @@
         <meta-data
             android:name="com.parse.CLIENT_KEY"
             android:value="@string/back4app_client_key" />
-        <meta-data android:name="com.parse.push.gcm_sender_id"
+        <meta-data
+            android:name="com.parse.push.gcm_sender_id"
             android:value="@string/firebase_sender_id" />
 
-        <service
-            android:name="com.parse.fcm.ParseFirebaseMessagingService">
+        <service android:name="com.parse.fcm.ParseFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <receiver android:name="com.parse.ParsePushBroadcastReceiver" android:exported="false">
+        <receiver
+            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
                 <action android:name="com.parse.push.intent.OPEN" />

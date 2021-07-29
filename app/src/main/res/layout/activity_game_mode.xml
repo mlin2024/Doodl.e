@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="30dp"
-                    android:textColor="@color/teal_700"
+                    android:textColor="?attr/colorSecondaryVariant"
                     android:textSize="48sp"
                     tools:text="AFXP" />
 

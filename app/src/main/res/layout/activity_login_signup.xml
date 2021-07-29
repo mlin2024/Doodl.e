@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:text="@string/Log_In"
-                    android:textColor="@color/purple_500"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="25sp" />
 
                 <EditText
@@ -129,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:text="@string/Sign_Up"
-                    android:textColor="@color/purple_500"
+                    android:textColor="?attr/colorPrimary"
                     android:textSize="25sp" />
 
                 <EditText

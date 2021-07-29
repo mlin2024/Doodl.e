@@ -2,23 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:layout_margin="5dp"
     android:background="@color/white"
     android:padding="5dp">
 
+    <TextView
+        android:id="@+id/originalArtistTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/doodleRelativeLayout"
+        android:layout_marginBottom="10dp"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="24sp"
+        tools:text="egg's doodle" />
+
     <LinearLayout
         android:id="@+id/versionLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/originalArtistTextView"
         android:layout_alignLeft="@id/doodleRelativeLayout"
         android:layout_alignRight="@id/doodleRelativeLayout"
         android:layout_centerHorizontal="true">
 
         <Button
-            android:id="@+id/backButton"
+            android:id="@+id/backButton_GAME"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
@@ -26,18 +37,18 @@
             app:backgroundTint="@color/button_light_blue" />
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/versionTabLayout"
+            android:id="@+id/versionTabLayout_GAME"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_toRightOf="@id/backButton"
+            android:layout_weight="1"
             app:tabBackground="@drawable/tab_selector"
             app:tabGravity="center"
-            app:tabIndicatorHeight="0dp"
-            android:layout_weight="1" />
+            app:tabIndicatorHeight="0dp" />
 
         <Button
-            android:id="@+id/forwardButton"
+            android:id="@+id/forwardButton_GAME"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
@@ -52,77 +63,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/versionLinearLayout"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_centerHorizontal="true">
+        android:background="@color/black"
+        android:padding="1dp">
 
         <RelativeLayout
-            android:id="@+id/doodleRelativeLayout_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:background="@color/black"
-            android:padding="1dp">
+            android:background="@color/white">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/doodleImageView_GAME"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:background="@color/white">
-
-                <ImageView
-                    android:id="@+id/doodleImageView"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
-                    tools:srcCompat="@tools:sample/avatars" />
-
-            </RelativeLayout>
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                tools:srcCompat="@tools:sample/avatars" />
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/timestampTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/doodleRelativeLayout_image"
-            android:layout_alignStart="@+id/doodleRelativeLayout_image"
-            android:layout_centerHorizontal="false"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="5dp"
-            tools:text="just now" />
-
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/seeContributionsButton"
+    <TextView
+        android:id="@+id/artistTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/doodleRelativeLayout"
         android:layout_centerHorizontal="true"
-        android:layout_margin="5dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/see_contributions"
-        android:textAllCaps="false"
-        android:textSize="18sp"
-        app:icon="@drawable/ic_baseline_arrow_forward_24"
-        app:iconGravity="textEnd" />
-
-    <Button
-        android:id="@+id/Xbutton"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/button_round"
-        app:backgroundTint="@color/button_black"
-        app:icon="@drawable/ic_close_black_24dp"
-        app:iconGravity="textEnd"
-        app:iconPadding="0dp"
-        app:iconSize="20dp"
-        app:iconTint="@color/button_white" />
+        android:textSize="24sp"
+        tools:text="egg" />
 
 </RelativeLayout>

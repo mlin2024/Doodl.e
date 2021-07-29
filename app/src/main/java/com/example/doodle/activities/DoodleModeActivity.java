@@ -104,7 +104,6 @@ public class DoodleModeActivity extends AppCompatActivity {
     private void goDoodleActivity() {
         Intent intent = new Intent(this, DoodleActivity.class);
         // Don't pass in anything for ParentDoodle, it has no parent since it is a new doodle
-        // Don't pass in anything for inGame, it defaults to false
         startActivity(intent);
     }
 

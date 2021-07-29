@@ -81,11 +81,12 @@ public class Doodle extends ParseObject implements Parcelable {
         put(KEY_ROOT, root);
     }
 
-    public boolean getInGame() {
-        return getBoolean(KEY_IN_GAME);
+    public String getInGame() {
+        if (containsKey(KEY_IN_GAME)) return getString(KEY_IN_GAME);
+        return null;
     }
 
-    public void setInGame(boolean inGame) {
+    public void setInGame(String inGame) {
         put(KEY_IN_GAME, inGame);
     }
 
@@ -123,5 +124,17 @@ public class Doodle extends ParseObject implements Parcelable {
         }
 
         return "";
+    }
+
+    // Asynchronously saves the doodle data to the database
+    public void saveInBackground(View view, Runnable run) {
+        saveInBackground(e -> {
+            if (e != null) {
+                Snackbar.make(view, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
+            }
+            else {
+                run.run();
+            }
+        });
     }
 }

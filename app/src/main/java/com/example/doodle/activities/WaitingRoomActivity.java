@@ -9,9 +9,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -37,10 +40,11 @@ public class WaitingRoomActivity extends AppCompatActivity {
     private RecyclerView playersRecyclerView;
     private TextView numPlayersTextView;
     private Button startGameButton;
+    private TextView waitForHost;
 
     // Other necessary member variables
     private Game game;
-    private List<ParseUser> players;
+    private ArrayList<ParseUser> players;
     private PlayerAdapter playerAdapter;
     private Handler updateHandler;
 
@@ -56,14 +60,14 @@ public class WaitingRoomActivity extends AppCompatActivity {
         playersRecyclerView = findViewById(R.id.playersRecyclerView);
         numPlayersTextView = findViewById(R.id.numPlayersTextView);
         startGameButton = findViewById(R.id.startGameButton);
+        waitForHost = findViewById(R.id.waitForHost);
 
         // Initialize other member variables
         // Unwrap the game that was passed in by the intent
-        game = null;
         game = getIntent().getParcelableExtra(GameModeActivity.GAME_TAG);
         players = game.getPlayers();
         playerAdapter = new PlayerAdapter(this, players);
-        updateHandler = new Handler();
+        updateHandler = new Handler(Looper.getMainLooper());
 
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
@@ -86,7 +90,17 @@ public class WaitingRoomActivity extends AppCompatActivity {
         // Set up num players TextView
         numPlayersTextView.setText(getResources().getString(R.string.Players) + " " + players.size());
 
+        // Set up start button
+        if (ParseUser.getCurrentUser().getObjectId().equals(game.getCreator().getObjectId())) {
+            startGameButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            waitForHost.setVisibility(View.VISIBLE);
+        }
+
         startGameButton.setOnClickListener(v -> {
+            game.setStarted(true);
+            game.saveInBackground(waitingRoomRelativeLayout);
             goGameActivity();
         });
     }
@@ -147,12 +161,15 @@ public class WaitingRoomActivity extends AppCompatActivity {
         public void run() {
             try {
                 game.fetch();
+                if (game.getStarted() == true) {
+                    goGameActivity();
+                }
                 playerAdapter.clear();
                 playerAdapter.addAll(game.getPlayers());
                 numPlayersTextView.setText(getResources().getString(R.string.Players) + " " + players.size());
                 updateHandler.postDelayed(this, POLL_INTERVAL);
             } catch (ParseException e) {
-                e.printStackTrace();
+                Snackbar.make(waitingRoomRelativeLayout, R.string.error_fetching_game_info, Snackbar.LENGTH_LONG).show();
             }
         }
     };
@@ -173,6 +190,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
     // Starts an intent to go to the game activity
     private void goGameActivity() {
         Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra(GameModeActivity.GAME_TAG, game);
         startActivity(intent);
     }
 

@@ -62,4 +62,12 @@
     <string name="error_finding_game">Couldn\'t find game, please check game code and try again</string>
     <string name="error_finding_players">Error finding players, please wait</string>
     <string name="error_joining_game">Error joining game, please try again</string>
+    <string name="waiting_for_other_players">Waiting for other players...</string>
+    <string name="wait_for_host">Wait for the host to start the game!</string>
+    <string name="round">Round</string>
+    <string name="error_fetching_doodles">Error fetching doodles, please wait</string>
+    <string name="error_fetching_game_info">There was an error fetching the game information, please wait</string>
+    <string name="error_updating_game">There was an error updating the game, please wait</string>
+    <string name="game_results">Game Results</string>
+    <string name="failed_to_load_doodles_from_game">Failed to load doodles from the game, please wait</string>
 </resources>

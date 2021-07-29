@@ -39,7 +39,7 @@ public class ContributionsGalleryActivity extends AppCompatActivity {
     private TextView noContributionsYet;
 
     // Other necessary member variables
-    private List<Doodle> contributions;
+    private ArrayList<Doodle> contributions;
     private DoodleAdapter doodleAdapter;
     private ProgressDialog loadingProgressDialog;
 
