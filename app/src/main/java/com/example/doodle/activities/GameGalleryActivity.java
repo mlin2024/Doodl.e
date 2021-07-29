@@ -88,7 +88,7 @@ public class GameGalleryActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.profile_menu, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
 
         // Add username next to profile icon
         menu.findItem(R.id.username).setTitle(ParseUser.getCurrentUser().getUsername());
