@@ -53,15 +53,15 @@
 
 **Optional Nice-to-have Stories**
 
-* [ ] When receiving an existing doodle from the database, user can view a timelapse of the work already done on the doodle
+* [ ] When receiving an existing doodle from the database, user can view a timelapse of the history of the doodle
 * [ ] App is compatible with landscape mode
 * [x] User can choose to either create a new game or join an existing game
   * [x] User can create a new game and receive the game code
   * [x] User can join a game by inputting the game code
     * [x] User can view a list of all users currently in the game
     * [x] User who created a game can start the game
-    * [ ] User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
-    * [ ] User can view the full history of each doodle in the game after the game ends
+    * [x] User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
+    * [x] User can view the full history of each doodle in the game after the game ends
 
 ### 2. Screen Archetypes
 
@@ -96,6 +96,7 @@
    * *User who created a game can start the game*
 * *Game Screen*
    * *User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game*
+* *Game Gallery Screen*
    * *User can view the full history of each doodle in the game after the game ends*
 * Profile Screen
    * User can choose to view their gallery
@@ -130,9 +131,9 @@
 * Game Mode Screen
    * Game Screen
 * Game Screen
-   * none
+   * Game Gallery Screen
 * Profile Screen
-   * none
+   * Contribution Gallery Screen
 
 ## Wireframes
 <img src="doodl.e wireframe.png" width=600>
