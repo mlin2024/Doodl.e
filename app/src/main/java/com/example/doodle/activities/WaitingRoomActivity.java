@@ -14,8 +14,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.doodle.R;
@@ -39,6 +42,8 @@ public class WaitingRoomActivity extends AppCompatActivity {
     private TextView gameCodeWaitingRoomTextView;
     private RecyclerView playersRecyclerView;
     private TextView numPlayersTextView;
+    private Spinner timeLimitSpinner;
+    private TextView timeLimitTextView;
     private Button startGameButton;
     private TextView waitForHost;
 
@@ -46,6 +51,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
     private Game game;
     private ArrayList<ParseUser> players;
     private PlayerAdapter playerAdapter;
+    private ArrayAdapter<CharSequence> timeLimitAdapter;
     private Handler updateHandler;
 
     @Override
@@ -59,6 +65,8 @@ public class WaitingRoomActivity extends AppCompatActivity {
         gameCodeWaitingRoomTextView = findViewById(R.id.gameCodeWaitingRoomTextView);
         playersRecyclerView = findViewById(R.id.playersRecyclerView);
         numPlayersTextView = findViewById(R.id.numPlayersTextView);
+        timeLimitSpinner = findViewById(R.id.timeLimitSpinner);
+        timeLimitTextView = findViewById(R.id.timeLimitTextView);
         startGameButton = findViewById(R.id.startGameButton);
         waitForHost = findViewById(R.id.waitForHost);
 
@@ -88,7 +96,39 @@ public class WaitingRoomActivity extends AppCompatActivity {
         playersRecyclerView.setAdapter(playerAdapter);
 
         // Set up num players TextView
-        numPlayersTextView.setText(getResources().getString(R.string.Players) + " " + players.size());
+        numPlayersTextView.setText(Integer.toString(players.size()));
+
+        // Set up time limit spinner
+        if (ParseUser.getCurrentUser().getObjectId().equals(game.getCreator().getObjectId())) {
+            timeLimitSpinner.setVisibility(View.VISIBLE);
+
+            // Create an ArrayAdapter using the string array and a default spinner layout
+            timeLimitAdapter = ArrayAdapter.createFromResource(this, R.array.time_limit_array_seconds, R.layout.spinner_item);
+            // Specify the layout to use when the list of choices appears
+            timeLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // Apply the adapter to the spinner
+            timeLimitSpinner.setAdapter(timeLimitAdapter);
+            // Set it to the default value, 60s
+            timeLimitSpinner.setSelection(1);
+
+            timeLimitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    int selected = getResources().getIntArray(R.array.time_limit_array)[position];
+                    game.setTimeLimit(selected);
+                    game.saveInBackground(waitingRoomRelativeLayout);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        }
+        else {
+            timeLimitTextView.setVisibility(View.VISIBLE);
+        }
+
+        // Set up time limit text view
+        timeLimitTextView.setText(game.getTimeLimit() + getResources().getString(R.string.seconds_unit));
 
         // Set up start button
         if (ParseUser.getCurrentUser().getObjectId().equals(game.getCreator().getObjectId())) {
@@ -144,7 +184,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
                 logout();
                 return true;
             case android.R.id.home:
-                finish();
+                goHomeActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -153,7 +193,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        goGameActivity();
     }
 
     private Runnable updatePlayers = new Runnable() {
@@ -166,7 +206,8 @@ public class WaitingRoomActivity extends AppCompatActivity {
                 }
                 playerAdapter.clear();
                 playerAdapter.addAll(game.getPlayers());
-                numPlayersTextView.setText(getResources().getString(R.string.Players) + " " + players.size());
+                numPlayersTextView.setText(Integer.toString(players.size()));
+                timeLimitTextView.setText(game.getTimeLimit() + getResources().getString(R.string.seconds_unit));
                 updateHandler.postDelayed(this, POLL_INTERVAL);
             } catch (ParseException e) {
                 Snackbar.make(waitingRoomRelativeLayout, R.string.error_fetching_game_info, Snackbar.LENGTH_LONG).show();
@@ -184,6 +225,13 @@ public class WaitingRoomActivity extends AppCompatActivity {
     // Starts an intent to go to the profile activity
     private void goProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the home activity
+    private void goHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

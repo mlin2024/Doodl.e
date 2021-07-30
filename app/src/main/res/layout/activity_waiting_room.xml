@@ -24,8 +24,10 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/yourGameCodeIs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             android:layout_gravity="center_vertical"
             android:text="@string/Your_game_code_is"
             android:textSize="24sp" />
@@ -34,7 +36,6 @@
             android:id="@+id/gameCodeWaitingRoomTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:textColor="?attr/colorSecondaryVariant"
             android:textSize="34sp"
             tools:text="AFXP" />
@@ -45,21 +46,78 @@
         android:id="@+id/playersRecyclerView"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/numPlayersTextView"
+        android:layout_above="@id/timeLimitLinearLayout"
         android:layout_below="@+id/gameCodeLinearLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp" />
 
-    <TextView
-        android:id="@+id/numPlayersTextView"
+    <LinearLayout
+        android:id="@+id/playersLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/startGameButton"
-        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@id/playersRecyclerView"
         android:layout_marginBottom="20dp"
-        android:textSize="24sp"
-        tools:text="Players: 0" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/players"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
+            android:text="@string/Players"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/numPlayersTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:textSize="34sp"
+            tools:text="0" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/timeLimitLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/startGameButton"
+        android:layout_alignRight="@id/playersRecyclerView"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/timeLimit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
+            android:text="@string/time_limit"
+            android:textSize="24sp" />
+
+        <Spinner
+            android:id="@+id/timeLimitSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/timeLimitTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="?attr/colorSecondaryVariant"
+            android:textSize="34sp"
+            android:visibility="gone"
+            tools:text="60s" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/startGameButton"
@@ -72,13 +130,14 @@
         android:text="@string/Start_Game"
         android:visibility="invisible"
         app:icon="@drawable/ic_baseline_arrow_forward_24"
-        app:iconGravity="end" />
+        app:iconGravity="end"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/waitForHost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/numPlayersTextView"
+        android:layout_alignTop="@id/startGameButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:text="@string/wait_for_host"

@@ -245,7 +245,7 @@ public class GameActivity extends AppCompatActivity {
                 logout();
                 return true;
             case android.R.id.home:
-                finish();
+                goHomeActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -254,7 +254,7 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        goHomeActivity();
     }
 
     private Runnable updateGame = new Runnable() {
@@ -546,13 +546,6 @@ public class GameActivity extends AppCompatActivity {
         return parseFile;
     }
 
-    // Starts an intent to go to the home activity
-    private void goHomeActivity() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
-
     // Starts an intent to go to the login/signup activity
     private void goLoginSignupActivity() {
         Intent intent = new Intent(this, LoginSignupActivity.class);
@@ -563,6 +556,13 @@ public class GameActivity extends AppCompatActivity {
     // Starts an intent to go to the profile activity
     private void goProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the home activity
+    private void goHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

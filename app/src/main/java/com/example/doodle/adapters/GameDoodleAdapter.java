@@ -122,7 +122,8 @@ public class GameDoodleAdapter extends RecyclerView.Adapter<GameDoodleAdapter.Vi
                                     .placeholder(R.drawable.placeholder)
                                     .into(doodleImageView_GAME);
                         }
-                        artistTextView.setText(currentDoodle.getArtist().fetchIfNeeded().getUsername());
+                        artistTextView.setText(currentDoodle.getArtist().fetchIfNeeded().getUsername()
+                                + context.getResources().getString(R.string.s_doodle));
                     } catch (ParseException e) {
                         Snackbar.make(itemView, context.getResources().getString(R.string.error_finding_doodle), Snackbar.LENGTH_LONG).show();
                     }

@@ -21,6 +21,7 @@ public class Game extends ParseObject implements Parcelable {
     public static final String KEY_PLAYERS = "players";
     public static final String KEY_CREATOR = "creator";
     public static final String KEY_STARTED = "started";
+    public static final String KEY_TIME_LIMIT = "timeLimit";
 
     public String getGameCode() {
         return getString(KEY_GAME_CODE);
@@ -60,6 +61,14 @@ public class Game extends ParseObject implements Parcelable {
 
     public void setStarted(boolean started) {
         put(KEY_STARTED, started);
+    }
+
+    public int getTimeLimit() {
+        return getInt(KEY_TIME_LIMIT);
+    }
+
+    public void setTimeLimit(int timeLimit) {
+        put(KEY_TIME_LIMIT, timeLimit);
     }
 
     // Asynchronously saves the user data to the database

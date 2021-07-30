@@ -70,4 +70,7 @@
     <string name="error_updating_game">There was an error updating the game, please wait</string>
     <string name="game_results">Game Results</string>
     <string name="failed_to_load_doodles_from_game">Failed to load doodles from the game, please wait</string>
+    <string name="s_doodle">\'s doodle:</string>
+    <string name="time_limit">Time limit:</string>
+    <string name="seconds_unit">s</string>
 </resources>

@@ -106,7 +106,7 @@ public class GameGalleryActivity extends AppCompatActivity {
                 logout();
                 return true;
             case android.R.id.home:
-                finish();
+                goHomeActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -115,7 +115,7 @@ public class GameGalleryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        goHomeActivity();
     }
 
     private void findGameDoodles() {
@@ -146,6 +146,13 @@ public class GameGalleryActivity extends AppCompatActivity {
     // Starts an intent to go to the login/signup activity
     private void goLoginSignupActivity() {
         Intent intent = new Intent(this, LoginSignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the home activity
+    private void goHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
