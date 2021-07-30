@@ -162,7 +162,8 @@
    | *gameCode*      | *String*   | *unique code for the game* |
    | *players*       | *Array of Users* | *users in the game* |
    | *creator*       | *Pointer to User* | *user who created the game* |
-   | *started*       | *Boolean* | *whether or not the game has started yet* |
+   | *timeLimit*     | *Number* | *the time limit players have to draw (set by game creator, can be set to 30s, 60s, or 90s)* |
+   | *round*         | *Number* | *What round the game is on (0 if game hasn't started yet)* |
    
 ### Networking
 #### List of network requests by screen
