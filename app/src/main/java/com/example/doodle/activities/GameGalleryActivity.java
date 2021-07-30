@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class GameGalleryActivity extends AppCompatActivity {
     private RelativeLayout gameGalleryRelativeLayout;
     private Toolbar toolbar;
     private RecyclerView gameGalleryRecyclerView;
+    private Button homeButton;
 
     // Other necessary member variables
     private ArrayList<Doodle> gameDoodles;
@@ -53,6 +55,7 @@ public class GameGalleryActivity extends AppCompatActivity {
         gameGalleryRelativeLayout = findViewById(R.id.gameGalleryRelativeLayout);
         toolbar = findViewById(R.id.gameGalleryToolbar);
         gameGalleryRecyclerView = findViewById(R.id.gameGalleryRecyclerView);
+        homeButton = findViewById(R.id.homeButton);
 
         // Initialize other member variables
         gameDoodles = new ArrayList<>();
@@ -80,6 +83,10 @@ public class GameGalleryActivity extends AppCompatActivity {
         // Set up ProgressDialog
         loadingProgressDialog.setMessage(getResources().getString(R.string.loading_doodles));
         loadingProgressDialog.setCancelable(false);
+
+        homeButton.setOnClickListener(v -> {
+            goHomeActivity();
+        });
 
         // Grab doodles to populate the RecyclerView
         findGameDoodles();
@@ -147,6 +154,13 @@ public class GameGalleryActivity extends AppCompatActivity {
     // Starts an intent to go to the login/signup activity
     private void goLoginSignupActivity() {
         Intent intent = new Intent(this, LoginSignupActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    // Starts an intent to go to the home activity
+    private void goHomeActivity() {
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
