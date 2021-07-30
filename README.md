@@ -210,6 +210,10 @@
 
 <img src='Week5Update.gif' title='Week 5 Update' width='' alt='Week 5 Update' />
 
+### Week 6 Update
+
+<img src='Week6Update.gif' title='Week 6 Update' width='' alt='Week 6 Update' />
+
 GIFs created with [LiceCap](https://www.cockos.com/licecap/).
 
 ## Credits
