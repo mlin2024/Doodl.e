@@ -297,7 +297,7 @@ public class DoodleActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapData, 0, bitmapData.length);
                 return bitmap;
             } catch (ParseException e) {
-                Snackbar.make(doodleRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_finding_doodle), Snackbar.LENGTH_LONG).show();
                 return null;
             }
         }
@@ -324,20 +324,14 @@ public class DoodleActivity extends AppCompatActivity {
 
         savingProgressDialog.show();
         // Save doodle to database
-        childDoodle.saveInBackground(e -> {
-            if (e != null) { // Saving doodle failed
-                savingProgressDialog.dismiss();
-                Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
-            }
-            else { // Saving doodle succeeded
-                // Now if it has no parent, set its root equal to its objectId
-                if (parentDoodle == null) setRootToObjectId();
-                else addToUserRootsContributedTo(parentDoodle.getRoot());
+        childDoodle.saveInBackground(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
+            // Now if it has no parent, set its root equal to its objectId
+            if (parentDoodle == null) setRootToObjectId();
+            else addToUserRootsContributedTo(parentDoodle.getRoot());
 
-                // Handle push notification to the artist of the parent doodle
-                if (parentDoodle != null) {
-                    handlePushNotification(parentDoodle.getArtist());
-                }
+            // Handle push notification to the artist of the parent doodle
+            if (parentDoodle != null) {
+                handlePushNotification(parentDoodle.getArtist());
             }
         });
     }
@@ -370,12 +364,12 @@ public class DoodleActivity extends AppCompatActivity {
         query.getFirstInBackground((doodle, e) -> {
             if (e != null) { // Query has failed
                 savingProgressDialog.dismiss();
-                Snackbar.make(doodleRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
             }
             else { // Query has succeeded
                 String root = doodle.getObjectId();
                 doodle.setRoot(root);
-                doodle.saveInBackground(doodleRelativeLayout, () -> {
+                doodle.saveInBackground(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
                     addToUserRootsContributedTo(root);
                 });
             }
@@ -386,9 +380,9 @@ public class DoodleActivity extends AppCompatActivity {
     private void addToUserRootsContributedTo (String root) {
         Player player = new Player(ParseUser.getCurrentUser());
         player.addRootContributedTo(root);
-        player.saveInBackground(doodleRelativeLayout, () -> {
+        player.saveInBackground(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
             savingProgressDialog.dismiss();
-            Toast.makeText(this, R.string.doodle_submitted, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.doodle_submitted), Toast.LENGTH_SHORT).show();
             goHomeActivity();
         });
     }
@@ -445,10 +439,10 @@ public class DoodleActivity extends AppCompatActivity {
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(doodleRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            if (e != null) { // Logout has failed
+                Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.logout_failed), Snackbar.LENGTH_LONG).show();
             }
-            else {
+            else { // Logout has succeeded
                 goLoginSignupActivity();
                 finish();
             }

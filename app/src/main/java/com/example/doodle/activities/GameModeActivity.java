@@ -57,6 +57,7 @@ public class GameModeActivity extends AppCompatActivity {
     private Animation shake;
     private ProgressDialog creatingProgressDialog;
     private ProgressDialog findingProgressDialog;
+    private ProgressDialog joiningProgressDialog;
     private TextWatcher textWatcher;
 
     @Override
@@ -81,6 +82,7 @@ public class GameModeActivity extends AppCompatActivity {
         // Initialize other member variables
         creatingProgressDialog = new ProgressDialog(GameModeActivity.this);
         findingProgressDialog = new ProgressDialog(GameModeActivity.this);
+        joiningProgressDialog = new ProgressDialog(GameModeActivity.this);
         shake = AnimationUtils.loadAnimation(GameModeActivity.this, R.anim.shake);
         // TextWatcher to disable the join game button unless 4-character game code has been filled in
         textWatcher = new TextWatcher() {
@@ -103,11 +105,13 @@ public class GameModeActivity extends AppCompatActivity {
         // Set up game code TextView
         gameCodeTextView.setText(gameCode);
 
-        // Set up ProgressDialog
+        // Set up ProgressDialogs
         creatingProgressDialog.setMessage(getResources().getString(R.string.creating_game));
         creatingProgressDialog.setCancelable(false);
         findingProgressDialog.setMessage(getResources().getString(R.string.finding_game));
         findingProgressDialog.setCancelable(false);
+        joiningProgressDialog.setMessage(getResources().getString(R.string.joining_game));
+        joiningProgressDialog.setCancelable(false);
 
         // Set up TextWatcher
         gameCodeEditText.addTextChangedListener(textWatcher);
@@ -134,17 +138,13 @@ public class GameModeActivity extends AppCompatActivity {
 
                 // Save game to database
                 creatingProgressDialog.show();
-                game.saveInBackground(e -> {
+                game.saveInBackground(gameModeRelativeLayout, getResources().getString(R.string.error_creating_game), () -> {
                     creatingProgressDialog.dismiss();
-                    if (e != null) { // Creating game failed
-                        Snackbar.make(gameModeRelativeLayout, R.string.error_creating_game, Snackbar.LENGTH_LONG).show();
-                    }
-                    else { // Creating game succeeded
-                        goWaitingRoomActivity(game);
-                    }
+                    goWaitingRoomActivity(game);
+                    finish();
                 });
             } catch (ParseException e) {
-                Snackbar.make(gameModeRelativeLayout, R.string.error_creating_game, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(gameModeRelativeLayout, getResources().getString(R.string.error_creating_game), Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -219,18 +219,18 @@ public class GameModeActivity extends AppCompatActivity {
         query.getFirstInBackground((foundGame, e) -> {
             findingProgressDialog.dismiss();
             if (e != null) { // Query has failed
-                Snackbar.make(gameModeRelativeLayout, R.string.error_finding_game, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(gameModeRelativeLayout, getResources().getString(R.string.error_finding_game), Snackbar.LENGTH_LONG).show();
                 joinGameExpandableLayout.startAnimation(shake);
                 return;
             }
             else { // Query has succeeded
-                try {
-                    foundGame.addPlayer(ParseUser.getCurrentUser().fetch());
-                    foundGame.saveInBackground(gameModeRelativeLayout);
+                foundGame.addPlayer(ParseUser.getCurrentUser());
+                joiningProgressDialog.show();
+                foundGame.saveInBackground(gameModeRelativeLayout, getResources().getString(R.string.error_joining_game), () -> {
+                    joiningProgressDialog.dismiss();
                     goWaitingRoomActivity(foundGame);
-                } catch (ParseException parseException) {
-                    Snackbar.make(gameModeRelativeLayout, R.string.error_joining_game, Snackbar.LENGTH_LONG).show();
-                }
+                    finish();
+                });
             }
         });
     }
@@ -263,10 +263,10 @@ public class GameModeActivity extends AppCompatActivity {
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(gameModeRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            if (e != null) { // Logout has failed
+                Snackbar.make(gameModeRelativeLayout, getResources().getString(R.string.logout_failed), Snackbar.LENGTH_LONG).show();
             }
-            else {
+            else { // Logout has succeeded
                 goLoginSignupActivity();
                 finish();
             }

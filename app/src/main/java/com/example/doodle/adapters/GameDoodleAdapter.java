@@ -40,7 +40,7 @@ public class GameDoodleAdapter extends RecyclerView.Adapter<GameDoodleAdapter.Vi
     @Override
     public GameDoodleAdapter.ViewHolder onCreateViewHolder(@NonNull @org.jetbrains.annotations.NotNull ViewGroup parent, int viewType) {
         View view;
-        view = LayoutInflater.from(context).inflate(R.layout.doodle_detail_game, parent, false);
+        view = LayoutInflater.from(context).inflate(R.layout.item_doodle_detail_game, parent, false);
         return new GameDoodleAdapter.ViewHolder(view);
     }
 
@@ -93,7 +93,8 @@ public class GameDoodleAdapter extends RecyclerView.Adapter<GameDoodleAdapter.Vi
 
                 // Set up the original artist TextView
                 try {
-                    originalArtistTextView.setText(currentDoodle.getArtist().fetchIfNeeded().getUsername());
+                    originalArtistTextView.setText(currentDoodle.getArtist().fetchIfNeeded().getUsername()
+                            + context.getResources().getString(R.string.s_doodle));
                 } catch (ParseException e) {
                     Snackbar.make(itemView, context.getResources().getString(R.string.error_finding_doodle), Snackbar.LENGTH_LONG).show();
                 }
@@ -122,8 +123,7 @@ public class GameDoodleAdapter extends RecyclerView.Adapter<GameDoodleAdapter.Vi
                                     .placeholder(R.drawable.placeholder)
                                     .into(doodleImageView_GAME);
                         }
-                        artistTextView.setText(currentDoodle.getArtist().fetchIfNeeded().getUsername()
-                                + context.getResources().getString(R.string.s_doodle));
+                        artistTextView.setText(currentDoodle.getArtist().fetchIfNeeded().getUsername());
                     } catch (ParseException e) {
                         Snackbar.make(itemView, context.getResources().getString(R.string.error_finding_doodle), Snackbar.LENGTH_LONG).show();
                     }

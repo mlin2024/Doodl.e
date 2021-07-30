@@ -55,12 +55,12 @@ public class Player {
     }
 
     // Asynchronously saves the user data to the database
-    public void saveInBackground(View view, Runnable run) {
+    public void saveInBackground(View view, String errorMessage, Runnable run) {
         user.saveInBackground(e -> {
-            if (e != null) {
-                Snackbar.make(view, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
+            if (e != null) { // Save has failed
+                Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
             }
-            else {
+            else { // Save has succeeded
                 run.run();
             }
         });

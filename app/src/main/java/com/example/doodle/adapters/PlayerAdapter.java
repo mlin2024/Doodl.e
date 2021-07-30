@@ -75,7 +75,7 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
             try {
                 usernameTextView.setText(player.fetchIfNeeded().getUsername());
             } catch (ParseException e) {
-                Toast.makeText(context, R.string.error_finding_players, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.error_finding_players), Toast.LENGTH_SHORT).show();
             }
         }
     }

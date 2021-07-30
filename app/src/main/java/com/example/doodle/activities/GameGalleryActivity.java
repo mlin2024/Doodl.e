@@ -106,7 +106,7 @@ public class GameGalleryActivity extends AppCompatActivity {
                 logout();
                 return true;
             case android.R.id.home:
-                goHomeActivity();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -115,7 +115,7 @@ public class GameGalleryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        goHomeActivity();
+        finish();
     }
 
     private void findGameDoodles() {
@@ -129,16 +129,17 @@ public class GameGalleryActivity extends AppCompatActivity {
         loadingProgressDialog.show();
         // Start an asynchronous call for doodles
         query.findInBackground((foundDoodles, e) -> {
-            loadingProgressDialog.dismiss();
+
             if (e != null) { // Query has failed
-                Snackbar.make(gameGalleryRelativeLayout, R.string.failed_to_load_doodles_from_game, Snackbar.LENGTH_LONG).show();
-                return;
+                loadingProgressDialog.dismiss();
+                Snackbar.make(gameGalleryRelativeLayout, getResources().getString(R.string.failed_to_load_doodles_from_game), Snackbar.LENGTH_LONG).show();
             }
             else { // Query has succeeded
                 // Clear out old items before appending in the new ones
                 gameDoodleAdapter.clear();
                 // Save received posts to list and notify adapter of new data
                 gameDoodleAdapter.addAll(foundDoodles);
+                loadingProgressDialog.dismiss();
             }
         });
     }
@@ -146,13 +147,6 @@ public class GameGalleryActivity extends AppCompatActivity {
     // Starts an intent to go to the login/signup activity
     private void goLoginSignupActivity() {
         Intent intent = new Intent(this, LoginSignupActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
-
-    // Starts an intent to go to the home activity
-    private void goHomeActivity() {
-        Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
@@ -165,10 +159,10 @@ public class GameGalleryActivity extends AppCompatActivity {
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(gameGalleryRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            if (e != null) { // Logout has failed
+                Snackbar.make(gameGalleryRelativeLayout, getResources().getString(R.string.logout_failed), Snackbar.LENGTH_LONG).show();
             }
-            else {
+            else { // Logout has succeeded
                 goLoginSignupActivity();
                 finish();
             }

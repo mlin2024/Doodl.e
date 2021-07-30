@@ -149,12 +149,12 @@ public class LoginSignupActivity extends AppCompatActivity {
         verifyingProgressDialog.show();
         ParseUser.logInInBackground(username, password, (user, e) -> {
             verifyingProgressDialog.dismiss();
-            if (e != null) { // The login failed
-                Snackbar.make(loginSignupRelativeLayout, R.string.login_failed, Snackbar.LENGTH_LONG).show();
+            if (e != null) {  // Login has failed
+                Snackbar.make(loginSignupRelativeLayout, getResources().getString(R.string.login_failed), Snackbar.LENGTH_LONG).show();
                 loginExpandableLayout.startAnimation(shake);
                 return;
             }
-            else { // The login succeded
+            else { // Login has succeeded
                 clearEditTexts();
                 goHomeActivity();
 
@@ -174,12 +174,12 @@ public class LoginSignupActivity extends AppCompatActivity {
         verifyingProgressDialog.show();
         user.signUpInBackground(e -> {
             verifyingProgressDialog.dismiss();
-            if (e != null) { // The signup failed
-                Snackbar.make(loginSignupRelativeLayout, R.string.signup_failed, Snackbar.LENGTH_LONG).show();
+            if (e != null) { // Signup has failed
+                Snackbar.make(loginSignupRelativeLayout, getResources().getString(R.string.signup_failed), Snackbar.LENGTH_LONG).show();
                 signupExpandableLayout.startAnimation(shake);
                 return;
             }
-            else { // The signup succeeded
+            else { // Signup has succeeded
                 clearEditTexts();
                 goHomeActivity();
 

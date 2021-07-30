@@ -139,7 +139,7 @@ public class ContributionsGalleryActivity extends AppCompatActivity {
         query.findInBackground((foundDoodles, e) -> {
             loadingProgressDialog.dismiss();
             if (e != null) { // Query has failed
-                Snackbar.make(contributionsGalleryRelativeLayout, R.string.failed_to_load_gallery, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(contributionsGalleryRelativeLayout, getResources().getString(R.string.failed_to_load_gallery), Snackbar.LENGTH_LONG).show();
                 return;
             }
             else { // Query has succeeded
@@ -168,10 +168,10 @@ public class ContributionsGalleryActivity extends AppCompatActivity {
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(contributionsGalleryRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            if (e != null) { // Logout has failed
+                Snackbar.make(contributionsGalleryRelativeLayout, getResources().getString(R.string.logout_failed), Snackbar.LENGTH_LONG).show();
             }
-            else {
+            else { // Logout has succeeded
                 goLoginSignupActivity();
                 finish();
             }

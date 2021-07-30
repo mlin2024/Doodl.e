@@ -73,4 +73,7 @@
     <string name="s_doodle">\'s doodle:</string>
     <string name="time_limit">Time limit:</string>
     <string name="seconds_unit">s</string>
+    <string name="starting_game">Starting game...</string>
+    <string name="error_starting_game">There was an error starting the game, please try again</string>
+    <string name="joining_game">Joining game...</string>
 </resources>

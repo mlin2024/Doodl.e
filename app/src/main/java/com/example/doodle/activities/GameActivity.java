@@ -46,17 +46,20 @@ import com.parse.ParseUser;
 import net.cachapa.expandablelayout.ExpandableLayout;
 
 import java.io.ByteArrayOutputStream;
+import java.util.concurrent.TimeUnit;
 
 public class GameActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
     public static final float STROKE_WIDTH_SMALL = 10;
     public static final float STROKE_WIDTH_MEDIUM = 20;
     public static final float STROKE_WIDTH_LARGE = 30;
+    public static final long ONE_SECOND = TimeUnit.SECONDS.toMillis(1);
 
     // Views in the layout
     private RelativeLayout gameRelativeLayout;
     private Toolbar toolbar;
     private TextView roundTextView;
+    private TextView timeTextView;
     private ImageView parentImageView;
     private DrawView doodleDrawView;
     private TextView waitingForOtherPlayers;
@@ -81,10 +84,12 @@ public class GameActivity extends AppCompatActivity {
     private Button currentSizeButton;
     private ImageButton currentPenButton;
     private Game game;
+    private int indexInPlayerList;
+    private int numPlayers;
     private int round;
-    private boolean currentlyDrawing;
     private Doodle parentDoodle;
     private Handler updateHandler;
+    private Handler timeHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +100,7 @@ public class GameActivity extends AppCompatActivity {
         gameRelativeLayout = findViewById(R.id.gameRelativeLayout);
         toolbar = findViewById(R.id.gameToolbar);
         roundTextView = findViewById(R.id.roundTextView);
+        timeTextView = findViewById(R.id.timeTextView);
         parentImageView = findViewById(R.id.parentImageView_GAME);
         doodleDrawView = findViewById(R.id.doodleDrawView_GAME);
         waitingForOtherPlayers = findViewById(R.id.waitingForOtherPlayers);
@@ -121,10 +127,12 @@ public class GameActivity extends AppCompatActivity {
         currentPenButton = colorButton;
         // Unwrap the game that was passed in by the intent
         game = getIntent().getParcelableExtra(GameModeActivity.GAME_TAG);
+        indexInPlayerList = 0;
+        numPlayers = game.getPlayers().size();
         round = 1;
-        currentlyDrawing = true;
         parentDoodle = null;
         updateHandler = new Handler(Looper.getMainLooper());
+        timeHandler = new Handler(Looper.getMainLooper());
 
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
@@ -133,7 +141,7 @@ public class GameActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // Set up round text view
-        roundTextView.setText(getResources().getString(R.string.round) + " " + round + "/" + game.getPlayers().size());
+        roundTextView.setText(getResources().getString(R.string.round) + " " + game.getRound() + "/" + numPlayers);
 
         // Set up ProgressDialog
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
@@ -144,6 +152,14 @@ public class GameActivity extends AppCompatActivity {
 
         // Set up canvas
         resetCanvas();
+
+        // Set up numPlayer
+        String curPlayer = ParseUser.getCurrentUser().getObjectId();
+        for (ParseUser player : game.getPlayers()) {
+            // Iterate through the list of players, once the current user is found, indexInPlayerList is equal to their index
+            if (player.getObjectId().equals(curPlayer)) break;
+            indexInPlayerList++;
+        }
 
         undoButton.setOnClickListener(v -> {
             doodleDrawView.undo();
@@ -199,6 +215,8 @@ public class GameActivity extends AppCompatActivity {
         });
 
         doneButton.setOnClickListener(v -> {
+            timeHandler.removeCallbacksAndMessages(null);
+
             Bitmap drawingBitmap = doodleDrawView.getBitmap();
             drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
@@ -212,13 +230,25 @@ public class GameActivity extends AppCompatActivity {
 
         // Only start checking for new messages when the app becomes active in foreground
         updateHandler.postDelayed(updateGame, WaitingRoomActivity.POLL_INTERVAL);
+        timeHandler.postDelayed(updateTime, ONE_SECOND);
     }
 
     @Override
     protected void onPause() {
         // Stop background task from refreshing messages, to avoid unnecessary traffic & battery drain
         updateHandler.removeCallbacksAndMessages(null);
+        timeHandler.removeCallbacksAndMessages(null);
+
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Stop background task from refreshing messages, to avoid unnecessary traffic & battery drain
+        updateHandler.removeCallbacksAndMessages(null);
+        timeHandler.removeCallbacksAndMessages(null);
+
+        super.onDestroy();
     }
 
     @Override
@@ -245,7 +275,7 @@ public class GameActivity extends AppCompatActivity {
                 logout();
                 return true;
             case android.R.id.home:
-                goHomeActivity();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -254,7 +284,7 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        goHomeActivity();
+        finish();
     }
 
     private Runnable updateGame = new Runnable() {
@@ -262,74 +292,99 @@ public class GameActivity extends AppCompatActivity {
         public void run() {
             try {
                 game.fetch();
-
-                // If the player is waiting for a new doodle, see if any are available
-                if (!currentlyDrawing) queryForNextDoodle();
-
+                if (game.getRound() > round) {
+                    round = game.getRound();
+                    // End the game if all rounds are finished
+                    if (round > numPlayers) {
+                        goGameGalleryActivity();
+                        finish();
+                    }
+                    // Else, start next round
+                    queryForNextDoodle();
+                }
                 updateHandler.postDelayed(this, WaitingRoomActivity.POLL_INTERVAL);
             } catch (ParseException e) {
-                Snackbar.make(gameRelativeLayout, R.string.error_fetching_doodles, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_fetching_doodles), Snackbar.LENGTH_LONG).show();
             }
         }
     };
 
+    private Runnable updateTime = new Runnable() {
+        @Override
+        public void run() {
+            int timeMillis = (int)(game.getUpdatedAt().getTime() + (game.getTimeLimit()*1000) - System.currentTimeMillis());
+            int time = timeMillis/1000;
+            if (time >= 0) {
+                timeTextView.setText(Integer.toString(time) + getResources().getString(R.string.seconds_unit));
+                timeHandler.postDelayed(this, ONE_SECOND);
+                if (time <= 10) {
+                    timeTextView.setTextColor(getResources().getColor(R.color.red, getTheme()));
+                }
+            }
+            else { // Round ends because time ran out
+                // Save whatever the user currently has drawn
+                Bitmap drawingBitmap = doodleDrawView.getBitmap();
+                drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
+                Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
+                saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
+            }
+        }
+    };
+
+    // Receives the next doodle for the player to edit from the database
+    // (the doodles in the game all just cyclically shift to the next player)
     private void queryForNextDoodle() {
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
         // Find doodle in current game
         query.whereEqualTo(Doodle.KEY_IN_GAME, game.getObjectId());
-        // Don't include doodles that the current user has already edited an ancestor of
-        Player player = new Player(ParseUser.getCurrentUser());
-        query.whereNotContainedIn(Doodle.KEY_ROOT, player.getRootsContributedTo());
-        // Don't include doodles that don't have a root (it must still be getting assigned)
-        query.whereNotEqualTo(Doodle.KEY_ROOT, null);
+        // Find doodle by the next player in line
+        int index = (indexInPlayerList + 1) % numPlayers;
+        query.whereEqualTo(Doodle.KEY_ARTIST, game.getPlayers().get(index));
         // Only include doodles with tail length equal to the number of doodles the player has already added to
-        // e.g. after round 1 we want a doodle that has tail length 1 (no one has added to it yet)
-        query.whereEqualTo(Doodle.KEY_TAIL_LENGTH, round);
+        // e.g. in round 2 we want a doodle that has tail length 1 (no one has added to it yet)
+        query.whereEqualTo(Doodle.KEY_TAIL_LENGTH, game.getRound() - 1);
 
         // Start an asynchronous call for the doodle
         query.getFirstInBackground((nextDoodle, e) -> {
-            if (e != null) { // Query has failed, no doodle is available yet
-                return;
-            }
-            else { // Query has succeeded
+            if (e != null) { // Query has failed
+                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_finding_doodle), Snackbar.LENGTH_LONG).show();
+            } else { // Query has succeeded
                 parentDoodle = nextDoodle;
                 startNextRound();
             }
         });
     }
 
-    private Runnable endIfComplete = new Runnable() {
-        @Override
-        public void run() {
-            // Specify what type of data we want to query - Doodle.class
-            ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
-            // Find doodle in current game
-            query.whereEqualTo(Doodle.KEY_IN_GAME, game.getObjectId());
-            // Find all doodles in the game which are complete
-            query.whereEqualTo(Doodle.KEY_TAIL_LENGTH, round);
+    // Checks if everyone is done the current round
+    private void checkCurrentRound() {
+        // Specify what type of data we want to query - Doodle.class
+        ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
+        // Find doodle in current game
+        query.whereEqualTo(Doodle.KEY_IN_GAME, game.getObjectId());
+        // Only find doodles submitted in current round - if all players have submitted a doodle in the current round, the round ends
+        query.whereEqualTo(Doodle.KEY_TAIL_LENGTH, round);
 
-            // Start an asynchronous call for the doodle
-            query.findInBackground((foundDoodles, e) -> {
-                if (e != null) { // Query has failed
-                    Snackbar.make(gameRelativeLayout, R.string.failed_to_load_doodles_from_game, Snackbar.LENGTH_LONG).show();
-                    return;
+        // Start an asynchronous call for the doodle
+        query.findInBackground((doodlesSubmittedInRound, e) -> {
+            if (e != null) { // Query has failed
+                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_updating_game), Snackbar.LENGTH_LONG).show();
+            }
+            else { // Query has succeeded
+                if (doodlesSubmittedInRound.size() == numPlayers) {
+                    game.setRound(game.getRound() + 1);
+                    game.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
                 }
-                else { // Query has succeeded
-                    // If all the game doodles are included, that means all the game doodles are complete
-                    if (foundDoodles != null && foundDoodles.size() == round) goGameGalleryActivity();
-                    else updateHandler.postDelayed(this, WaitingRoomActivity.POLL_INTERVAL);
-                }
-            });
-        }
-    };
+            }
+        });
+    }
 
     private void startNextRound() {
-        round++;
-        roundTextView.setText(getResources().getString(R.string.round) + " " + round + "/" +  + game.getPlayers().size());
+        timeHandler.post(updateTime);
+        roundTextView.setText(getResources().getString(R.string.round) + " " + game.getRound() + "/" +  + numPlayers);
         waitingForOtherPlayers.setVisibility(View.INVISIBLE);
         enableAllButtons();
-        currentlyDrawing = true;
+        timeTextView.setTextColor(getResources().getColor(R.color.design_default_color_secondary_variant, getTheme()));
         // Set up parent ImageView
         if (parentDoodle != null)
             Glide.with(this)
@@ -339,20 +394,17 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void endCurrentRound() {
+        timeTextView.setText("");
         parentDoodle = null;
         doodleDrawView.clearCanvas();
         waitingForOtherPlayers.setVisibility(View.VISIBLE);
         disableAllButtons();
-        currentlyDrawing = false;
 
         // Clear parent ImageView
         parentImageView.setImageBitmap(null);
 
-        // If it's the last round and you're done drawing, check if the game should end
-        if (round >= game.getPlayers().size() && !currentlyDrawing) {
-            // If all the doodles are complete, end the game
-            updateHandler.post(endIfComplete);
-        }
+        // Check if the next round should start
+        checkCurrentRound();
     }
 
     private void handleSizeButtonChange(Button button) {
@@ -445,7 +497,7 @@ public class GameActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapData, 0, bitmapData.length);
                 return bitmap;
             } catch (ParseException e) {
-                Snackbar.make(gameRelativeLayout, R.string.error_finding_doodle, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_finding_doodle), Snackbar.LENGTH_LONG).show();
                 return null;
             }
         }
@@ -473,16 +525,10 @@ public class GameActivity extends AppCompatActivity {
 
         savingProgressDialog.show();
         // Save doodle to database
-        childDoodle.saveInBackground(e -> {
-            if (e != null) { // Saving doodle failed
-                savingProgressDialog.dismiss();
-                Snackbar.make(gameRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
-            }
-            else { // Saving doodle succeeded
-                // Now if it has no parent, set its root equal to its objectId
-                if (parentDoodle == null) setRootToObjectId();
-                else addToUserRootsContributedTo(parentDoodle.getRoot());
-            }
+        childDoodle.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
+            // Now if it has no parent, set its root equal to its objectId
+            if (parentDoodle == null) setRootToObjectId();
+            else addToUserRootsContributedTo(parentDoodle.getRoot());
         });
     }
 
@@ -496,13 +542,13 @@ public class GameActivity extends AppCompatActivity {
         query.findInBackground((doodles, e) -> {
             if (e != null) { // Query has failed
                 savingProgressDialog.dismiss();
-                Snackbar.make(gameRelativeLayout, R.string.error_saving_doodle, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
             }
             else { // Query has succeeded
                 for (Doodle doodle: doodles) {
                     String root = doodle.getObjectId();
                     doodle.setRoot(root);
-                    doodle.saveInBackground(gameRelativeLayout, () -> {
+                    doodle.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
                         addToUserRootsContributedTo(root);
                     });
                 }
@@ -515,9 +561,9 @@ public class GameActivity extends AppCompatActivity {
         Player player = new Player(ParseUser.getCurrentUser());
         player.addRootContributedTo(root);
         // The round only ends after everything has been saved
-        player.saveInBackground(gameRelativeLayout, () -> {
+        player.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
             savingProgressDialog.dismiss();
-            Toast.makeText(this, R.string.doodle_submitted, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.doodle_submitted), Toast.LENGTH_SHORT).show();
             endCurrentRound();
         });
     }
@@ -559,13 +605,6 @@ public class GameActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // Starts an intent to go to the home activity
-    private void goHomeActivity() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-    }
-
     // Starts an intent to go to the game gallery activity
     private void goGameGalleryActivity() {
         Intent intent = new Intent(this, GameGalleryActivity.class);
@@ -581,10 +620,10 @@ public class GameActivity extends AppCompatActivity {
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(gameRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            if (e != null) { // Logout has failed
+                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.logout_failed), Snackbar.LENGTH_LONG).show();
             }
-            else {
+            else { // Logout has succeeded
                 goLoginSignupActivity();
                 finish();
             }

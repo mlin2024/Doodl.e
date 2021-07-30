@@ -20,8 +20,8 @@ public class Game extends ParseObject implements Parcelable {
     public static final String KEY_GAME_CODE = "gameCode";
     public static final String KEY_PLAYERS = "players";
     public static final String KEY_CREATOR = "creator";
-    public static final String KEY_STARTED = "started";
     public static final String KEY_TIME_LIMIT = "timeLimit";
+    public static final String KEY_ROUND = "round";
 
     public String getGameCode() {
         return getString(KEY_GAME_CODE);
@@ -55,14 +55,6 @@ public class Game extends ParseObject implements Parcelable {
         put(KEY_CREATOR, creator);
     }
 
-    public boolean getStarted() {
-        return getBoolean(KEY_STARTED);
-    }
-
-    public void setStarted(boolean started) {
-        put(KEY_STARTED, started);
-    }
-
     public int getTimeLimit() {
         return getInt(KEY_TIME_LIMIT);
     }
@@ -71,11 +63,22 @@ public class Game extends ParseObject implements Parcelable {
         put(KEY_TIME_LIMIT, timeLimit);
     }
 
+    public int getRound() {
+        return getInt(KEY_ROUND);
+    }
+
+    public void setRound(int round) {
+        put(KEY_ROUND, round);
+    }
+
     // Asynchronously saves the user data to the database
-    public void saveInBackground(View view) {
+    public void saveInBackground(View view, String errorMessage, Runnable run) {
         saveInBackground(e -> {
-            if (e != null) {
-                Snackbar.make(view, R.string.error_updating_game, Snackbar.LENGTH_LONG).show();
+            if (e != null) {  // Query has failed
+                Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
+            }
+            else {  // Query has succeeded
+                run.run();
             }
         });
     }

@@ -26,7 +26,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -117,7 +116,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
 
                 // Set up dialog
                 dialog = new Dialog(context);
-                dialog.setContentView(R.layout.doodle_detail);
+                dialog.setContentView(R.layout.item_doodle_detail);
 
                 // Asynchronously load the doodle's history
                 loadingProgressDialog.show();

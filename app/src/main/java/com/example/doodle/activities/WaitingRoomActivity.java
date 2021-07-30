@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,12 +28,12 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class WaitingRoomActivity extends AppCompatActivity {
     public static final String TAG = "WaitingRoomActivity";
-    static final long POLL_INTERVAL = TimeUnit.SECONDS.toMillis(2);
+    public static final long POLL_INTERVAL = TimeUnit.SECONDS.toMillis(2);
+    public static final String DEFAULT_TIME_LIMIT = "60s";
 
     // Views in the layout
     private RelativeLayout waitingRoomRelativeLayout;
@@ -53,6 +52,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
     private PlayerAdapter playerAdapter;
     private ArrayAdapter<CharSequence> timeLimitAdapter;
     private Handler updateHandler;
+    private ProgressDialog startingProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
         players = game.getPlayers();
         playerAdapter = new PlayerAdapter(this, players);
         updateHandler = new Handler(Looper.getMainLooper());
+        startingProgressDialog = new ProgressDialog(WaitingRoomActivity.this);
 
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
@@ -109,14 +110,14 @@ public class WaitingRoomActivity extends AppCompatActivity {
             // Apply the adapter to the spinner
             timeLimitSpinner.setAdapter(timeLimitAdapter);
             // Set it to the default value, 60s
-            timeLimitSpinner.setSelection(1);
+            timeLimitSpinner.setSelection(timeLimitAdapter.getPosition(DEFAULT_TIME_LIMIT));
 
             timeLimitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     int selected = getResources().getIntArray(R.array.time_limit_array)[position];
                     game.setTimeLimit(selected);
-                    game.saveInBackground(waitingRoomRelativeLayout);
+                    game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
                 }
 
                 @Override
@@ -138,10 +139,14 @@ public class WaitingRoomActivity extends AppCompatActivity {
             waitForHost.setVisibility(View.VISIBLE);
         }
 
+        // Set up ProgressDialogs
+        startingProgressDialog.setMessage(getResources().getString(R.string.starting_game));
+        startingProgressDialog.setCancelable(false);
+
         startGameButton.setOnClickListener(v -> {
-            game.setStarted(true);
-            game.saveInBackground(waitingRoomRelativeLayout);
-            goGameActivity();
+            game.setRound(1);
+            game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_starting_game), () -> {});
+            startingProgressDialog.show();
         });
     }
 
@@ -150,7 +155,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
         super.onResume();
 
         // Only start checking for new messages when the app becomes active in foreground
-        updateHandler.postDelayed(updatePlayers, POLL_INTERVAL);
+        updateHandler.postDelayed(updateGame, POLL_INTERVAL);
     }
 
     @Override
@@ -158,6 +163,14 @@ public class WaitingRoomActivity extends AppCompatActivity {
         // Stop background task from refreshing messages, to avoid unnecessary traffic & battery drain
         updateHandler.removeCallbacksAndMessages(null);
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Stop background task from refreshing messages, to avoid unnecessary traffic & battery drain
+        updateHandler.removeCallbacksAndMessages(null);
+
+        super.onDestroy();
     }
 
     @Override
@@ -184,7 +197,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
                 logout();
                 return true;
             case android.R.id.home:
-                goHomeActivity();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -193,16 +206,19 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        goGameActivity();
+        finish();
     }
 
-    private Runnable updatePlayers = new Runnable() {
+    // Updates the player list, time limit, and round
+    private Runnable updateGame = new Runnable() {
         @Override
         public void run() {
             try {
                 game.fetch();
-                if (game.getStarted() == true) {
+                if (game.getRound() != 0) {
+                    startingProgressDialog.dismiss();
                     goGameActivity();
+                    finish();
                 }
                 playerAdapter.clear();
                 playerAdapter.addAll(game.getPlayers());
@@ -210,7 +226,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
                 timeLimitTextView.setText(game.getTimeLimit() + getResources().getString(R.string.seconds_unit));
                 updateHandler.postDelayed(this, POLL_INTERVAL);
             } catch (ParseException e) {
-                Snackbar.make(waitingRoomRelativeLayout, R.string.error_fetching_game_info, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(waitingRoomRelativeLayout, getResources().getString(R.string.error_fetching_game_info), Snackbar.LENGTH_LONG).show();
             }
         }
     };
@@ -225,13 +241,6 @@ public class WaitingRoomActivity extends AppCompatActivity {
     // Starts an intent to go to the profile activity
     private void goProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
-    }
-
-    // Starts an intent to go to the home activity
-    private void goHomeActivity() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
@@ -250,10 +259,10 @@ public class WaitingRoomActivity extends AppCompatActivity {
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(waitingRoomRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            if (e != null) { // Logout has failed
+                Snackbar.make(waitingRoomRelativeLayout, getResources().getString(R.string.logout_failed), Snackbar.LENGTH_LONG).show();
             }
-            else {
+            else { // Logout has succeeded
                 goLoginSignupActivity();
                 finish();
             }

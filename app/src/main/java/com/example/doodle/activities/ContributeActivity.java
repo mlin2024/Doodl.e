@@ -151,7 +151,7 @@ public class ContributeActivity extends AppCompatActivity {
         query.findInBackground((foundDoodles, e) -> {
             loadingProgressDialog.dismiss();
             if (e != null) { // Query has failed
-                Snackbar.make(contributeRelativeLayout, R.string.failed_to_load_doodles, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(contributeRelativeLayout, getResources().getString(R.string.failed_to_load_doodles), Snackbar.LENGTH_LONG).show();
                 return;
             }
             else { // Query has succeeded
@@ -197,10 +197,10 @@ public class ContributeActivity extends AppCompatActivity {
         logoutProgressDialog.show();
         ParseUser.logOutInBackground(e -> {
             logoutProgressDialog.dismiss();
-            if (e != null) {
-                Snackbar.make(contributeRelativeLayout, R.string.logout_failed, Snackbar.LENGTH_LONG).show();
+            if (e != null) { // Logout has failed
+                Snackbar.make(contributeRelativeLayout, getResources().getString(R.string.logout_failed), Snackbar.LENGTH_LONG).show();
             }
-            else {
+            else { // Logout has succeeded
                 goLoginSignupActivity();
                 finish();
             }

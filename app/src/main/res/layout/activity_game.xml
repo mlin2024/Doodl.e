@@ -25,6 +25,17 @@
         android:textSize="24sp"
         tools:text="Round 1" />
 
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gameToolbar"
+        android:layout_alignEnd="@+id/canvasRelativeLayout_GAME"
+        android:layout_marginTop="10dp"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="24sp"
+        tools:text="59s" />
+
     <RelativeLayout
         android:id="@+id/canvasRelativeLayout_GAME"
         android:layout_width="wrap_content"

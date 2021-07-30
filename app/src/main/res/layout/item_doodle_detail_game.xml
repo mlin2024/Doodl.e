@@ -7,7 +7,7 @@
     android:layout_gravity="center_horizontal"
     android:layout_margin="5dp"
     android:background="@color/white"
-    android:padding="5dp">
+    android:padding="15dp">
 
     <TextView
         android:id="@+id/originalArtistTextView"
