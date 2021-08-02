@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.divyanshu.draw.widget.DrawView;
+import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
 import com.example.doodle.fragments.ColorPickerFragment;
 import com.example.doodle.models.ColorViewModel;
@@ -191,6 +192,7 @@ public class DoodleActivity extends AppCompatActivity {
 
         doneButton.setOnClickListener(v -> {
             Bitmap drawingBitmap = doodleDrawView.getBitmap();
+            if (parentBitmap != null) Log.e(TAG, drawingBitmap.getHeight() + ", " + drawingBitmap.getWidth() + "\n" + parentBitmap.getHeight() + ", " + parentBitmap.getWidth());
             drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
 
@@ -396,7 +398,7 @@ public class DoodleActivity extends AppCompatActivity {
 
         Bitmap bmOverlay = Bitmap.createBitmap(drawingBitmap.getWidth(), drawingBitmap.getHeight(), drawingBitmap.getConfig());
         Canvas canvas = new Canvas(bmOverlay);
-        canvas.drawBitmap(parentBitmap, new Matrix(), null);
+        canvas.drawBitmap(BitmapScaler.scaleToFitWidth(parentBitmap, drawingBitmap.getWidth()), new Matrix(), null);
         canvas.drawBitmap(drawingBitmap, 0, 0, null);
         return saveBitmapToParseFile(bmOverlay);
     }
