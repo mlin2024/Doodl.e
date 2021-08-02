@@ -1,12 +1,14 @@
 package com.example.doodle.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -74,6 +76,10 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
             // Bind the player data to the view elements
             try {
                 usernameTextView.setText(player.fetchIfNeeded().getUsername());
+                // Make the name a random color
+                //usernameTextView.setTextColor(55 + Color.rgb((int)(200 * Math.random()),
+                //        55 + (int)(200 * Math.random()),
+                //        55 + (int)(200 * Math.random())));
             } catch (ParseException e) {
                 Toast.makeText(context, context.getResources().getString(R.string.error_finding_players), Toast.LENGTH_SHORT).show();
             }

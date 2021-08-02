@@ -13,6 +13,7 @@ import com.parse.ParseUser;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 @ParseClassName("Game")
 public class Game extends ParseObject implements Parcelable {
@@ -45,6 +46,17 @@ public class Game extends ParseObject implements Parcelable {
         ArrayList<ParseUser> players = getPlayers();
         players.add(player);
         put(KEY_PLAYERS, players);
+    }
+
+    public void removePlayer(ParseUser player) {
+        ArrayList<ParseUser> players = getPlayers();
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getObjectId().equals(player.getObjectId())) {
+                players.remove(i);
+                put(KEY_PLAYERS, players);
+                return;
+            }
+        }
     }
 
     public ParseUser getCreator() {

@@ -77,4 +77,13 @@
     <string name="error_starting_game">There was an error starting the game, please try again</string>
     <string name="joining_game">Joining game...</string>
     <string name="Home">Home</string>
+    <string name="sure_you_want_to_leave_game">Are you sure you want to leave the game?</string>
+    <string name="once_you_leave_you_cant_come_back">Once you leave the game, you can\'t rejoin.</string>
+    <string name="leave_game">Leave game</string>
+    <string name="never_mind">Never mind</string>
+    <string name="this_will_kill_the_game">Since you created the game, this will kill the game.</string>
+    <string name="player_has_left_the_game">A player has left the game</string>
+    <string name="players_have_left_the_game">players have left the game</string>
+    <string name="game_ended_by_host">The game has been ended by the host</string>
+    <string name="you_can_still_rejoin_before_it_starts">You can still rejoin the game before it starts.</string>
 </resources>

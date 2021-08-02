@@ -1,5 +1,6 @@
 package com.example.doodle.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -275,7 +276,7 @@ public class GameActivity extends AppCompatActivity {
                 logout();
                 return true;
             case android.R.id.home:
-                finish();
+                leaveGameDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -284,7 +285,7 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        leaveGameDialog();
     }
 
     private Runnable updateGame = new Runnable() {
@@ -292,6 +293,19 @@ public class GameActivity extends AppCompatActivity {
         public void run() {
             try {
                 game.fetch();
+
+                // Account for if any player has left the game
+                int diff = numPlayers - game.getPlayers().size();
+                if (diff > 0) {
+                    numPlayers -= diff;
+                    if (diff == 1) Snackbar.make(gameRelativeLayout, getResources().getString(R.string.player_has_left_the_game), Snackbar.LENGTH_LONG).show();
+                    else Snackbar.make(gameRelativeLayout, diff + " " + getResources().getString(R.string.players_have_left_the_game), Snackbar.LENGTH_LONG).show();
+                    // Only change the denominator if the player is not on the last round (just so it doesn't say something nonsensical like Round 2/1)
+                    if (game.getRound() <= numPlayers) {
+                        roundTextView.setText(getResources().getString(R.string.round) + " " + game.getRound() + "/" +  + numPlayers);
+                    }
+                }
+
                 if (game.getRound() > round) {
                     round = game.getRound();
                     // End the game if all rounds are finished
@@ -590,6 +604,24 @@ public class GameActivity extends AppCompatActivity {
         // Save to ParseFile
         ParseFile parseFile = new ParseFile(fileName, bytes.toByteArray());
         return parseFile;
+    }
+
+    // Handles when the player tries to leave the game
+    private void leaveGameDialog() {
+        // Create an alert to ask user if they really want to leave the game
+        AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
+        builder.setTitle(getResources().getString(R.string.sure_you_want_to_leave_game))
+            .setMessage(getResources().getString(R.string.once_you_leave_you_cant_come_back))
+            .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
+                game.removePlayer(ParseUser.getCurrentUser());
+                game.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                finish();
+            })
+            .setNegativeButton(getResources().getString(R.string.never_mind), null);
+
+        // Create and show the alert
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     // Starts an intent to go to the login/signup activity

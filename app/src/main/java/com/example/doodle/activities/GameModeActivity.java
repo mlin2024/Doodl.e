@@ -1,10 +1,12 @@
 package com.example.doodle.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -213,6 +215,8 @@ public class GameModeActivity extends AppCompatActivity {
         ParseQuery<Game> query = ParseQuery.getQuery(Game.class);
         // Find game with gameCode equal to given game code
         query.whereEqualTo(Game.KEY_GAME_CODE, gameCode);
+        // Find the game only if it hasn't started yet
+        query.whereEqualTo(Game.KEY_ROUND, 0);
 
         findingProgressDialog.show();
         // Start an asynchronous call for the game

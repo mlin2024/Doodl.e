@@ -1,5 +1,6 @@
 package com.example.doodle.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.doodle.R;
 import com.example.doodle.adapters.PlayerAdapter;
@@ -197,7 +199,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
                 logout();
                 return true;
             case android.R.id.home:
-                finish();
+                leaveGameDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -206,7 +208,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
+        leaveGameDialog();
     }
 
     // Updates the player list, time limit, and round
@@ -215,9 +217,13 @@ public class WaitingRoomActivity extends AppCompatActivity {
         public void run() {
             try {
                 game.fetch();
-                if (game.getRound() != 0) {
+                if (game.getRound() > 0) { // Game has started
                     startingProgressDialog.dismiss();
                     goGameActivity();
+                    finish();
+                }
+                else if (game.getRound() == -1) { // Game has been killed (the host left the game)
+                    Toast.makeText(WaitingRoomActivity.this, getResources().getString(R.string.game_ended_by_host), Toast.LENGTH_LONG).show();
                     finish();
                 }
                 playerAdapter.clear();
@@ -230,6 +236,38 @@ public class WaitingRoomActivity extends AppCompatActivity {
             }
         }
     };
+
+    // Handles when the player tries to leave the game
+    private void leaveGameDialog() {
+        // Create an alert to ask user if they really want to leave the game
+        AlertDialog.Builder builder = new AlertDialog.Builder(WaitingRoomActivity.this);
+        builder.setTitle(getResources().getString(R.string.sure_you_want_to_leave_game));
+
+        // If the current user is the game creator, if they leave the game, the game immediately ends because
+        // the game creator is needed to start the game
+        if (ParseUser.getCurrentUser().getObjectId().equals(game.getCreator().getObjectId())) {
+            builder.setMessage(getResources().getString(R.string.this_will_kill_the_game))
+                .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
+                    game.setRound(-1);
+                    game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                    finish();
+                });
+        }
+        // Otherwise, just warn them normally
+        else {
+            builder.setMessage(getResources().getString(R.string.you_can_still_rejoin_before_it_starts))
+                .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
+                    game.removePlayer(ParseUser.getCurrentUser());
+                    game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                    finish();
+                });
+        }
+        builder.setNegativeButton(getResources().getString(R.string.never_mind), null);
+
+        // Create and show the alert
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
     // Starts an intent to go to the login/signup activity
     private void goLoginSignupActivity() {
