@@ -222,6 +222,8 @@ public class GameActivity extends AppCompatActivity {
             drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
+
+            endCurrentRound();
         });
     }
 
@@ -318,7 +320,7 @@ public class GameActivity extends AppCompatActivity {
                 }
                 updateHandler.postDelayed(this, WaitingRoomActivity.POLL_INTERVAL);
             } catch (ParseException e) {
-                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_fetching_doodles), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_updating_game), Snackbar.LENGTH_LONG).show();
             }
         }
     };
@@ -416,9 +418,6 @@ public class GameActivity extends AppCompatActivity {
 
         // Clear parent ImageView
         parentImageView.setImageBitmap(null);
-
-        // Check if the next round should start
-        checkCurrentRound();
     }
 
     private void handleSizeButtonChange(Button button) {
@@ -574,11 +573,11 @@ public class GameActivity extends AppCompatActivity {
     private void addToUserRootsContributedTo (String root) {
         Player player = new Player(ParseUser.getCurrentUser());
         player.addRootContributedTo(root);
-        // The round only ends after everything has been saved
+        // Only check if the next round should start after everything has been saved
         player.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
             savingProgressDialog.dismiss();
             Toast.makeText(this, getResources().getString(R.string.doodle_submitted), Toast.LENGTH_SHORT).show();
-            endCurrentRound();
+            checkCurrentRound();
         });
     }
 

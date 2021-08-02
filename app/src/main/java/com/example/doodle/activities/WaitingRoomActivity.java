@@ -104,6 +104,28 @@ public class WaitingRoomActivity extends AppCompatActivity {
         // Set up num players TextView
         numPlayersTextView.setText(Integer.toString(players.size()));
 
+        // Set up time limit spinner
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        timeLimitAdapter = ArrayAdapter.createFromResource(this, R.array.time_limit_array_seconds, R.layout.spinner_item);
+        // Specify the layout to use when the list of choices appears
+        timeLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        timeLimitSpinner.setAdapter(timeLimitAdapter);
+        // Set it to the default value, 60s
+        timeLimitSpinner.setSelection(timeLimitAdapter.getPosition(DEFAULT_TIME_LIMIT));
+
+        timeLimitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int selected = getResources().getIntArray(R.array.time_limit_array)[position];
+                game.setTimeLimit(selected);
+                game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
         // Set up time limit text view
         timeLimitTextView.setText(game.getTimeLimit() + getResources().getString(R.string.seconds_unit));
 
@@ -200,11 +222,13 @@ public class WaitingRoomActivity extends AppCompatActivity {
                     }
                 }
 
+                // Check if game has been started
                 if (game.getRound() > 0) { // Game has started
                     startingProgressDialog.dismiss();
                     goGameActivity();
                     finish();
                 }
+
                 playerAdapter.clear();
                 playerAdapter.addAll(game.getPlayers());
                 numPlayersTextView.setText(Integer.toString(players.size()));
@@ -220,27 +244,6 @@ public class WaitingRoomActivity extends AppCompatActivity {
     private void setUpHostView() {
         // Set up time limit spinner
         timeLimitSpinner.setVisibility(View.VISIBLE);
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        timeLimitAdapter = ArrayAdapter.createFromResource(this, R.array.time_limit_array_seconds, R.layout.spinner_item);
-        // Specify the layout to use when the list of choices appears
-        timeLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        timeLimitSpinner.setAdapter(timeLimitAdapter);
-        // Set it to the default value, 60s
-        timeLimitSpinner.setSelection(timeLimitAdapter.getPosition(DEFAULT_TIME_LIMIT));
-
-        timeLimitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int selected = getResources().getIntArray(R.array.time_limit_array)[position];
-                game.setTimeLimit(selected);
-                game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
 
         // Set up time limit TextView
         timeLimitTextView.setVisibility(View.GONE);

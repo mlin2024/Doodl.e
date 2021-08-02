@@ -115,7 +115,6 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="55dp"
                     android:gravity="center_horizontal"
-                    android:hint="@string/sample_game_code"
                     android:imeOptions="actionDone"
                     android:inputType="textCapCharacters"
                     android:maxLength="4"
