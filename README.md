@@ -1,5 +1,7 @@
 # Doodl.e
 
+<img src='app/src/main/res/drawable/doodle_icon.png' title='Doodl.e App Icon' width='' alt='Doodl.e App Icon' />
+
 ## Table of Contents
 1. [Overview](#Overview)
 2. [Product Spec](#Product-Spec)
