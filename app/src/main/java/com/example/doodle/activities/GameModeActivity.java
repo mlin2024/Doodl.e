@@ -136,7 +136,7 @@ public class GameModeActivity extends AppCompatActivity {
             try {
                 Game game = new Game();
                 game.setGameCode(gameCode);
-                game.setCreator(ParseUser.getCurrentUser().fetch());
+                game.setHost(ParseUser.getCurrentUser().fetch());
                 game.addPlayer(ParseUser.getCurrentUser().fetch());
 
                 // Save game to database

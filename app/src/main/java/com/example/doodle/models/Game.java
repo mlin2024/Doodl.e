@@ -20,7 +20,7 @@ public class Game extends ParseObject implements Parcelable {
     public static final String TAG = "Doodle";
     public static final String KEY_GAME_CODE = "gameCode";
     public static final String KEY_PLAYERS = "players";
-    public static final String KEY_CREATOR = "creator";
+    public static final String KEY_HOST = "host";
     public static final String KEY_TIME_LIMIT = "timeLimit";
     public static final String KEY_ROUND = "round";
 
@@ -59,12 +59,12 @@ public class Game extends ParseObject implements Parcelable {
         }
     }
 
-    public ParseUser getCreator() {
-        return getParseUser(KEY_CREATOR);
+    public ParseUser getHost() {
+        return getParseUser(KEY_HOST);
     }
 
-    public void setCreator(ParseUser creator) {
-        put(KEY_CREATOR, creator);
+    public void setHost(ParseUser host) {
+        put(KEY_HOST, host);
     }
 
     public int getTimeLimit() {

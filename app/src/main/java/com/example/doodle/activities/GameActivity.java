@@ -614,18 +614,19 @@ public class GameActivity extends AppCompatActivity {
         // If they are the last player left, warn them specifically
         if (game.getPlayers().size() == 1) {
             builder.setMessage(getResources().getString(R.string.you_are_the_last_player))
-                .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
-                    game.deleteInBackground();
-                    finish();
-                });
+                    .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
+                        game.deleteInBackground();
+                        finish();
+                    });
         }
+        // Else, just warn them normally
         else {
             builder.setMessage(getResources().getString(R.string.once_you_leave_you_cant_come_back))
-                .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
-                    game.removePlayer(ParseUser.getCurrentUser());
-                    game.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
-                    finish();
-                });
+                    .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
+                        game.removePlayer(ParseUser.getCurrentUser());
+                        game.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                        finish();
+                    });
         }
         builder.setNegativeButton(getResources().getString(R.string.never_mind), null);
 

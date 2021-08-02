@@ -81,12 +81,12 @@
     <string name="once_you_leave_you_cant_come_back">Once you leave the game, you can\'t rejoin.</string>
     <string name="leave_game">Leave game</string>
     <string name="never_mind">Never mind</string>
-    <string name="this_will_kill_the_game">Since you created the game, this will kill the game.</string>
     <string name="player_has_left_the_game">A player has left the game</string>
     <string name="players_have_left_the_game">players have left the game</string>
-    <string name="game_ended_by_host">The game has been ended by the host</string>
     <string name="you_can_still_rejoin_before_it_starts">You can still rejoin the game before it starts.</string>
     <string name="that_game_is_full">Sorry, that game is full.</string>
     <string name="that_game_already_started">Sorry, that game has already started.</string>
     <string name="you_are_the_last_player">You are the last player left in the game, if you leave the game will be deleted.</string>
+    <string name="you_have_been_made_host">The previous host left, so you have been made the host!</string>
+    <string name="another_player_will_become_host">Another player will become the host.</string>
 </resources>

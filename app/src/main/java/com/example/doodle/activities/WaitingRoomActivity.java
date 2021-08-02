@@ -56,6 +56,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
     private ArrayAdapter<CharSequence> timeLimitAdapter;
     private Handler updateHandler;
     private ProgressDialog startingProgressDialog;
+    private String host;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
         playerAdapter = new PlayerAdapter(this, players);
         updateHandler = new Handler(Looper.getMainLooper());
         startingProgressDialog = new ProgressDialog(WaitingRoomActivity.this);
+        host = game.getHost().getObjectId();
 
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
@@ -102,49 +104,17 @@ public class WaitingRoomActivity extends AppCompatActivity {
         // Set up num players TextView
         numPlayersTextView.setText(Integer.toString(players.size()));
 
-        // Set up time limit spinner
-        if (ParseUser.getCurrentUser().getObjectId().equals(game.getCreator().getObjectId())) {
-            timeLimitSpinner.setVisibility(View.VISIBLE);
-
-            // Create an ArrayAdapter using the string array and a default spinner layout
-            timeLimitAdapter = ArrayAdapter.createFromResource(this, R.array.time_limit_array_seconds, R.layout.spinner_item);
-            // Specify the layout to use when the list of choices appears
-            timeLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            // Apply the adapter to the spinner
-            timeLimitSpinner.setAdapter(timeLimitAdapter);
-            // Set it to the default value, 60s
-            timeLimitSpinner.setSelection(timeLimitAdapter.getPosition(DEFAULT_TIME_LIMIT));
-
-            timeLimitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    int selected = getResources().getIntArray(R.array.time_limit_array)[position];
-                    game.setTimeLimit(selected);
-                    game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
-            });
-        }
-        else {
-            timeLimitTextView.setVisibility(View.VISIBLE);
-        }
-
         // Set up time limit text view
         timeLimitTextView.setText(game.getTimeLimit() + getResources().getString(R.string.seconds_unit));
-
-        // Set up start button
-        if (ParseUser.getCurrentUser().getObjectId().equals(game.getCreator().getObjectId())) {
-            startGameButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            waitForHost.setVisibility(View.VISIBLE);
-        }
 
         // Set up ProgressDialogs
         startingProgressDialog.setMessage(getResources().getString(R.string.starting_game));
         startingProgressDialog.setCancelable(false);
+
+        // Set up the host view for the host
+        if (ParseUser.getCurrentUser().getObjectId().equals(host)) {
+            setUpHostView();
+        }
 
         startGameButton.setOnClickListener(v -> {
             game.setRound(1);
@@ -218,20 +188,21 @@ public class WaitingRoomActivity extends AppCompatActivity {
         public void run() {
             try {
                 game.fetch();
+
+                // Check if host has been changed
+                if (!game.getHost().getObjectId().equals(host))
+                {
+                    host = game.getHost().getObjectId();
+                    // Check if the current user has been made the host
+                    if (host.equals(ParseUser.getCurrentUser().getObjectId())) {
+                        Snackbar.make(waitingRoomRelativeLayout, getResources().getString(R.string.you_have_been_made_host), Snackbar.LENGTH_LONG).show();
+                        setUpHostView();
+                    }
+                }
+
                 if (game.getRound() > 0) { // Game has started
                     startingProgressDialog.dismiss();
                     goGameActivity();
-                    finish();
-                }
-                else if (game.getRound() == -1) { // Game has been killed (the host left the game)
-                    Toast.makeText(WaitingRoomActivity.this, getResources().getString(R.string.game_ended_by_host), Toast.LENGTH_LONG).show();
-                    game.removePlayer(ParseUser.getCurrentUser());
-                    game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {
-                        // Once everyone has left, delete the game from the database
-                        if (game.getPlayers().size() == 0) {
-                            game.deleteInBackground();
-                        }
-                    });
                     finish();
                 }
                 playerAdapter.clear();
@@ -245,24 +216,66 @@ public class WaitingRoomActivity extends AppCompatActivity {
         }
     };
 
+    // Handles when the current player becomes the host of the game
+    private void setUpHostView() {
+        // Set up time limit spinner
+        timeLimitSpinner.setVisibility(View.VISIBLE);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        timeLimitAdapter = ArrayAdapter.createFromResource(this, R.array.time_limit_array_seconds, R.layout.spinner_item);
+        // Specify the layout to use when the list of choices appears
+        timeLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        timeLimitSpinner.setAdapter(timeLimitAdapter);
+        // Set it to the default value, 60s
+        timeLimitSpinner.setSelection(timeLimitAdapter.getPosition(DEFAULT_TIME_LIMIT));
+
+        timeLimitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int selected = getResources().getIntArray(R.array.time_limit_array)[position];
+                game.setTimeLimit(selected);
+                game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        // Set up time limit TextView
+        timeLimitTextView.setVisibility(View.GONE);
+
+        // Set up the start button
+        startGameButton.setVisibility(View.VISIBLE);
+
+        // Set up wait for host TextView
+        waitForHost.setVisibility(View.INVISIBLE);
+    }
+
     // Handles when the player tries to leave the game
     private void leaveGameDialog() {
         // Create an alert to ask user if they really want to leave the game
         AlertDialog.Builder builder = new AlertDialog.Builder(WaitingRoomActivity.this);
         builder.setTitle(getResources().getString(R.string.sure_you_want_to_leave_game));
-
-        // If the current user is the game creator, if they leave the game, the game immediately ends because
-        // the game creator is needed to start the game
-        if (ParseUser.getCurrentUser().getObjectId().equals(game.getCreator().getObjectId())) {
-            builder.setMessage(getResources().getString(R.string.this_will_kill_the_game))
-                .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
-                    game.setRound(-1);
-                    game.removePlayer(ParseUser.getCurrentUser());
-                    game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
-                    finish();
-                });
+        // If they are the last player left, warn them specifically
+        if (game.getPlayers().size() == 1) {
+            builder.setMessage(getResources().getString(R.string.you_are_the_last_player))
+                    .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
+                        game.deleteInBackground();
+                        finish();
+                    });
         }
-        // Otherwise, just warn them normally
+        // Else, if the current user is the game creator, if they leave the game, another player becomes the host
+        else if (ParseUser.getCurrentUser().getObjectId().equals(host)) {
+            builder.setMessage(getResources().getString(R.string.another_player_will_become_host))
+                    .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
+                        game.removePlayer(ParseUser.getCurrentUser());
+                        game.setHost(game.getPlayers().get(0));
+                        game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                        finish();
+                    });
+        }
+        // Else, just warn them normally
         else {
             builder.setMessage(getResources().getString(R.string.you_can_still_rejoin_before_it_starts))
                 .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
