@@ -86,4 +86,6 @@
     <string name="players_have_left_the_game">players have left the game</string>
     <string name="game_ended_by_host">The game has been ended by the host</string>
     <string name="you_can_still_rejoin_before_it_starts">You can still rejoin the game before it starts.</string>
+    <string name="that_game_is_full">Sorry, that game is full.</string>
+    <string name="that_game_already_started">Sorry, that game has already started.</string>
 </resources>

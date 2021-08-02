@@ -42,6 +42,7 @@ import java.util.List;
 public class GameModeActivity extends AppCompatActivity {
     public static final String TAG = "GameModeActivity";
     public static final String GAME_TAG = "game";
+    public static final int MAX_PLAYERS = 10;
 
     // Views in the layout
     private RelativeLayout gameModeRelativeLayout;
@@ -215,8 +216,6 @@ public class GameModeActivity extends AppCompatActivity {
         ParseQuery<Game> query = ParseQuery.getQuery(Game.class);
         // Find game with gameCode equal to given game code
         query.whereEqualTo(Game.KEY_GAME_CODE, gameCode);
-        // Find the game only if it hasn't started yet
-        query.whereEqualTo(Game.KEY_ROUND, 0);
 
         findingProgressDialog.show();
         // Start an asynchronous call for the game
@@ -228,13 +227,21 @@ public class GameModeActivity extends AppCompatActivity {
                 return;
             }
             else { // Query has succeeded
-                foundGame.addPlayer(ParseUser.getCurrentUser());
-                joiningProgressDialog.show();
-                foundGame.saveInBackground(gameModeRelativeLayout, getResources().getString(R.string.error_joining_game), () -> {
-                    joiningProgressDialog.dismiss();
-                    goWaitingRoomActivity(foundGame);
-                    finish();
-                });
+                if (foundGame.getPlayers().size() >= MAX_PLAYERS) {
+                    Snackbar.make(gameModeRelativeLayout, getResources().getString(R.string.that_game_is_full), Snackbar.LENGTH_LONG).show();
+                }
+                else if (foundGame.getRound() != 0) {
+                    Snackbar.make(gameModeRelativeLayout, getResources().getString(R.string.that_game_already_started), Snackbar.LENGTH_LONG).show();
+                }
+                else {
+                    foundGame.addPlayer(ParseUser.getCurrentUser());
+                    joiningProgressDialog.show();
+                    foundGame.saveInBackground(gameModeRelativeLayout, getResources().getString(R.string.error_joining_game), () -> {
+                        joiningProgressDialog.dismiss();
+                        goWaitingRoomActivity(foundGame);
+                        finish();
+                    });
+                }
             }
         });
     }
