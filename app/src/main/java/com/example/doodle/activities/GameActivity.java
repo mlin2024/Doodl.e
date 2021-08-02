@@ -610,14 +610,24 @@ public class GameActivity extends AppCompatActivity {
     private void leaveGameDialog() {
         // Create an alert to ask user if they really want to leave the game
         AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-        builder.setTitle(getResources().getString(R.string.sure_you_want_to_leave_game))
-            .setMessage(getResources().getString(R.string.once_you_leave_you_cant_come_back))
-            .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
-                game.removePlayer(ParseUser.getCurrentUser());
-                game.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
-                finish();
-            })
-            .setNegativeButton(getResources().getString(R.string.never_mind), null);
+        builder.setTitle(getResources().getString(R.string.sure_you_want_to_leave_game));
+        // If they are the last player left, warn them specifically
+        if (game.getPlayers().size() == 1) {
+            builder.setMessage(getResources().getString(R.string.you_are_the_last_player))
+                .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
+                    game.deleteInBackground();
+                    finish();
+                });
+        }
+        else {
+            builder.setMessage(getResources().getString(R.string.once_you_leave_you_cant_come_back))
+                .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
+                    game.removePlayer(ParseUser.getCurrentUser());
+                    game.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                    finish();
+                });
+        }
+        builder.setNegativeButton(getResources().getString(R.string.never_mind), null);
 
         // Create and show the alert
         AlertDialog alert = builder.create();

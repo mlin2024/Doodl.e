@@ -26,6 +26,7 @@ import com.example.doodle.R;
 import com.example.doodle.adapters.PlayerAdapter;
 import com.example.doodle.models.Game;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -224,6 +225,13 @@ public class WaitingRoomActivity extends AppCompatActivity {
                 }
                 else if (game.getRound() == -1) { // Game has been killed (the host left the game)
                     Toast.makeText(WaitingRoomActivity.this, getResources().getString(R.string.game_ended_by_host), Toast.LENGTH_LONG).show();
+                    game.removePlayer(ParseUser.getCurrentUser());
+                    game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {
+                        // Once everyone has left, delete the game from the database
+                        if (game.getPlayers().size() == 0) {
+                            game.deleteInBackground();
+                        }
+                    });
                     finish();
                 }
                 playerAdapter.clear();
@@ -249,6 +257,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
             builder.setMessage(getResources().getString(R.string.this_will_kill_the_game))
                 .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
                     game.setRound(-1);
+                    game.removePlayer(ParseUser.getCurrentUser());
                     game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
                     finish();
                 });

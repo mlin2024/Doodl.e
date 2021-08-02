@@ -88,4 +88,5 @@
     <string name="you_can_still_rejoin_before_it_starts">You can still rejoin the game before it starts.</string>
     <string name="that_game_is_full">Sorry, that game is full.</string>
     <string name="that_game_already_started">Sorry, that game has already started.</string>
+    <string name="you_are_the_last_player">You are the last player left in the game, if you leave the game will be deleted.</string>
 </resources>

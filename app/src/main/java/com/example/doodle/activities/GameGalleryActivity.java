@@ -25,6 +25,7 @@ import com.example.doodle.adapters.GameDoodleAdapter;
 import com.example.doodle.models.Doodle;
 import com.example.doodle.models.Game;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -86,10 +87,29 @@ public class GameGalleryActivity extends AppCompatActivity {
 
         homeButton.setOnClickListener(v -> {
             goHomeActivity();
+            finish();
         });
 
         // Grab doodles to populate the RecyclerView
         findGameDoodles();
+    }
+
+    @Override
+    protected void onDestroy() {
+        try {
+            game.fetch();
+            game.removePlayer(ParseUser.getCurrentUser());
+            game.saveInBackground(gameGalleryRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {
+                // Once everyone has left, delete the game from the database
+                if (game.getPlayers().size() == 0) {
+                    game.deleteInBackground();
+                }
+            });
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        super.onDestroy();
     }
 
     @Override
