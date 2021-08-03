@@ -273,13 +273,21 @@ public class GameActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.profileMenuItem:
-                goProfileActivity();
+                leaveGameDialog(() -> {
+                    goProfileActivity();
+                    finish();
+                });
                 return true;
             case R.id.logoutMenuItem:
-                logout();
+                leaveGameDialog(() -> {
+                    logout();
+                    finish();
+                });
                 return true;
             case android.R.id.home:
-                leaveGameDialog();
+                leaveGameDialog(() -> {
+                    finish();
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -288,7 +296,9 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        leaveGameDialog();
+        leaveGameDialog(() -> {
+            finish();
+        });
     }
 
     private Runnable updateGame = new Runnable() {
@@ -607,7 +617,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     // Handles when the player tries to leave the game
-    private void leaveGameDialog() {
+    private void leaveGameDialog(Runnable runIfReallyLeaving) {
         // Create an alert to ask user if they really want to leave the game
         AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
         builder.setTitle(getResources().getString(R.string.sure_you_want_to_leave_game));
@@ -616,7 +626,7 @@ public class GameActivity extends AppCompatActivity {
             builder.setMessage(getResources().getString(R.string.you_are_the_last_player))
                     .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
                         game.deleteInBackground();
-                        finish();
+                        runIfReallyLeaving.run();
                     });
         }
         // Else, just warn them normally
@@ -625,7 +635,7 @@ public class GameActivity extends AppCompatActivity {
                     .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
                         game.removePlayer(ParseUser.getCurrentUser());
                         game.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
-                        finish();
+                        runIfReallyLeaving.run();
                     });
         }
         builder.setNegativeButton(getResources().getString(R.string.never_mind), null);

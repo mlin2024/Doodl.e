@@ -186,13 +186,21 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.profileMenuItem:
-                goProfileActivity();
+                leaveGameDialog(() -> {
+                    goProfileActivity();
+                    finish();
+                });
                 return true;
             case R.id.logoutMenuItem:
-                logout();
+                leaveGameDialog(() -> {
+                    logout();
+                    finish();
+                });
                 return true;
             case android.R.id.home:
-                leaveGameDialog();
+                leaveGameDialog(() -> {
+                    finish();
+                });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -201,7 +209,9 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        leaveGameDialog();
+        leaveGameDialog(() -> {
+            finish();
+        });
     }
 
     // Updates the player list, time limit, and round
@@ -256,7 +266,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
     }
 
     // Handles when the player tries to leave the game
-    private void leaveGameDialog() {
+    private void leaveGameDialog(Runnable runIfReallyLeaving) {
         // Create an alert to ask user if they really want to leave the game
         AlertDialog.Builder builder = new AlertDialog.Builder(WaitingRoomActivity.this);
         builder.setTitle(getResources().getString(R.string.sure_you_want_to_leave_game));
@@ -265,7 +275,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
             builder.setMessage(getResources().getString(R.string.you_are_the_last_player))
                     .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
                         game.deleteInBackground();
-                        finish();
+                        runIfReallyLeaving.run();
                     });
         }
         // Else, if the current user is the game creator, if they leave the game, another player becomes the host
@@ -275,7 +285,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
                         game.removePlayer(ParseUser.getCurrentUser());
                         game.setHost(game.getPlayers().get(0));
                         game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
-                        finish();
+                        runIfReallyLeaving.run();
                     });
         }
         // Else, just warn them normally
@@ -284,7 +294,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
                 .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
                     game.removePlayer(ParseUser.getCurrentUser());
                     game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
-                    finish();
+                    runIfReallyLeaving.run();
                 });
         }
         builder.setNegativeButton(getResources().getString(R.string.never_mind), null);
