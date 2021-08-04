@@ -192,7 +192,6 @@ public class DoodleActivity extends AppCompatActivity {
 
         doneButton.setOnClickListener(v -> {
             Bitmap drawingBitmap = doodleDrawView.getBitmap();
-            if (parentBitmap != null) Log.e(TAG, drawingBitmap.getHeight() + ", " + drawingBitmap.getWidth() + "\n" + parentBitmap.getHeight() + ", " + parentBitmap.getWidth());
             drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
 

@@ -5,16 +5,19 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.DynamicDrawableSpan;
+import android.text.style.ImageSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.doodle.R;
 import com.google.android.material.snackbar.Snackbar;
@@ -27,6 +30,7 @@ public class HomeActivity extends AppCompatActivity {
     private RelativeLayout homeRelativeLayout;
     private Toolbar toolbar;
     private ImageView background;
+    private TextView homeTitleTextView;
     private Button doodleModeButton;
     private Button gameModeButton;
 
@@ -39,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
         homeRelativeLayout = findViewById(R.id.homeRelativeLayout);
         toolbar = findViewById(R.id.homeToolbar);
         background = findViewById(R.id.homeBackground);
+        homeTitleTextView = findViewById(R.id.homeTitleTextView);
         doodleModeButton = findViewById(R.id.doodleModeButton);
         gameModeButton = findViewById(R.id.gameModeButton);
 
@@ -53,6 +58,16 @@ public class HomeActivity extends AppCompatActivity {
         background.setScaleX(fwidth/getResources().getDimension(R.dimen.background_width));
         background.setScaleY(fheight/getResources().getDimension(R.dimen.background_height));
 
+        // Set up title text
+        SpannableString string = new SpannableString(getResources().getString(R.string.app_name));
+        Drawable e = getResources().getDrawable(R.drawable.e_icon, getTheme());
+        e.setBounds(0, 0,
+                // Size the 'e' icon relative to the TextView's size and its own size
+                (int)(homeTitleTextView.getTextSize() * 0.65 * (e.getIntrinsicWidth())/Math.max(e.getIntrinsicHeight(), e.getIntrinsicWidth())),
+                (int)(homeTitleTextView.getTextSize() * 0.65 * (e.getIntrinsicHeight())/Math.max(e.getIntrinsicHeight(), e.getIntrinsicWidth())));
+        int len = getResources().getString(R.string.app_name).length();
+        string.setSpan(new ImageSpan(e, ImageSpan.ALIGN_BASELINE), len - 1, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        homeTitleTextView.setText(string);
 
         doodleModeButton.setOnClickListener(v -> {
             goDoodleModeActivity();

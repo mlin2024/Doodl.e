@@ -5,9 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.doodle.R;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,6 +35,7 @@ public class LoginSignupActivity extends AppCompatActivity {
 
     // Views in the layout
     private RelativeLayout loginSignupRelativeLayout;
+    private TextView loginSignupTitleTextView;
     private LinearLayout loginSignupLinearLayout;
     private ExpandableLayout loginButtonExpandableLayout;
     private Button loginButton;
@@ -60,6 +66,7 @@ public class LoginSignupActivity extends AppCompatActivity {
 
         // Initialize the views in the layout
         loginSignupRelativeLayout = findViewById(R.id.loginSignupRelativeLayout);
+        loginSignupTitleTextView = findViewById(R.id.loginSignupTitleTextView);
         loginSignupLinearLayout = findViewById(R.id.loginSignupLinearLayout);
         loginButtonExpandableLayout = findViewById(R.id.loginButtonExpandableLayout);
         loginButton = findViewById(R.id.loginButton);
@@ -88,6 +95,17 @@ public class LoginSignupActivity extends AppCompatActivity {
                 checkForEmptyFields();
             }
         };
+
+        // Set up title text
+        SpannableString string = new SpannableString(getResources().getString(R.string.app_name));
+        Drawable e = getResources().getDrawable(R.drawable.e_icon, getTheme());
+        e.setBounds(0, 0,
+                // Size the 'e' icon relative to the TextView's size and its own size
+                (int)(loginSignupTitleTextView.getTextSize() * 0.65 * (e.getIntrinsicWidth())/Math.max(e.getIntrinsicHeight(), e.getIntrinsicWidth())),
+                (int)(loginSignupTitleTextView.getTextSize() * 0.65 * (e.getIntrinsicHeight())/Math.max(e.getIntrinsicHeight(), e.getIntrinsicWidth())));
+        int len = getResources().getString(R.string.app_name).length();
+        string.setSpan(new ImageSpan(e, ImageSpan.ALIGN_BASELINE), len - 1, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        loginSignupTitleTextView.setText(string);
 
         // Set up ProgressDialog
         verifyingProgressDialog.setMessage(getResources().getString(R.string.verifying_credentials));
