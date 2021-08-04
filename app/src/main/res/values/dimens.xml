@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="background_width">1229px</dimen>
+    <dimen name="background_height">2048px</dimen>
+    <dimen name="background_width_times_0.75">921.75px</dimen>
+    <dimen name="background_height_times_0.75">1536px</dimen>
+    <dimen name="background_scroll_speed"><int>20000</int></dimen>
+</resources>

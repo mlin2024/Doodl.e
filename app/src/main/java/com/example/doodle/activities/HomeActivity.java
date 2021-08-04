@@ -6,9 +6,14 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.example.doodle.R;
@@ -21,6 +26,7 @@ public class HomeActivity extends AppCompatActivity {
     // Views in the layout
     private RelativeLayout homeRelativeLayout;
     private Toolbar toolbar;
+    private ImageView background;
     private Button doodleModeButton;
     private Button gameModeButton;
 
@@ -32,12 +38,21 @@ public class HomeActivity extends AppCompatActivity {
         // Initialize the views in the layout
         homeRelativeLayout = findViewById(R.id.homeRelativeLayout);
         toolbar = findViewById(R.id.homeToolbar);
+        background = findViewById(R.id.homeBackground);
         doodleModeButton = findViewById(R.id.doodleModeButton);
         gameModeButton = findViewById(R.id.gameModeButton);
 
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
         setSupportActionBar(toolbar);
+
+        // Set up background animation
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        float fwidth = dm.density * dm.widthPixels;
+        float fheight = dm.density * dm.heightPixels;
+        background.setScaleX(fwidth/getResources().getDimension(R.dimen.background_width));
+        background.setScaleY(fheight/getResources().getDimension(R.dimen.background_height));
+
 
         doodleModeButton.setOnClickListener(v -> {
             goDoodleModeActivity();
