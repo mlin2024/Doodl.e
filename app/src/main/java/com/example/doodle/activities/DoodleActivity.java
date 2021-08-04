@@ -348,10 +348,9 @@ public class DoodleActivity extends AppCompatActivity {
             @Override
             public void done(Object response, ParseException e) {
                 if(e == null) { // Function call succeeded
-                    Log.i(TAG, "Notification sent");
                 }
                 else { // Function call failed
-                    Log.e(TAG, "Notification failed", e);
+                    e.printStackTrace();
                 }
             }
         });

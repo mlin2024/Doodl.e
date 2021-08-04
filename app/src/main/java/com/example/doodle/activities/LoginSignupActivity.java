@@ -210,7 +210,6 @@ public class LoginSignupActivity extends AppCompatActivity {
     // Assigns the user to the current installation
     private void assignUserToInstallation() {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        Log.e(TAG, ParseUser.getCurrentUser().getObjectId());
         installation.put("user", ParseUser.getCurrentUser().getObjectId());
         installation.saveInBackground();
     }
