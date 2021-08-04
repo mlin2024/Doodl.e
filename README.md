@@ -33,7 +33,7 @@
 * [x] User can log in
 * [x] User can sign up for a new account
 * [x] User can logout
-* [x] User can choose between Doodle Mode and *Game Mode*
+* [x] User can choose between Doodle Mode and Game Mode
   * [x] User can choose to either create a new doodle or contribute to an existing doodle
     * [x] User can choose a doodle from a selection of doodles from the database that they've never edited before
       * [x] User can see the timestamp of each doodle in the selection
@@ -45,25 +45,25 @@
       * [x] User can erase their strokes
       * [x] User can choose their drawing color out of a list of colors
       * [x] User can send out their new doodle/contribution to the database
+    * [x] User can choose to either create a new game or join an existing game
+      * [x] User can create a new game and receive the game code
+      * [x] User can join a game by inputting the game code
+        * [x] User can view a list of all users currently in the game
+        * [x] User who created a game can start the game
+        * [x] User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
+        * [x] User can view the full history of each doodle in the game after the game ends
 * [x] User can view their profile
   * [x] User can choose to view their gallery
   * [x] User can view a gallery of all the doodles they've done
     * [x] User can see the timestamp of each doodle in the gallery
     * [x] User can view a detail view of each doodle, including the doodle's full history
-    * [x] User can view a list of the contributions made to the given doodle
 * [x] User can receive a notification whenever one of their doodles is contributed to
 
 **Optional Nice-to-have Stories**
 
+* [x] In the gallery, user can view a list of the contributions made to the given doodle
 * [ ] When receiving an existing doodle from the database, user can view a timelapse of the history of the doodle
 * [ ] App is compatible with landscape mode
-* [x] User can choose to either create a new game or join an existing game
-  * [x] User can create a new game and receive the game code
-  * [x] User can join a game by inputting the game code
-    * [x] User can view a list of all users currently in the game
-    * [x] User who created a game can start the game
-    * [x] User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
-    * [x] User can view the full history of each doodle in the game after the game ends
 
 ### 2. Screen Archetypes
 
@@ -89,17 +89,17 @@
    * User can choose a doodle from a selection of doodles from the database that they've never edited before
    * User can see the timestamp of each doodle in the selection
    * User can view a detail view of each doodle, including the doodle's full history
-* *Game Mode Screen*
-   * *User can choose to either create a new game or join an existing game*
-   * *User can create a new game and receive the game code*
-   * *User can join a game by inputting the game code*
-* *Waiting Room Screen*
-   * *User can view a list of all users currently in the game*
-   * *User who created a game can start the game*
-* *Game Screen*
-   * *User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game*
-* *Game Gallery Screen*
-   * *User can view the full history of each doodle in the game after the game ends*
+* Game Mode Screen
+   * User can choose to either create a new game or join an existing game
+   * User can create a new game and receive the game code
+   * User can join a game by inputting the game code
+* Waiting Room Screen
+   * User can view a list of all users currently in the game
+   * User who created a game can start the game
+* Game Screen
+   * User can proceed with gameplay similar to Doodle Mode, but confined among the users in the game
+* Game Gallery Screen
+   * User can view the full history of each doodle in the game after the game ends
 * Profile Screen
    * User can choose to view their gallery
 * Gallery Screen
@@ -144,28 +144,28 @@
 ### Models
 #### Doodle
 
-   | Property      | Type     | Description |
-   | ------------- | -------- | ------------|
-   | objectId      | String   | unique id for the doodle (default field) |
-   | createdAt     | DateTime | date when doodle is created (default field) |
-   | artist        | Pointer to User| doodle artist |
-   | image         | File     | the doodle that the artist posted |
+   | Property      | Type                | Description  |
+   | ------------- | ------------------- | ------------ |
+   | objectId      | String              | unique id for the doodle (default field) |
+   | createdAt     | DateTime            | date when doodle is created (default field) |
+   | artist        | Pointer to User.    | doodle artist |
+   | image         | File                | the doodle that the artist posted |
    | parent        | Pointer to Doodle   | the parent to this doodle (null if this doodle has no parent) |
-   | tailLength    | Number    | the length of the doodle's "tail" (i.e. how many doodles preceed it, including itself) (if not inGame, Doodle is unable to be randomly received after tailLength reaches 5)|
-   | root          | String    | objectId of the root node |
-   | inGame        | String   | the objectId of the game it's in, if it's in a game (if it is, it cannot be randomly received) |
-   | *speedDoodle (optional)* | *File* | *data that can be used to recreate a speed-draw of the doodle's past* |
+   | tailLength    | Number              | the length of the doodle's "tail" (i.e. how many doodles preceed it, including itself) (if not inGame, Doodle is unable to be randomly received after tailLength reaches 5)|
+   | root          | String              | objectId of the root node |
+   | inGame        | String              | the objectId of the game it's in, if it's in a game (if it is, it cannot be randomly received) |
+   | *speedDoodle* | *File*              | *data that can be used to recreate a speed-draw of the doodle's past* |
    
 #### Game
 
-   | *Property*      | *Type*     | *Description* |
-   | -------------   | -------- | ------------|
-   | *objectId*      | *String*   | *unique id for the game (default field)* |
-   | *gameCode*      | *String*   | *unique code for the game* |
-   | *players*       | *Array of Users* | *users in the game* |
-   | *host*       | *Pointer to User* | *"host" of the game (originally the user who created the game, but becomes another player in game if they leave)* |
-   | *timeLimit*     | *Number* | *the time limit players have to draw (set by game creator, can be set to 30s, 60s, or 90s)* |
-   | *round*         | *Number* | *What round the game is on (0 if game hasn't started yet)* |
+   | Property      | Type            | Description  |
+   | ------------- | --------------- | ------------ |
+   | objectId      | String          | unique id for the game (default field) |
+   | gameCode      | String          | unique code for the game |
+   | players       | Array of Users  | users in the game |
+   | host          | Pointer to User | "host" of the game (originally the user who created the game, but becomes another player in game if they leave) |
+   | timeLimit     | Number          | the time limit players have to draw (set by game creator, can be set to 30s, 60s, or 90s) |
+   | round         | Number          | What round the game is on (0 if game hasn't started yet) |
    
 ### Networking
 #### List of network requests by screen
