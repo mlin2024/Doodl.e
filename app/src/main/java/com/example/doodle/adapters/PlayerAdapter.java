@@ -2,6 +2,7 @@ package com.example.doodle.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +27,12 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
 
     public Context context;
     public List<ParseUser> players;
+    public String gameCode; // Used to calculate unique username color
 
-    public PlayerAdapter(Context context, List<ParseUser> players) {
+    public PlayerAdapter(Context context, List<ParseUser> players, String gameCode) {
         this.context = context;
         this.players = players;
+        this.gameCode = gameCode;
     }
 
     @NonNull
@@ -77,9 +80,15 @@ public class PlayerAdapter extends RecyclerView.Adapter<PlayerAdapter.ViewHolder
             try {
                 usernameTextView.setText(player.fetchIfNeeded().getUsername());
                 // Make the name a random color
-                //usernameTextView.setTextColor(55 + Color.rgb((int)(200 * Math.random()),
-                //        55 + (int)(200 * Math.random()),
-                //        55 + (int)(200 * Math.random())));
+                long hash = gameCode.hashCode();
+                long hash2 = player.getObjectId().hashCode();
+                int r = (int)(((hash * 17) + (hash2 * 23)) % 200) + 20;
+                int g = (int)(((hash * 13) + (hash2 * 17)) % 200) + 20;
+                int b = (int)(((hash * 23) + (hash2 * 13)) % 200) + 20;
+                int textColor = Color.argb(255, r, g, b);
+                int shadowColor = Color.argb(100, Math.max(0, r - 50), Math.max(0, g - 50), Math.max(0, b - 50));
+                usernameTextView.setTextColor(textColor);
+                usernameTextView.setShadowLayer(3, 3, 3, shadowColor);
             } catch (ParseException e) {
                 Toast.makeText(context, context.getResources().getString(R.string.error_finding_players), Toast.LENGTH_SHORT).show();
             }

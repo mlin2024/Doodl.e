@@ -78,7 +78,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
         // Unwrap the game that was passed in by the intent
         game = getIntent().getParcelableExtra(GameModeActivity.GAME_TAG);
         players = game.getPlayers();
-        playerAdapter = new PlayerAdapter(this, players);
+        playerAdapter = new PlayerAdapter(this, players, game.getGameCode());
         updateHandler = new Handler(Looper.getMainLooper());
         startingProgressDialog = new ProgressDialog(WaitingRoomActivity.this);
         host = game.getHost().getObjectId();
