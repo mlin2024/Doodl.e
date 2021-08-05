@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Base application theme. -->
     <style name="Theme.Doodle" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -21,6 +21,21 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_baseline_arrow_back_24</item>
         <!-- Toolbar text. -->
         <item name="actionButtonStyle">@style/AppTheme.Widget.ActionButton</item>
+        <!-- Enable transitions -->
+        <item name="android:windowContentTransitions">true</item>
+        <!-- Allow overlapping transitions -->
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+    </style>
+
+    <style name="HorizontalTransitions" parent="Theme.Doodle">
+        <!-- specify enter and exit transitions-->
+        <item name="android:windowAnimationStyle">@style/HorizontalTransitionAnimations</item>
+    </style>
+
+    <style name="VerticalTransitions" parent="Theme.Doodle">
+        <!-- specify enter and exit transitions-->
+        <item name="android:windowAnimationStyle">@style/VerticalTransitionAnimations</item>
     </style>
 
     <style name="OverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
@@ -37,5 +52,19 @@
     <style name="AppTheme.Widget.ActionButton" parent="@style/Widget.AppCompat.ActionButton">
         <item name="textAllCaps">false</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="HorizontalTransitionAnimations" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    </style>
+
+    <style name="VerticalTransitionAnimations" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_down</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_up</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_up</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_down</item>
     </style>
 </resources>

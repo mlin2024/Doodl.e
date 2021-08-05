@@ -2,6 +2,9 @@ package com.example.doodle.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.transition.Transition;
+import androidx.transition.TransitionInflater;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,9 +12,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;

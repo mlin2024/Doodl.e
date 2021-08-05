@@ -22,38 +22,51 @@
         android:theme="@style/Theme.Doodle">
         <activity
             android:name=".activities.GameGalleryActivity"
-            android:label="@string/game_results" />
+            android:label="@string/game_results"
+            android:theme="@style/HorizontalTransitions" />
         <activity
             android:name=".activities.ContributionsGalleryActivity"
-            android:label="@string/Contributions" />
+            android:label="@string/Contributions"
+            android:theme="@style/HorizontalTransitions" />
         <activity
             android:name=".activities.GameActivity"
-            android:label="@string/Game" />
+            android:label="@string/Game"
+            android:theme="@style/HorizontalTransitions" />
         <activity
             android:name=".activities.WaitingRoomActivity"
-            android:label="@string/Waiting_Room" />
+            android:label="@string/Waiting_Room"
+            android:theme="@style/HorizontalTransitions" />
         <activity
             android:name=".activities.ContributeActivity"
-            android:label="@string/Contribute" />
+            android:label="@string/Contribute"
+            android:theme="@style/HorizontalTransitions" />
         <activity
             android:name=".activities.DoodleActivity"
-            android:label="@string/Doodle" />
+            android:label="@string/Doodle"
+            android:theme="@style/HorizontalTransitions" />
         <activity
             android:name=".activities.GameModeActivity"
-            android:label="@string/Game_Mode" />
+            android:label="@string/Game_Mode"
+            android:theme="@style/HorizontalTransitions" />
         <activity
             android:name=".activities.DoodleModeActivity"
-            android:label="@string/Doodle_Mode" />
+            android:label="@string/Doodle_Mode"
+            android:theme="@style/HorizontalTransitions" />
         <activity
             android:name=".activities.GalleryActivity"
-            android:label="@string/Gallery" />
+            android:label="@string/Gallery"
+            android:theme="@style/HorizontalTransitions" />
         <activity
             android:name=".activities.ProfileActivity"
-            android:label="@string/Profile" />
+            android:label="@string/Profile"
+            android:theme="@style/VerticalTransitions" />
         <activity
             android:name=".activities.HomeActivity"
-            android:label="@string/app_name" />
-        <activity android:name=".activities.LoginSignupActivity">
+            android:label="@string/app_name"
+            android:theme="@style/HorizontalTransitions" />
+        <activity
+            android:name=".activities.LoginSignupActivity"
+            android:theme="@style/HorizontalTransitions">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
