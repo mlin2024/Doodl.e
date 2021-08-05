@@ -8,6 +8,14 @@
     android:layout_height="match_parent"
     tools:context=".activities.GameModeActivity">
 
+    <ImageView
+        android:id="@+id/gameModeBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/background"
+        android:stateListAnimator="@animator/background_scroll" />
+
     <include
         android:id="@+id/gameModeToolbar"
         layout="@layout/toolbar_main"

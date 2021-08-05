@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,7 @@ public class GameModeActivity extends AppCompatActivity {
     // Views in the layout
     private RelativeLayout gameModeRelativeLayout;
     private Toolbar toolbar;
+    private ImageView background;
     private Button createGameButton;
     private ExpandableLayout createGameExpandableLayout;
     private TextView gameCodeTextView;
@@ -73,6 +76,7 @@ public class GameModeActivity extends AppCompatActivity {
         // Initialize the views in the layout
         gameModeRelativeLayout = findViewById(R.id.gameModeRelativeLayout);
         toolbar = findViewById(R.id.gameModeToolbar);
+        background = findViewById(R.id.gameModeBackground);
         createGameButton = findViewById(R.id.createGameButton);
         createGameExpandableLayout = findViewById(R.id.createGameExpandableLayout);
         gameCodeTextView = findViewById(R.id.gameCodeTextView);
@@ -104,6 +108,13 @@ public class GameModeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // Set up background animation
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        float fwidth = dm.density * dm.widthPixels;
+        float fheight = dm.density * dm.heightPixels;
+        background.setScaleX(fwidth/getResources().getDimension(R.dimen.background_width));
+        background.setScaleY(fheight/getResources().getDimension(R.dimen.background_height));
 
         // Set up game code TextView
         gameCodeTextView.setText(gameCode);
