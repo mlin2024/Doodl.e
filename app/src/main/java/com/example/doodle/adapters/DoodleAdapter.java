@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.doodle.R;
 import com.example.doodle.activities.ContributionsGalleryActivity;
+import com.example.doodle.activities.GalleryActivity;
 import com.example.doodle.models.Doodle;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -35,11 +36,13 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
     public Context context;
     public List<Doodle> doodles;
     public boolean usedForViewPager;
+    public boolean showSeeContributionsButton;
 
-    public DoodleAdapter(Context context, List<Doodle> doodles, boolean usedForViewPager) {
+    public DoodleAdapter(Context context, List<Doodle> doodles, boolean usedForViewPager, boolean showSeeContributionsButton) {
         this.context = context;
         this.doodles = doodles;
         this.usedForViewPager = usedForViewPager;
+        this.showSeeContributionsButton = showSeeContributionsButton;
     }
 
     @NonNull
@@ -135,6 +138,9 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 TextView timestampTextView = dialog.findViewById(R.id.timestampTextView);
                 Button seeContributionsButton = dialog.findViewById(R.id.seeContributionsButton);
                 Button Xbutton = dialog.findViewById(R.id.Xbutton);
+
+                // Hide seeContributionsButton if it is not wanted
+                if (!showSeeContributionsButton) seeContributionsButton.setVisibility(View.GONE);
 
                 int tailLength = doodle.getTailLength();
 

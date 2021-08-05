@@ -62,7 +62,7 @@ public class ContributeActivity extends AppCompatActivity {
 
         // Initialize other member variables
         doodles = new ArrayList<>();
-        doodleAdapter = new DoodleAdapter(this, doodles, true);
+        doodleAdapter = new DoodleAdapter(this, doodles, true, false);
         loadingProgressDialog = new ProgressDialog(ContributeActivity.this);
 
         // Set up toolbar
