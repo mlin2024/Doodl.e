@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -120,6 +122,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 // Set up dialog
                 dialog = new Dialog(context);
                 dialog.setContentView(R.layout.item_doodle_detail);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                 // Asynchronously load the doodle's history
                 loadingProgressDialog.show();
