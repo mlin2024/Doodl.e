@@ -5,9 +5,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:layout_margin="5dp"
-    android:background="@color/white"
-    android:padding="5dp">
+    android:background="@color/black"
+    android:padding="10dp">
 
     <LinearLayout
         android:id="@+id/versionLinearLayout"
@@ -15,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/doodleRelativeLayout"
         android:layout_alignRight="@id/doodleRelativeLayout"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp">
 
         <Button
             android:id="@+id/backButton"
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:background="@drawable/arrow_left_float"
-            app:backgroundTint="@color/button_light_blue" />
+            app:backgroundTint="@color/button_purple" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/versionTabLayout"
@@ -31,10 +31,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_toRightOf="@id/backButton"
+            android:layout_weight="1"
+            android:background="@color/black"
             app:tabBackground="@drawable/tab_selector"
             app:tabGravity="center"
-            app:tabIndicatorHeight="0dp"
-            android:layout_weight="1" />
+            app:tabIndicatorHeight="0dp" />
 
         <Button
             android:id="@+id/forwardButton"
@@ -43,7 +44,7 @@
             android:layout_gravity="right|center_vertical"
             android:layout_toRightOf="@id/versionTabLayout"
             android:background="@drawable/arrow_right_float"
-            app:backgroundTint="@color/button_light_blue" />
+            app:backgroundTint="@color/button_purple" />
 
     </LinearLayout>
 
@@ -52,11 +53,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/versionLinearLayout"
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_centerHorizontal="true">
+        android:layout_marginBottom="5dp">
 
         <RelativeLayout
             android:id="@+id/doodleRelativeLayout_image"
@@ -94,6 +95,8 @@
             android:layout_centerHorizontal="false"
             android:layout_marginStart="0dp"
             android:layout_marginTop="5dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
             tools:text="just now" />
 
     </RelativeLayout>
