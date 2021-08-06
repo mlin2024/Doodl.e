@@ -1,5 +1,6 @@
 package com.example.doodle.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.LayoutInflater;
@@ -75,6 +76,7 @@ public class GameDoodleAdapter extends RecyclerView.Adapter<GameDoodleAdapter.Vi
         private Button forwardButton_GAME;
         private ImageView doodleImageView_GAME;
         private TextView artistTextView;
+
         private Doodle currentDoodle;
 
         public ViewHolder(@NonNull View itemView) {
@@ -133,8 +135,10 @@ public class GameDoodleAdapter extends RecyclerView.Adapter<GameDoodleAdapter.Vi
                 };
 
                 // Add a tab for each doodle in the history
-                for (int i = 0; i < tailLength; i++)
-                    versionTabLayout_GAME.addTab(versionTabLayout_GAME.newTab());
+                if (versionTabLayout_GAME.getTabCount() == 0) { // Only add new tabs if it doesn't already have them from being previously loaded
+                    for (int i = 0; i < tailLength; i++)
+                        versionTabLayout_GAME.addTab(versionTabLayout_GAME.newTab());
+                }
 
                 // Set selected tab to first tab
                 versionTabLayout_GAME.selectTab(versionTabLayout_GAME.getTabAt(0));
