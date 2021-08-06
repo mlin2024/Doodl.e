@@ -3,9 +3,9 @@
     <color name="main_purple">#FF7C79D7</color>
     <color name="second_purple">#FF6B6ABD</color>
     <color name="disabled_purple">#557C79D7</color>
-    <color name="main_teal">#FF6BC2B9</color>
-    <color name="second_teal">#FF5CABA3</color>
-    <color name="disabled_teal">#556BC2B9</color>
+    <color name="main_teal">#FF5CC6CC</color>
+    <color name="second_teal">#FF50AEB3</color>
+    <color name="disabled_teal">#555CC6CC</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
 

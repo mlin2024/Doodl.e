@@ -17,8 +17,6 @@
         <item name="android:fontFamily">@font/visby_round_cf_heavy</item>
         <!-- Toolbar overflow icon -->
         <item name="android:actionOverflowButtonStyle">@style/OverflowButton</item>
-        <!-- Toolbar overflow menu text style -->
-        <item name="android:itemTextAppearance">@style/menuItem</item>
         <!-- Home as Up icon -->
         <item name="android:homeAsUpIndicator">@drawable/ic_baseline_arrow_back_24</item>
         <!-- Toolbar text -->
@@ -54,10 +52,6 @@
     <style name="AppTheme.Widget.ActionButton" parent="@style/Widget.AppCompat.ActionButton">
         <item name="textAllCaps">false</item>
         <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="menuItem" parent="Widget.AppCompat.TextView.SpinnerItem">
-        <item name="android:textColor">@color/button_color_secondary</item>
     </style>
 
     <style name="HorizontalTransitionAnimations" parent="@android:style/Animation.Activity">
