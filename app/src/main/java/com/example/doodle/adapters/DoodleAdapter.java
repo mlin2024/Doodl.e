@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -103,9 +104,11 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
             // Bind the doodle data to the view elements
             ParseFile image = doodle.getImage();
             if (image != null) {
+                AnimationDrawable loadingDrawable = (AnimationDrawable) context.getResources().getDrawable(R.drawable.loading_circle, context.getTheme());
+                loadingDrawable.start();
                 Glide.with(context)
                         .load(image.getUrl())
-                        .placeholder(R.drawable.placeholder)
+                        .placeholder(loadingDrawable)
                         .into(doodleImageView);
             }
             timestampTextView.setText(doodle.getTimestamp());
@@ -163,9 +166,11 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                     Doodle currentDoodle = doodleHistory[tab];
                     ParseFile image = currentDoodle.getImage();
                     if (image != null) {
+                        AnimationDrawable loadingDrawable = (AnimationDrawable) context.getResources().getDrawable(R.drawable.loading_circle, context.getTheme());
+                        loadingDrawable.start();
                         Glide.with(context)
                                 .load(image.getUrl())
-                                .placeholder(R.drawable.placeholder)
+                                .placeholder(loadingDrawable)
                                 .into(doodleImageView);
                     }
                     timestampTextView.setText(currentDoodle.getTimestamp());

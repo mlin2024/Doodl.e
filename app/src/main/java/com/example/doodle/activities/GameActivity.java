@@ -15,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -413,11 +414,14 @@ public class GameActivity extends AppCompatActivity {
         enableAllButtons();
         timeTextView.setTextColor(getResources().getColor(R.color.design_default_color_secondary_variant, getTheme()));
         // Set up parent ImageView
-        if (parentDoodle != null)
+        if (parentDoodle != null) {
+            AnimationDrawable loadingDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.loading_circle, getTheme());
+            loadingDrawable.start();
             Glide.with(this)
                     .load(parentDoodle.getImage().getUrl())
-                    .placeholder(R.drawable.placeholder)
+                    .placeholder(loadingDrawable)
                     .into(parentImageView);
+        }
     }
 
     private void endCurrentRound() {

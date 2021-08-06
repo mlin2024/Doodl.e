@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -70,9 +71,11 @@ public class ContributionsGalleryActivity extends AppCompatActivity {
         Doodle currentDoodle = getIntent().getParcelableExtra(ORIGINAL_DOODLE);
 
         // Set up ImageView
+        AnimationDrawable loadingDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.loading_circle, getTheme());
+        loadingDrawable.start();
         Glide.with(this)
                 .load(currentDoodle.getImage().getUrl())
-                .placeholder(R.drawable.placeholder)
+                .placeholder(loadingDrawable)
                 .into(originalDoodleImageView);
 
         // Set up gallery RecyclerView

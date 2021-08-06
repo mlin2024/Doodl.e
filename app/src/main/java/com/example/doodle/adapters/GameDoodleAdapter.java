@@ -1,6 +1,7 @@
 package com.example.doodle.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,9 +119,11 @@ public class GameDoodleAdapter extends RecyclerView.Adapter<GameDoodleAdapter.Vi
                         Doodle currentDoodle = versions.get(tab);
                         ParseFile image = currentDoodle.getImage();
                         if (image != null) {
+                            AnimationDrawable loadingDrawable = (AnimationDrawable) context.getResources().getDrawable(R.drawable.loading_circle, context.getTheme());
+                            loadingDrawable.start();
                             Glide.with(context)
                                     .load(image.getUrl())
-                                    .placeholder(R.drawable.placeholder)
+                                    .placeholder(loadingDrawable)
                                     .into(doodleImageView_GAME);
                         }
                         artistTextView.setText(currentDoodle.getArtist().fetchIfNeeded().getUsername());

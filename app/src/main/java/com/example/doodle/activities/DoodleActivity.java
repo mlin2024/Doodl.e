@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -125,11 +126,14 @@ public class DoodleActivity extends AppCompatActivity {
         // Get parent doodle from intent
         Doodle parentDoodle = getIntent().getParcelableExtra(PARENT_DOODLE);
         Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
-        if (parentDoodle != null)
+        if (parentDoodle != null) {
+            AnimationDrawable loadingDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.loading_circle, getTheme());
+            loadingDrawable.start();
             Glide.with(this)
-                .load(parentDoodle.getImage().getUrl())
-                .placeholder(R.drawable.placeholder)
-                .into(parentImageView);
+                    .load(parentDoodle.getImage().getUrl())
+                    .placeholder(loadingDrawable)
+                    .into(parentImageView);
+        }
 
         // Set up ProgressDialog
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
