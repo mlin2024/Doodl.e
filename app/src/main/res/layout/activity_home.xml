@@ -40,7 +40,11 @@
         android:layout_below="@+id/homeTitleTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:text="@string/Doodle_Mode" />
+        android:text="@string/Doodle_Mode"
+        app:icon="@drawable/ic_baseline_edit_24"
+        app:iconGravity="end"
+        app:iconPadding="0dp"
+        app:iconSize="30dp" />
 
     <Button
         android:id="@+id/gameModeButton"
@@ -50,6 +54,10 @@
         android:layout_below="@+id/doodleModeButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:text="@string/Game_Mode" />
+        android:text="@string/Game_Mode"
+        app:icon="@drawable/ic_baseline_people_alt_24"
+        app:iconGravity="end"
+        app:iconPadding="0dp"
+        app:iconSize="30dp" />
 
 </RelativeLayout>
