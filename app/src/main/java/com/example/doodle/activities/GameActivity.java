@@ -479,6 +479,7 @@ public class GameActivity extends AppCompatActivity {
         colorButton.setEnabled(false);
         doneButton.setEnabled(false);
         colorPickerExpandableLayout.collapse();
+        doodleDrawView.setVisibility(View.INVISIBLE);
     }
 
     // Enables all buttons
@@ -491,6 +492,7 @@ public class GameActivity extends AppCompatActivity {
         eraserButton.setEnabled(true);
         colorButton.setEnabled(true);
         doneButton.setEnabled(true);
+        doodleDrawView.setVisibility(View.VISIBLE);
     }
 
     // Convert transparentColor to be transparent in a Bitmap
