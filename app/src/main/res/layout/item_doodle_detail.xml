@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -73,7 +74,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/doodleImageView"
             android:layout_alignStart="@+id/doodleImageView"
-            android:layout_centerHorizontal="false"
             android:layout_marginStart="0dp"
             android:layout_marginTop="5dp"
             android:textSize="16sp"
@@ -103,7 +103,7 @@
         android:layout_height="20dp"
         android:layout_alignParentEnd="true"
         android:background="@drawable/button_round"
-        app:backgroundTint="@color/button_black"
+        app:backgroundTint="@color/button_color_primary"
         app:icon="@drawable/ic_close_black_24dp"
         app:iconGravity="textEnd"
         app:iconPadding="0dp"

@@ -127,7 +127,7 @@
                     android:inputType="textCapCharacters"
                     android:maxLength="4"
                     android:singleLine="true"
-                    android:textColor="@color/teal_700"
+                    android:textColor="?attr/colorSecondary"
                     android:textSize="48sp" />
 
                 <Button

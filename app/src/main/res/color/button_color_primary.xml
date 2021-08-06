@@ -3,6 +3,6 @@
     <item android:state_pressed="true"
         android:color="?attr/colorPrimaryVariant"/>
     <item android:state_enabled="false"
-        android:color="#55000000"/>
+        android:color="@color/disabled_purple"/>
     <item android:color="?attr/colorPrimary"/>
 </selector>

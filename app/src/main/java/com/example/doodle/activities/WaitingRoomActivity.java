@@ -108,7 +108,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
         // Create an ArrayAdapter using the string array and a default spinner layout
         timeLimitAdapter = ArrayAdapter.createFromResource(this, R.array.time_limit_array_seconds, R.layout.spinner_item);
         // Specify the layout to use when the list of choices appears
-        timeLimitAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        timeLimitAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         // Apply the adapter to the spinner
         timeLimitSpinner.setAdapter(timeLimitAdapter);
         // Set it to the default value, 60s

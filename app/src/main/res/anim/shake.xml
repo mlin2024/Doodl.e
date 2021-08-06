@@ -16,20 +16,17 @@
         android:toXDelta="-25%p"
         android:duration="110" />
 
-
     <translate
         android:startOffset="130"
         android:fromXDelta="0%p"
         android:toXDelta="25%p"
         android:duration="120" />
 
-
     <translate
         android:startOffset="190"
         android:fromXDelta="0%p"
         android:toXDelta="-20%p"
         android:duration="130" />
-
 
     <translate
         android:startOffset="260"

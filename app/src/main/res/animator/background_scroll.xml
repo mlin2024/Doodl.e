@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <set
-            android:ordering="together">
+        <set android:ordering="together">
+
             <objectAnimator
                 android:interpolator="@android:anim/linear_interpolator"
                 android:propertyName="pivotX"
@@ -10,6 +10,7 @@
                 android:valueFrom="0px"
                 android:valueTo="@dimen/background_width_times_0.75"
                 android:repeatCount="-1" />
+
             <objectAnimator
                 android:interpolator="@android:anim/linear_interpolator"
                 android:propertyName="pivotY"
@@ -17,6 +18,7 @@
                 android:valueFrom="0px"
                 android:valueTo="@dimen/background_height_times_0.75"
                 android:repeatCount="-1" />
+
         </set>
     </item>
 </selector>
