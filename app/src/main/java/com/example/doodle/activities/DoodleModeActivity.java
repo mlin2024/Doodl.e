@@ -5,10 +5,14 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewTreeObserver;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -47,11 +51,37 @@ public class DoodleModeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // Set up background animation
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        float fwidth = dm.density * dm.widthPixels;
-        float fheight = dm.density * dm.heightPixels;
-        background.setScaleX(fwidth/getResources().getDimension(R.dimen.background_width));
-        background.setScaleY(fheight/getResources().getDimension(R.dimen.background_height));
+        ViewTreeObserver vto = background.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                background.getViewTreeObserver().removeOnPreDrawListener(this);
+                int fheight = background.getMeasuredHeight();
+                int fwidth = background.getMeasuredWidth();
+
+                Drawable backgroundDrawable = getResources().getDrawable(R.drawable.background, getTheme());
+                backgroundDrawable.setBounds(0, 0, fwidth * 2, fheight * 2);
+                background.setImageDrawable(backgroundDrawable);
+                background.setScaleX(2);
+                background.setScaleY(2);
+                background.setPivotX(0);
+                background.setPivotY(0);
+
+                TranslateAnimation anim = new TranslateAnimation(
+                        TranslateAnimation.ABSOLUTE, 0.0f,
+                        TranslateAnimation.ABSOLUTE, -fwidth,
+                        TranslateAnimation.ABSOLUTE, 0.0f,
+                        TranslateAnimation.ABSOLUTE, -fheight
+                );
+                anim.setFillAfter(true);
+                anim.setDuration(getResources().getInteger(R.integer.background_scroll_speed));
+                anim.setRepeatCount(-1);
+                anim.setInterpolator(new LinearInterpolator());
+
+                background.startAnimation(anim);
+
+                return true;
+            }
+        });
 
         createDoodleButton.setOnClickListener(v -> {
             goDoodleActivity();
