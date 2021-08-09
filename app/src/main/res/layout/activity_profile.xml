@@ -14,73 +14,130 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/usernameLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/profileToolbar"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:text="@string/username"
-        android:textSize="16sp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/profileToolbar"
+        android:layout_alignParentBottom="true">
 
-    <TextView
-        android:id="@+id/profileUsernameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/usernameLabel"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="20dp"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="30sp"
-        tools:text="username" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp">
 
-    <TextView
-        android:id="@+id/passwordLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/profileUsernameTextView"
-        android:layout_alignStart="@id/usernameLabel"
-        android:layout_marginTop="30dp"
-        android:text="@string/password"
-        android:textSize="16sp" />
+            <TextView
+                android:id="@+id/usernameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="@string/username"
+                android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/profilePasswordTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/passwordLabel"
-        android:layout_alignStart="@id/profileUsernameTextView"
-        android:layout_marginTop="20dp"
-        android:text="@string/dots"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="30sp" />
+            <TextView
+                android:id="@+id/profileUsernameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="30sp"
+                tools:text="egg" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/notificationSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/profilePasswordTextView"
-        android:layout_alignStart="@id/usernameLabel"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:text="@string/receive_notifications"
-        android:textColor="?attr/colorPrimary"
-        android:textSize="16sp" />
+            <View
+                android:layout_marginTop="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"/>
 
-    <Button
-        android:id="@+id/galleryButton"
-        style="@style/CustomButton.Doodle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/notificationSwitch"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="@string/Gallery"
-        app:icon="@drawable/ic_baseline_collections_24"
-        app:iconGravity="end"
-        app:iconPadding="0dp"
-        app:iconSize="30dp" />
+            <TextView
+                android:id="@+id/passwordLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/password"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/profilePasswordTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/dots"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="30sp" />
+
+            <View
+                android:layout_marginTop="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/notificationsLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/notifications"
+                    android:textSize="20sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/notificationSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_weight="1"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/anonymousLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/anonymous"
+                    android:textSize="20sp" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/anonymousSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_weight="1"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/galleryButton"
+                style="@style/CustomButton.Doodle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50dp"
+                android:text="@string/Gallery"
+                app:icon="@drawable/ic_baseline_collections_24"
+                app:iconGravity="end"
+                app:iconPadding="0dp"
+                app:iconSize="30dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

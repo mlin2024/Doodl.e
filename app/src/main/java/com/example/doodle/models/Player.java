@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class Player {
     public static final String TAG = "Player";
     public static final String KEY_GETS_NOTIFICATIONS = "getsNotifications";
+    public static final String KEY_IS_ANONYMOUS = "isAnonymous";
     public static final String KEY_ROOTS_CONTRIBUTED_TO = "rootsContributedTo";
 
     private ParseUser user;
@@ -26,12 +27,24 @@ public class Player {
         this.user = user;
     }
 
+    public String getUsername() {
+        return user.getUsername();
+    }
+
     public boolean getGetsNotifications() {
         return user.getBoolean(KEY_GETS_NOTIFICATIONS);
     }
 
     public void setGetsNotifications(boolean getsNotifications) {
         user.put(KEY_GETS_NOTIFICATIONS, getsNotifications);
+    }
+
+    public boolean getIsAnonymous() {
+        return user.getBoolean(KEY_IS_ANONYMOUS);
+    }
+
+    public void setIsAnonymous(boolean isAnonymous) {
+        user.put(KEY_IS_ANONYMOUS, isAnonymous);
     }
 
     // Gets the list of roots the user has contributed to

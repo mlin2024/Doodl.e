@@ -89,8 +89,12 @@
     <string name="you_are_the_last_player">You are the last player left in the game, if you leave the game will be deleted.</string>
     <string name="you_have_been_made_host">The previous host left, so you have been made the host!</string>
     <string name="another_player_will_become_host">Another player will become the host.</string>
-    <string name="receive_notifications">Receive notifications when someone contributes to one of your doodles?</string>
     <string name="you_will_receive_notifications">You will now receive a notification every time someone contributes to one of your doodles.</string>
     <string name="you_will_not_receive_notifications">You will no longer receive a notification every time someone contributes to one of your doodles.</string>
     <string name="failed_to_save_user_settings">Failed to save user settings, please try again</string>
+    <string name="notifications">notifications</string>
+    <string name="anonymous">anonymous</string>
+    <string name="you_will_be_anonymous">Your username will be hidden on doodles you create.</string>
+    <string name="you_will_not_be_anonymous">Other people will be able to see your username on doodles you create.</string>
+    <string name="anon">anon</string>
 </resources>

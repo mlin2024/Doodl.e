@@ -25,6 +25,7 @@ import com.example.doodle.R;
 import com.example.doodle.activities.ContributionsGalleryActivity;
 import com.example.doodle.activities.GalleryActivity;
 import com.example.doodle.models.Doodle;
+import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseException;
@@ -39,12 +40,14 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
     public Context context;
     public List<Doodle> doodles;
     public boolean usedForViewPager;
+    public boolean showArtist;
     public boolean showSeeContributionsButton;
 
-    public DoodleAdapter(Context context, List<Doodle> doodles, boolean usedForViewPager, boolean showSeeContributionsButton) {
+    public DoodleAdapter(Context context, List<Doodle> doodles, boolean usedForViewPager, boolean showArtist, boolean showSeeContributionsButton) {
         this.context = context;
         this.doodles = doodles;
         this.usedForViewPager = usedForViewPager;
+        this.showArtist = showArtist;
         this.showSeeContributionsButton = showSeeContributionsButton;
     }
 
@@ -82,6 +85,8 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView doodleImageView;
+        private TextView artistTextView;
+        private View dividerView;
         private TextView timestampTextView;
 
         private Dialog dialog;
@@ -92,6 +97,8 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
             super(itemView);
             if (usedForViewPager) itemView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             doodleImageView = itemView.findViewById(R.id.doodleImageView);
+            artistTextView = itemView.findViewById(R.id.artistTextView);
+            dividerView = itemView.findViewById(R.id.dividerView);
             timestampTextView = itemView.findViewById(R.id.timestampTextView);
 
             loadingProgressDialog = new ProgressDialog(context);
@@ -102,16 +109,34 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
 
         public void bind(Doodle doodle) {
             // Bind the doodle data to the view elements
-            ParseFile image = doodle.getImage();
-            if (image != null) {
-                AnimationDrawable loadingDrawable = (AnimationDrawable) context.getResources().getDrawable(R.drawable.loading_circle, context.getTheme());
-                loadingDrawable.start();
-                Glide.with(context)
-                        .load(image.getUrl())
-                        .placeholder(loadingDrawable)
-                        .into(doodleImageView);
+            try {
+                ParseFile image = doodle.getImage();
+                if (image != null) {
+                    AnimationDrawable loadingDrawable = (AnimationDrawable) context.getResources().getDrawable(R.drawable.loading_circle, context.getTheme());
+                    loadingDrawable.start();
+                    Glide.with(context)
+                            .load(image.getUrl())
+                            .placeholder(loadingDrawable)
+                            .into(doodleImageView);
+                }
+                // Remove the artist TextView if it is not meant to be shown
+                if (!showArtist) {
+                    artistTextView.setVisibility(View.GONE);
+                    dividerView.setVisibility(View.GONE);
+                }
+                // Otherwise, populate it
+                else {
+                    Player artist = new Player(doodle.getArtist().fetchIfNeeded());
+                    if (artist.getIsAnonymous()) {
+                        artistTextView.setText(context.getResources().getString(R.string.anon));
+                    } else {
+                        artistTextView.setText(artist.getUsername());
+                    }
+                }
+                timestampTextView.setText(doodle.getTimestamp());
+            } catch (ParseException e) {
+                Snackbar.make(itemView, context.getResources().getString(R.string.error_finding_doodle), Snackbar.LENGTH_LONG).show();
             }
-            timestampTextView.setText(doodle.getTimestamp());
         }
 
         @Override
@@ -141,6 +166,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 TabLayout versionTabLayout = dialog.findViewById(R.id.versionTabLayout);
                 Button forwardButton = dialog.findViewById(R.id.forwardButton);
                 ImageView doodleImageView = dialog.findViewById(R.id.doodleImageView);
+                TextView artistTextView = dialog.findViewById(R.id.artistTextView);
                 TextView timestampTextView = dialog.findViewById(R.id.timestampTextView);
                 Button seeContributionsButton = dialog.findViewById(R.id.seeContributionsButton);
                 Button Xbutton = dialog.findViewById(R.id.Xbutton);
@@ -163,17 +189,28 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
 
                 // Lambda function that loads the appropriate data into the view
                 Consumer<Integer> loadTab = (tab) -> {
-                    Doodle currentDoodle = doodleHistory[tab];
-                    ParseFile image = currentDoodle.getImage();
-                    if (image != null) {
-                        AnimationDrawable loadingDrawable = (AnimationDrawable) context.getResources().getDrawable(R.drawable.loading_circle, context.getTheme());
-                        loadingDrawable.start();
-                        Glide.with(context)
-                                .load(image.getUrl())
-                                .placeholder(loadingDrawable)
-                                .into(doodleImageView);
+                    try {
+                        Doodle currentDoodle = doodleHistory[tab];
+                        ParseFile image = currentDoodle.getImage();
+                        if (image != null) {
+                            AnimationDrawable loadingDrawable = (AnimationDrawable) context.getResources().getDrawable(R.drawable.loading_circle, context.getTheme());
+                            loadingDrawable.start();
+                            Glide.with(context)
+                                    .load(image.getUrl())
+                                    .placeholder(loadingDrawable)
+                                    .into(doodleImageView);
+                        }
+                        Player artist = new Player(currentDoodle.getArtist().fetchIfNeeded());
+                        if (artist.getIsAnonymous()) {
+                            artistTextView.setText(context.getResources().getString(R.string.anon));
+                        }
+                        else {
+                            artistTextView.setText(artist.getUsername());
+                        }
+                        timestampTextView.setText(currentDoodle.getTimestamp());
+                    } catch (ParseException e) {
+                        Snackbar.make(itemView, context.getResources().getString(R.string.error_loading_history), Snackbar.LENGTH_LONG).show();
                     }
-                    timestampTextView.setText(currentDoodle.getTimestamp());
                 };
 
                 // Add a tab for each doodle in the history

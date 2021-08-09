@@ -52,7 +52,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         // Initialize other member variables
         doodles = new ArrayList<>();
-        doodleAdapter = new DoodleAdapter(this, doodles, false, true);
+        doodleAdapter = new DoodleAdapter(this, doodles, false, false, true);
         loadingProgressDialog = new ProgressDialog(GalleryActivity.this);
 
         // Set up toolbar

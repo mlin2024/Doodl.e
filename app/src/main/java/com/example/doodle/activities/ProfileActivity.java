@@ -28,7 +28,11 @@ public class ProfileActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView profileUsernameTextView;
     private SwitchMaterial notificationSwitch;
+    private SwitchMaterial anonymousSwitch;
     private Button galleryButton;
+
+    // Other necessary member variables
+    Player curPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,11 @@ public class ProfileActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.profileToolbar);
         profileUsernameTextView = findViewById(R.id.profileUsernameTextView);
         notificationSwitch = findViewById(R.id.notificationSwitch);
+        anonymousSwitch = findViewById(R.id.anonymousSwitch);
         galleryButton = findViewById(R.id.galleryButton);
+
+        // Initialize other member variables
+        curPlayer = new Player(ParseUser.getCurrentUser());
 
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
@@ -52,13 +60,10 @@ public class ProfileActivity extends AppCompatActivity {
         profileUsernameTextView.setText(ParseUser.getCurrentUser().getUsername());
 
         // Set up notification switch
-        Player curPlayer = new Player(ParseUser.getCurrentUser());
-
         // Set initial configuration
-        Log.e(TAG, ""+curPlayer.getGetsNotifications());
         if (curPlayer.getGetsNotifications()) notificationSwitch.setChecked(true);
         else notificationSwitch.setChecked(false);
-
+        // Set up toggle logic
         notificationSwitch.setOnClickListener(v -> {
             if (notificationSwitch.isChecked()) {
                 curPlayer.setGetsNotifications(true);
@@ -70,6 +75,26 @@ public class ProfileActivity extends AppCompatActivity {
                 curPlayer.setGetsNotifications(false);
                 curPlayer.saveInBackground(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), () -> {
                     Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_not_receive_notifications), Snackbar.LENGTH_LONG).show();
+                });
+            }
+        });
+
+        // Set up anonymous switch
+        // Set initial configuration
+        if (curPlayer.getIsAnonymous()) anonymousSwitch.setChecked(true);
+        else anonymousSwitch.setChecked(false);
+        // Set up toggle logic
+        anonymousSwitch.setOnClickListener(v -> {
+            if (anonymousSwitch.isChecked()) {
+                curPlayer.setIsAnonymous(true);
+                curPlayer.saveInBackground(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), () -> {
+                    Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_be_anonymous), Snackbar.LENGTH_LONG).show();
+                });
+            }
+            else {
+                curPlayer.setIsAnonymous(false);
+                curPlayer.saveInBackground(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), () -> {
+                    Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_not_be_anonymous), Snackbar.LENGTH_LONG).show();
                 });
             }
         });

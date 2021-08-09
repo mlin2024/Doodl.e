@@ -193,7 +193,7 @@ public class GameDoodleAdapter extends RecyclerView.Adapter<GameDoodleAdapter.Vi
             // Start a synchronous call for the doodles and return the result
             try {
                 return (ArrayList) query.find();
-            }  catch (ParseException e) {
+            } catch (ParseException e) {
                 Snackbar.make(itemView, context.getResources().getString(R.string.error_loading_history), Snackbar.LENGTH_LONG).show();
                 return new ArrayList<>();
             }
