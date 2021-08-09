@@ -218,7 +218,6 @@ public class GameModeActivity extends AppCompatActivity {
         for (int i = 0; i < 4; i++) {
             gameCode += (char)('A' + (Math.random() * 26));
         }
-        // TODO: make the game code calculated from the object id, so it's guaranteed to be unique
         return gameCode;
     }
 

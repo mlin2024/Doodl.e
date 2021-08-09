@@ -138,7 +138,6 @@ public class ContributeActivity extends AppCompatActivity {
         query.whereNotContainedIn(Doodle.KEY_ROOT, player.getRootsContributedTo());
         // Don't include doodles with a tail longer than 4
         query.whereLessThanOrEqualTo(Doodle.KEY_TAIL_LENGTH, 4);
-        // TODO: figure out how to not include doodles with more than 1 sibling
         // Don't include doodles that are from a game
         query.whereEqualTo(Doodle.KEY_IN_GAME, null);
         // Limit query to NUM_TO_LOAD items

@@ -224,7 +224,6 @@ public class GameActivity extends AppCompatActivity {
             drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
-
             endCurrentRound();
         });
     }
@@ -355,6 +354,7 @@ public class GameActivity extends AppCompatActivity {
                 drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
                 Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
                 saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
+                endCurrentRound();
             }
         }
     };
