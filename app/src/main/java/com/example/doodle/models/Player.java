@@ -17,12 +17,21 @@ import java.util.ArrayList;
 // Extending the ParseUser class is not recommended, so I am doing this instead
 public class Player {
     public static final String TAG = "Player";
+    public static final String KEY_GETS_NOTIFICATIONS = "getsNotifications";
     public static final String KEY_ROOTS_CONTRIBUTED_TO = "rootsContributedTo";
 
     private ParseUser user;
 
     public Player(ParseUser user) {
         this.user = user;
+    }
+
+    public boolean getGetsNotifications() {
+        return user.getBoolean(KEY_GETS_NOTIFICATIONS);
+    }
+
+    public void setGetsNotifications(boolean getsNotifications) {
+        user.put(KEY_GETS_NOTIFICATIONS, getsNotifications);
     }
 
     // Gets the list of roots the user has contributed to

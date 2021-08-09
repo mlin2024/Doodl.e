@@ -6,14 +6,18 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.doodle.R;
+import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.parse.ParseUser;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -23,6 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
     private RelativeLayout profileRelativeLayout;
     private Toolbar toolbar;
     private TextView profileUsernameTextView;
+    private SwitchMaterial notificationSwitch;
     private Button galleryButton;
 
     @Override
@@ -34,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
         profileRelativeLayout = findViewById(R.id.profileRelativeLayout);
         toolbar = findViewById(R.id.profileToolbar);
         profileUsernameTextView = findViewById(R.id.profileUsernameTextView);
+        notificationSwitch = findViewById(R.id.notificationSwitch);
         galleryButton = findViewById(R.id.galleryButton);
 
         // Set up toolbar
@@ -44,6 +50,29 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Set up username TextView
         profileUsernameTextView.setText(ParseUser.getCurrentUser().getUsername());
+
+        // Set up notification switch
+        Player curPlayer = new Player(ParseUser.getCurrentUser());
+
+        // Set initial configuration
+        Log.e(TAG, ""+curPlayer.getGetsNotifications());
+        if (curPlayer.getGetsNotifications()) notificationSwitch.setChecked(true);
+        else notificationSwitch.setChecked(false);
+
+        notificationSwitch.setOnClickListener(v -> {
+            if (notificationSwitch.isChecked()) {
+                curPlayer.setGetsNotifications(true);
+                curPlayer.saveInBackground(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), () -> {
+                    Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_receive_notifications), Snackbar.LENGTH_LONG).show();
+                });
+            }
+            else {
+                curPlayer.setGetsNotifications(false);
+                curPlayer.saveInBackground(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), () -> {
+                    Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_not_receive_notifications), Snackbar.LENGTH_LONG).show();
+                });
+            }
+        });
 
         galleryButton.setOnClickListener(v -> {
             goGalleryActivity();

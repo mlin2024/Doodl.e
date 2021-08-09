@@ -342,7 +342,16 @@ public class DoodleActivity extends AppCompatActivity {
 
             // Handle push notification to the artist of the parent doodle
             if (parentDoodle != null) {
-                handlePushNotification(parentDoodle.getArtist());
+                try {
+                    Player player = new Player(parentDoodle.getArtist().fetchIfNeeded());
+                    // If the artist has enabled notifications, send them notification
+                    if (player.getGetsNotifications()) {
+                        handlePushNotification(parentDoodle.getArtist());
+                    }
+                } catch (ParseException e) {
+                    Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
             }
         });
     }

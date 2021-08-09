@@ -19,7 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/profileToolbar"
-        android:layout_alignParentStart="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:text="@string/username"
@@ -58,12 +57,24 @@
         android:textColor="?attr/colorPrimary"
         android:textSize="30sp" />
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/notificationSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profilePasswordTextView"
+        android:layout_alignStart="@id/usernameLabel"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/receive_notifications"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="16sp" />
+
     <Button
         android:id="@+id/galleryButton"
         style="@style/CustomButton.Doodle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profilePasswordTextView"
+        android:layout_below="@id/notificationSwitch"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:text="@string/Gallery"
