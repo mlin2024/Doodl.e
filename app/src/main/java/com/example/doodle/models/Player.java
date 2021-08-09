@@ -27,6 +27,10 @@ public class Player {
         this.user = user;
     }
 
+    public String getObjectId() {
+        return user.getObjectId();
+    }
+
     public String getUsername() {
         return user.getUsername();
     }

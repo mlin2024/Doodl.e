@@ -141,7 +141,7 @@ public class ContributeActivity extends AppCompatActivity {
         // Don't include doodles that are from a game
         query.whereEqualTo(Doodle.KEY_IN_GAME, null);
         // Limit query to NUM_TO_LOAD items
-        //query.setLimit(NUM_TO_LOAD);
+        query.setLimit(NUM_TO_LOAD);
         // Order doodles by creation date (oldest first)
         query.addAscendingOrder("createdAt");
 

@@ -97,4 +97,5 @@
     <string name="you_will_be_anonymous">Your username will be hidden on doodles you create.</string>
     <string name="you_will_not_be_anonymous">Other people will be able to see your username on doodles you create.</string>
     <string name="anon">anon</string>
+    <string name="you">you</string>
 </resources>

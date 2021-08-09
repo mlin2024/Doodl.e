@@ -30,6 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -127,9 +128,13 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                 // Otherwise, populate it
                 else {
                     Player artist = new Player(doodle.getArtist().fetchIfNeeded());
-                    if (artist.getIsAnonymous()) {
+                    if (artist.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                        artistTextView.setText(context.getResources().getString(R.string.you));
+                    }
+                    else if (artist.getIsAnonymous()) {
                         artistTextView.setText(context.getResources().getString(R.string.anon));
-                    } else {
+                    }
+                    else {
                         artistTextView.setText(artist.getUsername());
                     }
                 }
@@ -201,7 +206,10 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                                     .into(doodleImageView);
                         }
                         Player artist = new Player(currentDoodle.getArtist().fetchIfNeeded());
-                        if (artist.getIsAnonymous()) {
+                        if (artist.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                            artistTextView.setText(context.getResources().getString(R.string.you));
+                        }
+                        else if (artist.getIsAnonymous()) {
                             artistTextView.setText(context.getResources().getString(R.string.anon));
                         }
                         else {
