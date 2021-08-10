@@ -23,7 +23,7 @@
         <activity
             android:name=".activities.GameGalleryActivity"
             android:label="@string/game_results"
-            android:theme="@style/HorizontalTransitions" />
+            android:theme="@style/HorizontalTransitions"/>
         <activity
             android:name=".activities.ContributionsGalleryActivity"
             android:label="@string/Contributions"

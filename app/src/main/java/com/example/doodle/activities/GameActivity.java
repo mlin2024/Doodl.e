@@ -1,5 +1,6 @@
 package com.example.doodle.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -47,6 +48,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.util.concurrent.TimeUnit;
@@ -206,13 +209,17 @@ public class GameActivity extends AppCompatActivity {
             }
             // If it's already selected, click will expand/retract the color picker ExpandableLayout
             else {
-                if (colorPickerExpandableLayout.isExpanded())
+                if (colorPickerExpandableLayout.isExpanded()) {
                     colorPickerExpandableLayout.collapse();
-                else colorPickerExpandableLayout.expand();
+                }
+                else {
+                    colorPickerExpandableLayout.expand();
+                }
                 colorViewModel.getSelectedItem().observe(this, color -> {
                     currentColor = color;
                     colorButton.setBackgroundTintList(color);
                     doodleDrawView.setColor(color.getDefaultColor());
+
                 });
             }
         });

@@ -20,42 +20,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/homeTitleTextView"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/homeToolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:text="@string/app_name"
-        android:textSize="96sp" />
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/doodleModeButton"
-        style="@style/CustomButton.Doodle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/homeTitleTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="@string/Doodle_Mode"
-        app:icon="@drawable/ic_baseline_edit_24"
-        app:iconGravity="end"
-        app:iconPadding="0dp"
-        app:iconSize="30dp" />
+        <TextView
+            android:id="@+id/homeTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="2"
+            android:text="@string/app_name"
+            android:textSize="96sp" />
 
-    <Button
-        android:id="@+id/gameModeButton"
-        style="@style/CustomButton.Doodle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/doodleModeButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="@string/Game_Mode"
-        app:icon="@drawable/ic_baseline_people_alt_24"
-        app:iconGravity="end"
-        app:iconPadding="0dp"
-        app:iconSize="30dp" />
+        <Button
+            android:id="@+id/doodleModeButton"
+            style="@style/CustomButton.Doodle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/homeTitleTextView"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:text="@string/Doodle_Mode"
+            app:icon="@drawable/ic_baseline_edit_24"
+            app:iconGravity="end"
+            app:iconPadding="0dp"
+            app:iconSize="30dp" />
+
+        <Button
+            android:id="@+id/gameModeButton"
+            style="@style/CustomButton.Doodle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/doodleModeButton"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:text="@string/Game_Mode"
+            app:icon="@drawable/ic_baseline_people_alt_24"
+            app:iconGravity="end"
+            app:iconPadding="0dp"
+            app:iconSize="30dp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

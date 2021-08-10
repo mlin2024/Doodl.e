@@ -32,7 +32,7 @@
         android:layout_below="@+id/gameToolbar"
         android:layout_alignEnd="@+id/canvasRelativeLayout_GAME"
         android:layout_marginTop="10dp"
-        android:textColor="?attr/colorPrimary"
+        android:textColor="?attr/colorSecondary"
         android:textSize="24sp"
         tools:text="59s" />
 

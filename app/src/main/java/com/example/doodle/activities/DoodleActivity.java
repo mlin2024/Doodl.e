@@ -1,5 +1,6 @@
 package com.example.doodle.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
@@ -48,7 +49,11 @@ import com.parse.ParseUser;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
+import org.jetbrains.annotations.NotNull;
+import org.parceler.Parcels;
+
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 
 public class DoodleActivity extends AppCompatActivity {
@@ -187,13 +192,17 @@ public class DoodleActivity extends AppCompatActivity {
             }
             // If it's already selected, click will expand/retract the color picker ExpandableLayout
             else {
-                if (colorPickerExpandableLayout.isExpanded())
+                if (colorPickerExpandableLayout.isExpanded()) {
                     colorPickerExpandableLayout.collapse();
-                else colorPickerExpandableLayout.expand();
+                }
+                else {
+                    colorPickerExpandableLayout.expand();
+                }
                 colorViewModel.getSelectedItem().observe(this, color -> {
                     currentColor = color;
                     colorButton.setBackgroundTintList(color);
                     doodleDrawView.setColor(color.getDefaultColor());
+
                 });
             }
         });

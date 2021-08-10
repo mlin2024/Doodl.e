@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -121,7 +122,13 @@ public class GameModeActivity extends AppCompatActivity {
                 int fheight = background.getMeasuredHeight();
                 int fwidth = background.getMeasuredWidth();
 
-                Drawable backgroundDrawable = getResources().getDrawable(R.drawable.background, getTheme());
+                Drawable backgroundDrawable;
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    backgroundDrawable = getResources().getDrawable(R.drawable.background, getTheme());
+                }
+                else {
+                    backgroundDrawable = getResources().getDrawable(R.drawable.background_land, getTheme());
+                }
                 backgroundDrawable.setBounds(0, 0, fwidth * 2, fheight * 2);
                 background.setImageDrawable(backgroundDrawable);
                 background.setScaleX(2);

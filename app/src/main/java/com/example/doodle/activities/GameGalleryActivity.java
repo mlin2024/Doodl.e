@@ -95,24 +95,6 @@ public class GameGalleryActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        try {
-            game.fetch();
-            game.removePlayer(ParseUser.getCurrentUser());
-            game.saveInBackground(gameGalleryRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {
-                // Once everyone has left, delete the game from the database
-                if (game.getPlayers().size() == 0) {
-                    game.deleteInBackground();
-                }
-            });
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -129,10 +111,16 @@ public class GameGalleryActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
+            case R.id.profileMenuItem:
+                goProfileActivity();
+                finish();
+                return true;
             case R.id.logoutMenuItem:
                 logout();
+                finish();
                 return true;
             case android.R.id.home:
+                leaveGame();
                 finish();
                 return true;
             default:
@@ -142,6 +130,7 @@ public class GameGalleryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        leaveGame();
         finish();
     }
 
@@ -171,15 +160,39 @@ public class GameGalleryActivity extends AppCompatActivity {
         });
     }
 
+    private void leaveGame() {
+        try {
+            game.fetch();
+            game.removePlayer(ParseUser.getCurrentUser());
+            game.saveInBackground(gameGalleryRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {
+                // Once everyone has left, delete the game from the database
+                if (game.getPlayers().size() == 0) {
+                    game.deleteInBackground();
+                }
+            });
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Starts an intent to go to the login/signup activity
     private void goLoginSignupActivity() {
+        leaveGame();
         Intent intent = new Intent(this, LoginSignupActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
+    // Starts an intent to go to the profile activity
+    private void goProfileActivity() {
+        leaveGame();
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
     // Starts an intent to go to the home activity
     private void goHomeActivity() {
+        leaveGame();
         Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
@@ -187,6 +200,7 @@ public class GameGalleryActivity extends AppCompatActivity {
 
     // Logs out user and sends them back to login/signup page
     private void logout() {
+        leaveGame();
         ProgressDialog logoutProgressDialog = new ProgressDialog(GameGalleryActivity.this);
         logoutProgressDialog.setMessage(getResources().getString(R.string.logging_out));
         logoutProgressDialog.setCancelable(false);

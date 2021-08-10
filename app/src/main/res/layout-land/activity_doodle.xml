@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/doodleRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.DoodleActivity">
+
+    <include
+        android:id="@+id/doodleToolbar"
+        layout="@layout/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:id="@+id/canvasRelativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/doodleToolbar"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/grey"
+            android:padding="1dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <ImageView
+                    android:id="@+id/parentImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignStart="@+id/doodleDrawView"
+                    android:layout_alignTop="@+id/doodleDrawView"
+                    android:layout_alignEnd="@id/doodleDrawView"
+                    android:layout_alignBottom="@+id/doodleDrawView"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <com.divyanshu.draw.widget.DrawView
+                    android:id="@+id/doodleDrawView"
+                    android:layout_width="320dp"
+                    android:layout_height="320dp"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:id="@+id/waitingForOtherPlayers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/waiting_for_other_players"
+                    android:textSize="18sp"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/canvasRelativeLayout"
+        android:layout_alignBottom="@id/canvasRelativeLayout"
+        android:layout_toRightOf="@id/canvasRelativeLayout"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/undoRedoLinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/undoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                app:icon="@drawable/ic_baseline_undo_24"
+                app:iconGravity="textEnd"
+                app:iconPadding="0dp"
+                app:iconSize="30dp" />
+
+            <Button
+                android:id="@+id/redoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                app:icon="@drawable/ic_baseline_redo_24"
+                app:iconGravity="textEnd"
+                app:iconPadding="0dp"
+                app:iconSize="30dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sizeLinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/smallButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_round"
+                app:backgroundTint="@color/button_white"
+                app:icon="@drawable/ic_baseline_brightness_1_24"
+                app:iconGravity="textEnd"
+                app:iconPadding="0dp"
+                app:iconSize="7dp"
+                app:iconTint="@color/black" />
+
+            <Button
+                android:id="@+id/mediumButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_round"
+                android:foreground="@drawable/transparent_circle_indicator"
+                app:backgroundTint="@color/button_white"
+                app:icon="@drawable/ic_baseline_brightness_1_24"
+                app:iconGravity="textEnd"
+                app:iconPadding="0dp"
+                app:iconSize="13dp"
+                app:iconTint="@color/black" />
+
+            <Button
+                android:id="@+id/largeButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_round"
+                app:backgroundTint="@color/button_white"
+                app:icon="@drawable/ic_baseline_brightness_1_24"
+                app:iconGravity="textEnd"
+                app:iconPadding="0dp"
+                app:iconSize="20dp"
+                app:iconTint="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/penLinearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/eraserButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                android:background="@drawable/button_round"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_transparent_texture" />
+
+            <ImageButton
+                android:id="@+id/colorButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/button_round"
+                android:foreground="@drawable/transparent_circle_indicator"
+                app:backgroundTint="@color/button_black" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/colorPickerExpandableLayout"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/buttonLinearLayout"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@id/buttonLinearLayout"
+        android:orientation="horizontal"
+        app:el_duration="1000"
+        app:el_expanded="false"
+        app:el_parallax="0.5">
+
+        <FrameLayout
+            android:id="@+id/colorPickerFrameLayout"
+            android:layout_width="100dp"
+            android:layout_height="300dp"></FrameLayout>
+
+    </net.cachapa.expandablelayout.ExpandableLayout>
+
+    <Button
+        android:id="@+id/doneButton"
+        style="@style/CustomButton.Doodle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/canvasRelativeLayout"
+        android:text="@string/Done"
+        android:textSize="20sp" />
+
+</RelativeLayout>
