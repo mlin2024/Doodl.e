@@ -107,10 +107,10 @@ public class CanvasFragment extends Fragment {
         doneButton = view.findViewById(R.id.doneButton);
 
         // Initialize other member variables
-        fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager = getChildFragmentManager();
         colorPickerFragment = new ColorPickerFragment();
-        viewModelProvider = new ViewModelProvider(this);
         // Set up ViewModel for color picker fragment
+        viewModelProvider = new ViewModelProvider(this);
         colorViewModel = viewModelProvider.get(ColorViewModel.class);
         currentColor = getResources().getColorStateList(R.color.button_black, getActivity().getTheme());
         currentSizeButton = mediumButton;

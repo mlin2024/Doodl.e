@@ -77,7 +77,7 @@ public class ColorPickerFragment extends Fragment {
         // Initialize other member variables
         currentColorButton = blackButton;
         // Set up view model
-        viewModelProvider = new ViewModelProvider(requireActivity());
+        viewModelProvider = new ViewModelProvider(requireParentFragment());
         colorViewModel = viewModelProvider.get(ColorViewModel.class);
 
         // Set up click listeners for each color button
