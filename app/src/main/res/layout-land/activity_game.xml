@@ -36,213 +36,26 @@
         tools:text="59s" />
 
     <RelativeLayout
-        android:id="@+id/canvasRelativeLayout_GAME"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/gameToolbar"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/grey"
-            android:padding="1dp">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white">
-
-                <ImageView
-                    android:id="@+id/parentImageView_GAME"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:layout_alignStart="@+id/doodleDrawView_GAME"
-                    android:layout_alignTop="@+id/doodleDrawView_GAME"
-                    android:layout_alignEnd="@id/doodleDrawView_GAME"
-                    android:layout_alignBottom="@+id/doodleDrawView_GAME"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
-                    android:layout_marginBottom="0dp"
-                    tools:srcCompat="@tools:sample/avatars" />
-
-                <com.divyanshu.draw.widget.DrawView
-                    android:id="@+id/doodleDrawView_GAME"
-                    android:layout_width="320dp"
-                    android:layout_height="320dp"
-                    android:layout_centerHorizontal="true" />
-
-                <TextView
-                    android:id="@+id/waitingForOtherPlayers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/waiting_for_other_players"
-                    android:textSize="18sp"
-                    android:visibility="invisible" />
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/buttonLinearLayout_GAME"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/canvasRelativeLayout_GAME"
-        android:layout_alignBottom="@id/canvasRelativeLayout_GAME"
-        android:layout_toRightOf="@id/canvasRelativeLayout_GAME"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/undoRedoLinearLayout_GAME"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/undoButton_GAME"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                app:icon="@drawable/ic_baseline_undo_24"
-                app:iconGravity="textEnd"
-                app:iconPadding="0dp"
-                app:iconSize="30dp" />
-
-            <Button
-                android:id="@+id/redoButton_GAME"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                app:icon="@drawable/ic_baseline_redo_24"
-                app:iconGravity="textEnd"
-                app:iconPadding="0dp"
-                app:iconSize="30dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/sizeLinearLayout_GAME"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/smallButton_GAME"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/button_round"
-                app:backgroundTint="@color/button_white"
-                app:icon="@drawable/ic_baseline_brightness_1_24"
-                app:iconGravity="textEnd"
-                app:iconPadding="0dp"
-                app:iconSize="7dp"
-                app:iconTint="@color/black" />
-
-            <Button
-                android:id="@+id/mediumButton_GAME"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/button_round"
-                android:foreground="@drawable/transparent_circle_indicator"
-                app:backgroundTint="@color/button_white"
-                app:icon="@drawable/ic_baseline_brightness_1_24"
-                app:iconGravity="textEnd"
-                app:iconPadding="0dp"
-                app:iconSize="13dp"
-                app:iconTint="@color/black" />
-
-            <Button
-                android:id="@+id/largeButton_GAME"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/button_round"
-                app:backgroundTint="@color/button_white"
-                app:icon="@drawable/ic_baseline_brightness_1_24"
-                app:iconGravity="textEnd"
-                app:iconPadding="0dp"
-                app:iconSize="20dp"
-                app:iconTint="@color/black" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/penLinearLayout_GAME"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/eraserButton_GAME"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:adjustViewBounds="true"
-                android:background="@drawable/button_round"
-                android:scaleType="fitCenter"
-                android:src="@drawable/button_transparent_texture" />
-
-            <ImageButton
-                android:id="@+id/colorButton_GAME"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/button_round"
-                android:foreground="@drawable/transparent_circle_indicator"
-                app:backgroundTint="@color/button_black" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <net.cachapa.expandablelayout.ExpandableLayout
-        android:id="@+id/colorPickerExpandableLayout_GAME"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/buttonLinearLayout_GAME"
-        android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@id/buttonLinearLayout_GAME"
-        android:orientation="horizontal"
-        app:el_duration="1000"
-        app:el_expanded="false"
-        app:el_parallax="0.5">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/roundTextView"
+        android:layout_below="@id/gameToolbar">
 
         <FrameLayout
-            android:id="@+id/colorPickerFrameLayout_GAME"
-            android:layout_width="100dp"
-            android:layout_height="300dp"></FrameLayout>
+            android:id="@+id/canvasFrameLayout_GAME"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
 
-    </net.cachapa.expandablelayout.ExpandableLayout>
+        <TextView
+            android:id="@+id/waitingForOtherPlayers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/waiting_for_other_players"
+            android:textSize="18sp"
+            android:visibility="invisible" />
 
-    <Button
-        android:id="@+id/doneButton_GAME"
-        style="@style/CustomButton.Doodle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_toLeftOf="@+id/canvasRelativeLayout_GAME"
-        android:text="@string/Done"
-        android:textSize="20sp" />
+    </RelativeLayout>
 
 </RelativeLayout>

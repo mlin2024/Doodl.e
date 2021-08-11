@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.divyanshu.draw.widget.DrawView;
 import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
+import com.example.doodle.fragments.CanvasFragment;
 import com.example.doodle.fragments.ColorPickerFragment;
 import com.example.doodle.models.ColorViewModel;
 import com.example.doodle.models.Doodle;
@@ -56,9 +57,6 @@ import java.util.concurrent.TimeUnit;
 
 public class GameActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
-    public static final float STROKE_WIDTH_SMALL = 10;
-    public static final float STROKE_WIDTH_MEDIUM = 20;
-    public static final float STROKE_WIDTH_LARGE = 30;
     public static final long ONE_SECOND = TimeUnit.SECONDS.toMillis(1);
 
     // Views in the layout
@@ -66,30 +64,14 @@ public class GameActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView roundTextView;
     private TextView timeTextView;
-    private ImageView parentImageView;
-    private DrawView doodleDrawView;
     private TextView waitingForOtherPlayers;
-    private Button undoButton;
-    private Button redoButton;
-    private Button smallButton;
-    private Button mediumButton;
-    private Button largeButton;
-    private ImageButton eraserButton;
-    private ImageButton colorButton;
-    private ExpandableLayout colorPickerExpandableLayout;
-    private FrameLayout colorPickerFrameLayout;
-    private Button doneButton;
 
     // Other necessary member variables
+    private Game game;
+    private long timeCurRoundEnds;
     private ProgressDialog savingProgressDialog;
     private FragmentManager fragmentManager;
-    private Fragment colorPickerFragment;
-    private ViewModelProvider viewModelProvider;
-    private ColorViewModel colorViewModel;
-    private ColorStateList currentColor;
-    private Button currentSizeButton;
-    private ImageButton currentPenButton;
-    private Game game;
+    private Fragment canvasFragment;
     private int indexInPlayerList;
     private int numPlayers;
     private int round;
@@ -107,32 +89,15 @@ public class GameActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.gameToolbar);
         roundTextView = findViewById(R.id.roundTextView);
         timeTextView = findViewById(R.id.timeTextView);
-        parentImageView = findViewById(R.id.parentImageView_GAME);
-        doodleDrawView = findViewById(R.id.doodleDrawView_GAME);
         waitingForOtherPlayers = findViewById(R.id.waitingForOtherPlayers);
-        undoButton = findViewById(R.id.undoButton_GAME);
-        redoButton = findViewById(R.id.redoButton_GAME);
-        smallButton = findViewById(R.id.smallButton_GAME);
-        mediumButton = findViewById(R.id.mediumButton_GAME);
-        largeButton = findViewById(R.id.largeButton_GAME);
-        eraserButton = findViewById(R.id.eraserButton_GAME);
-        colorButton = findViewById(R.id.colorButton_GAME);
-        colorPickerExpandableLayout = findViewById(R.id.colorPickerExpandableLayout_GAME);
-        colorPickerFrameLayout = findViewById(R.id.colorPickerFrameLayout_GAME);
-        doneButton = findViewById(R.id.doneButton_GAME);
 
         // Initialize other member variables
-        savingProgressDialog = new ProgressDialog(GameActivity.this);
-        fragmentManager = getSupportFragmentManager();
-        colorPickerFragment = new ColorPickerFragment();
-        viewModelProvider = new ViewModelProvider(this);
-        // Set up ViewModel for color picker fragment
-        colorViewModel = viewModelProvider.get(ColorViewModel.class);
-        currentColor = getResources().getColorStateList(R.color.button_black, getTheme());
-        currentSizeButton = mediumButton;
-        currentPenButton = colorButton;
         // Unwrap the game that was passed in by the intent
         game = getIntent().getParcelableExtra(GameModeActivity.GAME_TAG);
+        timeCurRoundEnds = game.getUpdatedAt().getTime() + (game.getTimeLimit() * 1000);
+        savingProgressDialog = new ProgressDialog(GameActivity.this);
+        fragmentManager = getSupportFragmentManager();
+        canvasFragment = CanvasFragment.newInstance(null, timeCurRoundEnds);
         indexInPlayerList = 0;
         numPlayers = game.getPlayers().size();
         round = 1;
@@ -153,11 +118,8 @@ public class GameActivity extends AppCompatActivity {
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
         savingProgressDialog.setCancelable(false);
 
-        // Set up color picker fragment
-        fragmentManager.beginTransaction().add(R.id.colorPickerFrameLayout_GAME, colorPickerFragment).show(colorPickerFragment).commit();
-
-        // Set up canvas
-        resetCanvas();
+        // Set up canvas fragment
+        fragmentManager.beginTransaction().add(R.id.canvasFrameLayout_GAME, canvasFragment).show(canvasFragment).commit();
 
         // Set up numPlayer
         String curPlayer = ParseUser.getCurrentUser().getObjectId();
@@ -167,67 +129,11 @@ public class GameActivity extends AppCompatActivity {
             indexInPlayerList++;
         }
 
-        undoButton.setOnClickListener(v -> {
-            doodleDrawView.undo();
-        });
-
-        redoButton.setOnClickListener(v -> {
-            doodleDrawView.redo();
-        });
-
-        smallButton.setOnClickListener(v -> {
-            handleSizeButtonChange(smallButton);
-            doodleDrawView.setStrokeWidth(STROKE_WIDTH_SMALL);
-        });
-
-        mediumButton.setOnClickListener(v -> {
-            handleSizeButtonChange(mediumButton);
-            doodleDrawView.setStrokeWidth(STROKE_WIDTH_MEDIUM);
-        });
-
-        largeButton.setOnClickListener(v -> {
-            handleSizeButtonChange(largeButton);
-            doodleDrawView.setStrokeWidth(STROKE_WIDTH_LARGE);
-        });
-
-        eraserButton.setOnClickListener(v -> {
-            colorPickerExpandableLayout.collapse();
-
-            handlePenButtonChange(eraserButton);
-
-            // Change pen color to eraser color
-            doodleDrawView.setColor(getResources().getColor(R.color.transparent, getTheme()));
-        });
-
-        colorButton.setOnClickListener(v -> {
-            // If it's not selected, select it
-            if (colorButton.isSelected() == false) {
-                handlePenButtonChange(colorButton);
-
-                // Change pen color to the current color
-                doodleDrawView.setColor(currentColor.getDefaultColor());
-            }
-            // If it's already selected, click will expand/retract the color picker ExpandableLayout
-            else {
-                if (colorPickerExpandableLayout.isExpanded()) {
-                    colorPickerExpandableLayout.collapse();
-                }
-                else {
-                    colorPickerExpandableLayout.expand();
-                }
-                colorViewModel.getSelectedItem().observe(this, color -> {
-                    currentColor = color;
-                    colorButton.setBackgroundTintList(color);
-                    doodleDrawView.setColor(color.getDefaultColor());
-
-                });
-            }
-        });
-
-        doneButton.setOnClickListener(v -> {
+        // Listen for result from fragment
+        fragmentManager.setFragmentResultListener(CanvasFragment.RESULT_DOODLE, this, (requestKey, bundle) -> {
             timeHandler.removeCallbacksAndMessages(null);
 
-            Bitmap drawingBitmap = doodleDrawView.getBitmap();
+            Bitmap drawingBitmap = bundle.getParcelable(CanvasFragment.DRAWING_BITMAP);
             drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
@@ -346,23 +252,25 @@ public class GameActivity extends AppCompatActivity {
     private Runnable updateTime = new Runnable() {
         @Override
         public void run() {
-            int timeMillis = (int)(game.getUpdatedAt().getTime() + (game.getTimeLimit()*1000) - System.currentTimeMillis());
-            int time = timeMillis/1000;
-            if (time >= 0) {
-                timeTextView.setText(Integer.toString(time) + getResources().getString(R.string.seconds_unit));
+            long timeLeftInRoundMillis = timeCurRoundEnds - System.currentTimeMillis();
+            int timeLeftInRound = (int)(timeLeftInRoundMillis/1000);
+            if (timeLeftInRound >= 0) {
+                timeTextView.setText(timeLeftInRound + getResources().getString(R.string.seconds_unit));
                 timeHandler.postDelayed(this, ONE_SECOND);
-                if (time <= 10) {
+                if (timeLeftInRound <= 10) {
                     timeTextView.setTextColor(getResources().getColor(R.color.red, getTheme()));
                 }
             }
-            else { // Round ends because time ran out
+            /*else { // Round ends because time ran out
                 // Save whatever the user currently has drawn
-                Bitmap drawingBitmap = doodleDrawView.getBitmap();
-                drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
-                Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
-                saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
-                endCurrentRound();
-            }
+                fragmentManager.setFragmentResultListener(CanvasFragment.RESULT_DOODLE, GameActivity.this, (requestKey, bundle) -> {
+                    Bitmap drawingBitmap = bundle.getParcelable(CanvasFragment.DRAWING_BITMAP);
+                    drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
+                    Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
+                    saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
+                    endCurrentRound();
+                });
+            }*/
         }
     };
 
@@ -415,95 +323,19 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void startNextRound() {
+        timeCurRoundEnds = game.getUpdatedAt().getTime() + (game.getTimeLimit() * 1000);
         timeHandler.post(updateTime);
         roundTextView.setText(getResources().getString(R.string.round) + " " + game.getRound() + "/" +  + numPlayers);
         waitingForOtherPlayers.setVisibility(View.INVISIBLE);
-        enableAllButtons();
-        timeTextView.setTextColor(getResources().getColor(R.color.design_default_color_secondary_variant, getTheme()));
-        // Set up parent ImageView
-        if (parentDoodle != null) {
-            AnimationDrawable loadingDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.loading_circle, getTheme());
-            loadingDrawable.start();
-            Glide.with(this)
-                    .load(parentDoodle.getImage().getUrl())
-                    .placeholder(loadingDrawable)
-                    .into(parentImageView);
-        }
+        canvasFragment = CanvasFragment.newInstance(getBitmapFromDoodle(parentDoodle), timeCurRoundEnds);
+        fragmentManager.beginTransaction().add(R.id.canvasFrameLayout_GAME, canvasFragment).show(canvasFragment).commit();
     }
 
     private void endCurrentRound() {
         timeTextView.setText("");
         parentDoodle = null;
-        doodleDrawView.clearCanvas();
         waitingForOtherPlayers.setVisibility(View.VISIBLE);
-        disableAllButtons();
-
-        // Clear parent ImageView
-        parentImageView.setImageBitmap(null);
-    }
-
-    private void handleSizeButtonChange(Button button) {
-        // Hide the icon on the previously selected button
-        currentSizeButton.setForeground(null);
-
-        // Display the icon on the newly selected button
-        currentSizeButton = button;
-        currentSizeButton.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getTheme()));
-    }
-
-    private void handlePenButtonChange(ImageButton button) {
-        // Set previously selected button to unselected
-        currentPenButton.setSelected(false);
-
-        // Hide the icon on the previously selected button
-        currentPenButton.setForeground(null);
-
-        // Display the icon on the newly selected button
-        currentPenButton = button;
-        currentPenButton.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getTheme()));
-
-        // Set the newly selected button to selected
-        currentPenButton.setSelected(true);
-    }
-
-    // Resets the canvas to a default state
-    private void resetCanvas() {
-        doodleDrawView.clearCanvas();
-        doodleDrawView.setStrokeWidth(STROKE_WIDTH_MEDIUM);
-        doodleDrawView.setColor(currentColor.getDefaultColor());
-
-        // Set up pen buttons
-        eraserButton.setSelected(false);
-        colorButton.setSelected(true);
-        handlePenButtonChange(colorButton);
-        handleSizeButtonChange(mediumButton);
-    }
-
-    // Disables all buttons
-    private void disableAllButtons() {
-        undoButton.setEnabled(false);
-        redoButton.setEnabled(false);
-        smallButton.setEnabled(false);
-        mediumButton.setEnabled(false);
-        largeButton.setEnabled(false);
-        eraserButton.setEnabled(false);
-        colorButton.setEnabled(false);
-        doneButton.setEnabled(false);
-        colorPickerExpandableLayout.collapse();
-        doodleDrawView.setVisibility(View.INVISIBLE);
-    }
-
-    // Enables all buttons
-    private void enableAllButtons() {
-        undoButton.setEnabled(true);
-        redoButton.setEnabled(true);
-        smallButton.setEnabled(true);
-        mediumButton.setEnabled(true);
-        largeButton.setEnabled(true);
-        eraserButton.setEnabled(true);
-        colorButton.setEnabled(true);
-        doneButton.setEnabled(true);
-        doodleDrawView.setVisibility(View.VISIBLE);
+        fragmentManager.beginTransaction().remove(canvasFragment).commit();
     }
 
     // Convert transparentColor to be transparent in a Bitmap

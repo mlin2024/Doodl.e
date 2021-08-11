@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.transition.Transition;
 import androidx.transition.TransitionInflater;
@@ -35,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.divyanshu.draw.widget.DrawView;
 import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
+import com.example.doodle.fragments.CanvasFragment;
 import com.example.doodle.fragments.ColorPickerFragment;
 import com.example.doodle.models.ColorViewModel;
 import com.example.doodle.models.Doodle;
@@ -58,36 +60,16 @@ import java.util.HashMap;
 
 public class DoodleActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
-    public static final float STROKE_WIDTH_SMALL = 10;
-    public static final float STROKE_WIDTH_MEDIUM = 20;
-    public static final float STROKE_WIDTH_LARGE = 30;
     public static final String PARENT_DOODLE = "ParentDoodle";
 
     // Views in the layout
     private RelativeLayout doodleRelativeLayout;
     private Toolbar toolbar;
-    private ImageView parentImageView;
-    private DrawView doodleDrawView;
-    private Button undoButton;
-    private Button redoButton;
-    private Button smallButton;
-    private Button mediumButton;
-    private Button largeButton;
-    private ImageButton eraserButton;
-    private ImageButton colorButton;
-    private ExpandableLayout colorPickerExpandableLayout;
-    private FrameLayout colorPickerFrameLayout;
-    private Button doneButton;
 
     // Other necessary member variables
     private ProgressDialog savingProgressDialog;
     private FragmentManager fragmentManager;
-    private Fragment colorPickerFragment;
-    private ViewModelProvider viewModelProvider;
-    private ColorViewModel colorViewModel;
-    private ColorStateList currentColor;
-    private Button currentSizeButton;
-    private ImageButton currentPenButton;
+    private Fragment canvasFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,29 +79,14 @@ public class DoodleActivity extends AppCompatActivity {
         // Initialize the views in the layout
         doodleRelativeLayout = findViewById(R.id.doodleRelativeLayout);
         toolbar = findViewById(R.id.doodleToolbar);
-        parentImageView = findViewById(R.id.parentImageView);
-        doodleDrawView = findViewById(R.id.doodleDrawView);
-        undoButton = findViewById(R.id.undoButton);
-        redoButton = findViewById(R.id.redoButton);
-        smallButton = findViewById(R.id.smallButton);
-        mediumButton = findViewById(R.id.mediumButton);
-        largeButton = findViewById(R.id.largeButton);
-        eraserButton = findViewById(R.id.eraserButton);
-        colorButton = findViewById(R.id.colorButton);
-        colorPickerExpandableLayout = findViewById(R.id.colorPickerExpandableLayout);
-        colorPickerFrameLayout = findViewById(R.id.colorPickerFrameLayout);
-        doneButton = findViewById(R.id.doneButton);
 
         // Initialize other member variables
         savingProgressDialog = new ProgressDialog(DoodleActivity.this);
         fragmentManager = getSupportFragmentManager();
-        colorPickerFragment = new ColorPickerFragment();
-        viewModelProvider = new ViewModelProvider(this);
-        // Set up ViewModel for color picker fragment
-        colorViewModel = viewModelProvider.get(ColorViewModel.class);
-        currentColor = getResources().getColorStateList(R.color.button_black, getTheme());
-        currentSizeButton = mediumButton;
-        currentPenButton = colorButton;
+        Doodle parentDoodle = getIntent().getParcelableExtra(PARENT_DOODLE);
+        Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
+        // There is no timer, so deadline is -1
+        canvasFragment = CanvasFragment.newInstance(parentBitmap, -1);
 
         // Set up toolbar
         toolbar.setTitleTextColor(getResources().getColor(R.color.white, getTheme()));
@@ -127,92 +94,18 @@ public class DoodleActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        // Set up parent ImageView (if parentDoodle exists)
-        // Get parent doodle from intent
-        Doodle parentDoodle = getIntent().getParcelableExtra(PARENT_DOODLE);
-        Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
-        if (parentDoodle != null) {
-            AnimationDrawable loadingDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.loading_circle, getTheme());
-            loadingDrawable.start();
-            Glide.with(this)
-                    .load(parentDoodle.getImage().getUrl())
-                    .placeholder(loadingDrawable)
-                    .into(parentImageView);
-        }
-
         // Set up ProgressDialog
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
         savingProgressDialog.setCancelable(false);
 
-        // Set up color picker fragment
-        fragmentManager.beginTransaction().add(R.id.colorPickerFrameLayout, colorPickerFragment).show(colorPickerFragment).commit();
+        // Set up canvas fragment
+        fragmentManager.beginTransaction().add(R.id.canvasFrameLayout, canvasFragment).show(canvasFragment).commit();
 
-        // Set up canvas
-        resetCanvas();
-
-        undoButton.setOnClickListener(v -> {
-            doodleDrawView.undo();
-        });
-
-        redoButton.setOnClickListener(v -> {
-            doodleDrawView.redo();
-        });
-
-        smallButton.setOnClickListener(v -> {
-            handleSizeButtonChange(smallButton);
-            doodleDrawView.setStrokeWidth(STROKE_WIDTH_SMALL);
-        });
-
-        mediumButton.setOnClickListener(v -> {
-            handleSizeButtonChange(mediumButton);
-            doodleDrawView.setStrokeWidth(STROKE_WIDTH_MEDIUM);
-        });
-
-        largeButton.setOnClickListener(v -> {
-            handleSizeButtonChange(largeButton);
-            doodleDrawView.setStrokeWidth(STROKE_WIDTH_LARGE);
-        });
-
-        eraserButton.setOnClickListener(v -> {
-            colorPickerExpandableLayout.collapse();
-
-            handlePenButtonChange(eraserButton);
-
-            // Change pen color to eraser color
-            doodleDrawView.setColor(getResources().getColor(R.color.transparent, getTheme()));
-        });
-
-        colorButton.setOnClickListener(v -> {
-            // If it's not selected, select it
-            if (colorButton.isSelected() == false) {
-                handlePenButtonChange(colorButton);
-
-                // Change pen color to the current color
-                doodleDrawView.setColor(currentColor.getDefaultColor());
-            }
-            // If it's already selected, click will expand/retract the color picker ExpandableLayout
-            else {
-                if (colorPickerExpandableLayout.isExpanded()) {
-                    colorPickerExpandableLayout.collapse();
-                }
-                else {
-                    colorPickerExpandableLayout.expand();
-                }
-                colorViewModel.getSelectedItem().observe(this, color -> {
-                    currentColor = color;
-                    colorButton.setBackgroundTintList(color);
-                    doodleDrawView.setColor(color.getDefaultColor());
-
-                });
-            }
-        });
-
-        doneButton.setOnClickListener(v -> {
-            Bitmap drawingBitmap = doodleDrawView.getBitmap();
+        // Listen for result from fragment
+        fragmentManager.setFragmentResultListener(CanvasFragment.RESULT_DOODLE, this, (requestKey, bundle) -> {
+            Bitmap drawingBitmap = bundle.getParcelable(CanvasFragment.DRAWING_BITMAP);
             drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
-
-            doneButton.setEnabled(false);
         });
     }
 
@@ -250,43 +143,6 @@ public class DoodleActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
-    }
-
-    private void handleSizeButtonChange(Button button) {
-        // Hide the icon on the previously selected button
-        currentSizeButton.setForeground(null);
-
-        // Display the icon on the newly selected button
-        currentSizeButton = button;
-        currentSizeButton.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getTheme()));
-    }
-
-    private void handlePenButtonChange(ImageButton button) {
-        // Set previously selected button to unselected
-        currentPenButton.setSelected(false);
-
-        // Hide the icon on the previously selected button
-        currentPenButton.setForeground(null);
-
-        // Display the icon on the newly selected button
-        currentPenButton = button;
-        currentPenButton.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getTheme()));
-
-        // Set the newly selected button to selected
-        currentPenButton.setSelected(true);
-    }
-
-    // Resets the canvas to a default state
-    private void resetCanvas() {
-        doodleDrawView.clearCanvas();
-        doodleDrawView.setStrokeWidth(STROKE_WIDTH_MEDIUM);
-        doodleDrawView.setColor(currentColor.getDefaultColor());
-
-        // Set up pen buttons
-        eraserButton.setSelected(false);
-        colorButton.setSelected(true);
-        handlePenButtonChange(colorButton);
-        handleSizeButtonChange(mediumButton);
     }
 
     // Convert transparentColor to be transparent in a Bitmap
