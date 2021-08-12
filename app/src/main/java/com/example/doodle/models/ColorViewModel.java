@@ -1,20 +1,32 @@
 package com.example.doodle.models;
 
-import android.content.ClipData;
-import android.content.res.ColorStateList;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ColorViewModel extends ViewModel {
-    private final MutableLiveData<ColorStateList> selectedItem = new MutableLiveData<>();
+import com.example.doodle.R;
 
-    public void selectItem(ColorStateList color) {
-        selectedItem.setValue(color);
+public class ColorViewModel extends ViewModel {
+    private final MutableLiveData<Integer> selectedColorButtonId = new MutableLiveData<>();
+    private final MutableLiveData<Integer> selectedColorId = new MutableLiveData<>();
+
+    public void selectColorButton(int colorButtonId) {
+        selectedColorButtonId.setValue(colorButtonId);
     }
 
-    public LiveData<ColorStateList> getSelectedItem() {
-        return selectedItem;
+    public void selectColor(int colorId) {
+        selectedColorId.setValue(colorId);
+    }
+
+    public LiveData<Integer> getSelectedColorButtonId() {
+        // Set black as default color button if no color button has been selected
+        if (selectedColorButtonId.getValue() == null) selectColorButton(R.id.blackButton);
+        return selectedColorButtonId;
+    }
+
+    public LiveData<Integer> getSelectedColorId() {
+        // Set black as default color if no color has been selected
+        if (selectedColorId.getValue() == null) selectColor(R.color.button_black);
+        return selectedColorId;
     }
 }

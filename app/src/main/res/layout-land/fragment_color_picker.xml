@@ -149,7 +149,6 @@
             android:layout_below="@id/brownButton"
             android:layout_toRightOf="@id/greyButton"
             android:background="@drawable/button_round"
-            android:foreground="@drawable/transparent_circle_indicator"
             app:backgroundTint="@color/button_black" />
 
     </RelativeLayout>

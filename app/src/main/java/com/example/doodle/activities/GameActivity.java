@@ -261,16 +261,6 @@ public class GameActivity extends AppCompatActivity {
                     timeTextView.setTextColor(getResources().getColor(R.color.red, getTheme()));
                 }
             }
-            /*else { // Round ends because time ran out
-                // Save whatever the user currently has drawn
-                fragmentManager.setFragmentResultListener(CanvasFragment.RESULT_DOODLE, GameActivity.this, (requestKey, bundle) -> {
-                    Bitmap drawingBitmap = bundle.getParcelable(CanvasFragment.DRAWING_BITMAP);
-                    drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
-                    Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
-                    saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
-                    endCurrentRound();
-                });
-            }*/
         }
     };
 

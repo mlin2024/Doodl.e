@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,9 +38,10 @@ public class ColorPickerFragment extends Fragment {
     private Button blackButton;
 
     // Other necessary member variables
-    private Button currentColorButton;
     private ViewModelProvider viewModelProvider;
     private ColorViewModel colorViewModel;
+    private int currentColorButtonId;
+    private int currentColorStateListId;
 
     public ColorPickerFragment() {}
 
@@ -75,10 +77,11 @@ public class ColorPickerFragment extends Fragment {
         blackButton = view.findViewById(R.id.blackButton);
 
         // Initialize other member variables
-        currentColorButton = blackButton;
         // Set up view model
-        viewModelProvider = new ViewModelProvider(requireParentFragment());
+        viewModelProvider = new ViewModelProvider(requireActivity());
         colorViewModel = viewModelProvider.get(ColorViewModel.class);
+        currentColorButtonId = colorViewModel.getSelectedColorButtonId().getValue();
+        currentColorStateListId = colorViewModel.getSelectedColorId().getValue();
 
         // Set up click listeners for each color button
         pinkButton.setOnClickListener(v -> handleClick(pinkButton, R.color.button_pink));
@@ -95,17 +98,25 @@ public class ColorPickerFragment extends Fragment {
         brownButton.setOnClickListener(v -> handleClick(brownButton, R.color.button_brown));
         greyButton.setOnClickListener(v -> handleClick(greyButton, R.color.button_grey));
         blackButton.setOnClickListener(v -> handleClick(blackButton, R.color.button_black));
+
+        // Make sure current color is selected
+        view.findViewById(currentColorButtonId).callOnClick();
     }
 
     // Makes the currently selected button have the foreground icon
     public void handleClick(Button button, int colorStateListId) {
-        colorViewModel.selectItem(getResources().getColorStateList(colorStateListId, getActivity().getTheme()));
+        // Set the new values in the ViewModel
+        colorViewModel.selectColorButton(button.getId());
+        colorViewModel.selectColor(colorStateListId);
 
         // Hide the icon on the previously selected button
-        currentColorButton.setForeground(null);
+        getView().findViewById(currentColorButtonId).setForeground(null);
+
+        // Update the current button and color
+        currentColorButtonId = button.getId();
+        currentColorStateListId = colorStateListId;
 
         // Display the icon on the newly selected button
-        currentColorButton = button;
-        currentColorButton.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getActivity().getTheme()));
+        button.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getActivity().getTheme()));
     }
 }

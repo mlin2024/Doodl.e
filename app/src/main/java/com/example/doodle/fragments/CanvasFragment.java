@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.divyanshu.draw.widget.DrawView;
 import com.example.doodle.R;
+import com.example.doodle.models.CanvasViewModel;
 import com.example.doodle.models.ColorViewModel;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
@@ -59,9 +60,10 @@ public class CanvasFragment extends Fragment {
     private Fragment colorPickerFragment;
     private ViewModelProvider viewModelProvider;
     private ColorViewModel colorViewModel;
+    private CanvasViewModel canvasViewModel;
     private ColorStateList currentColor;
-    private Button currentSizeButton;
-    private ImageButton currentPenButton;
+    private int currentSizeButtonId;
+    private int currentPenButtonId;
     private Handler roundEndHandler;
 
     public CanvasFragment() {}
@@ -110,11 +112,12 @@ public class CanvasFragment extends Fragment {
         fragmentManager = getChildFragmentManager();
         colorPickerFragment = new ColorPickerFragment();
         // Set up ViewModel for color picker fragment
-        viewModelProvider = new ViewModelProvider(this);
+        viewModelProvider = new ViewModelProvider(requireActivity());
         colorViewModel = viewModelProvider.get(ColorViewModel.class);
-        currentColor = getResources().getColorStateList(R.color.button_black, getActivity().getTheme());
-        currentSizeButton = mediumButton;
-        currentPenButton = colorButton;
+        canvasViewModel = viewModelProvider.get(CanvasViewModel.class);
+        currentColor = getResources().getColorStateList(colorViewModel.getSelectedColorId().getValue(), getActivity().getTheme());
+        currentSizeButtonId = canvasViewModel.getSelectedSizeButtonId().getValue();
+        currentPenButtonId = canvasViewModel.getSelectedPenButtonId().getValue();
         roundEndHandler = new Handler(Looper.getMainLooper());
 
         // Set up parent ImageView (if parentDoodle exists)
@@ -129,12 +132,6 @@ public class CanvasFragment extends Fragment {
                     .into(parentImageView);
         }
 
-        // Set up color picker fragment
-        fragmentManager.beginTransaction().add(R.id.colorPickerFrameLayout, colorPickerFragment).show(colorPickerFragment).commit();
-
-        // Set up canvas
-        resetCanvas();
-
         // Set timer to send result back to parent activity by the deadline, if the deadline exists
         long timeCurRoundEnds = getArguments().getLong(TIME_CUR_ROUND_ENDS);
         // If timeCurRoundEnds is -1, the parent activity is DoodleActivity and there is no round or time limit
@@ -144,6 +141,21 @@ public class CanvasFragment extends Fragment {
             // Set the handler to send the result at the end of the round
             roundEndHandler.postDelayed(sendResultToParentActivity, timeLeftInRoundMillis);
         }
+
+        // Set up color picker fragment
+        fragmentManager.beginTransaction().add(R.id.colorPickerFrameLayout, colorPickerFragment).show(colorPickerFragment).commit();
+
+        // Set up the colorViewModel to observe whenever the color is changed
+        colorViewModel.getSelectedColorId().observe(getViewLifecycleOwner(), colorId -> {
+            // Get the current color
+            currentColor = getResources().getColorStateList(colorId, getActivity().getTheme());
+
+            // Change the color of the color button
+            colorButton.setBackgroundTintList(currentColor);
+
+            // Change the color of the DrawView
+            doodleDrawView.setColor(currentColor.getDefaultColor());
+        });
 
         undoButton.setOnClickListener(v -> {
             doodleDrawView.undo();
@@ -179,25 +191,15 @@ public class CanvasFragment extends Fragment {
 
         colorButton.setOnClickListener(v -> {
             // If it's not selected, select it
-            if (colorButton.isSelected() == false) {
+            if (colorButton.getForeground() == null) { // If the icon isn't in the foreground to indicate it's selected
                 handlePenButtonChange(colorButton);
 
                 // Change pen color to the current color
                 doodleDrawView.setColor(currentColor.getDefaultColor());
             }
-            // If it's already selected, click will expand/retract the color picker ExpandableLayout
+            // If it's already selected, click will toggle the color picker ExpandableLayout
             else {
-                if (colorPickerExpandableLayout.isExpanded()) {
-                    colorPickerExpandableLayout.collapse();
-                }
-                else {
-                    colorPickerExpandableLayout.expand();
-                }
-                colorViewModel.getSelectedItem().observe(getViewLifecycleOwner(), color -> {
-                    currentColor = color;
-                    colorButton.setBackgroundTintList(color);
-                    doodleDrawView.setColor(color.getDefaultColor());
-                });
+                colorPickerExpandableLayout.toggle();
             }
         });
 
@@ -205,6 +207,17 @@ public class CanvasFragment extends Fragment {
             roundEndHandler.removeCallbacksAndMessages(null);
             sendResultToParentActivity.run();
         });
+
+        // Set up canvas
+        setUpCanvas();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        canvasViewModel.setPaths(doodleDrawView.getMPaths());
+        canvasViewModel.setColorPickerIsExpanded(colorPickerExpandableLayout.isExpanded());
     }
 
     // Put result doodle in bundle to send back to parent activity
@@ -220,41 +233,50 @@ public class CanvasFragment extends Fragment {
     };
 
     private void handleSizeButtonChange(Button button) {
+        // Set the new values in the ViewModel
+        canvasViewModel.selectSizeButton(button.getId());
+
         // Hide the icon on the previously selected button
-        currentSizeButton.setForeground(null);
+        getView().findViewById(currentSizeButtonId).setForeground(null);
+
+        // Update the current button
+        currentSizeButtonId = button.getId();
 
         // Display the icon on the newly selected button
-        currentSizeButton = button;
-        currentSizeButton.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getActivity().getTheme()));
+        button.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getActivity().getTheme()));
     }
 
     private void handlePenButtonChange(ImageButton button) {
-        // Set previously selected button to unselected
-        currentPenButton.setSelected(false);
+        // Set the new values in the ViewModel
+        canvasViewModel.selectPenButton(button.getId());
 
         // Hide the icon on the previously selected button
-        currentPenButton.setForeground(null);
+        getView().findViewById(currentPenButtonId).setForeground(null);
+
+        // Update the current button
+        currentPenButtonId = button.getId();
 
         // Display the icon on the newly selected button
-        currentPenButton = button;
-        currentPenButton.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getActivity().getTheme()));
-
-        // Set the newly selected button to selected
-        currentPenButton.setSelected(true);
+        button.setForeground(getResources().getDrawable(R.drawable.transparent_circle_indicator, getActivity().getTheme()));
     }
 
-    // Resets the canvas to a default state
-    private void resetCanvas() {
-        doodleDrawView.clearCanvas();
-        doodleDrawView.setStrokeWidth(STROKE_WIDTH_MEDIUM);
+    // Sets up the canvas with the saved states from the ViewModels
+    private void setUpCanvas() {
+        // Set up the selected color, which is saved in the ColorViewModel
+        // Get the current color
+        currentColor = getResources().getColorStateList(colorViewModel.getSelectedColorId().getValue(), getActivity().getTheme());
+        // Change the color of the color button
+        colorButton.setBackgroundTintList(currentColor);
+        // Change the color of the DrawView
         doodleDrawView.setColor(currentColor.getDefaultColor());
 
-        // Set up pen buttons
-        eraserButton.setSelected(false);
-        colorButton.setSelected(true);
-        handlePenButtonChange(colorButton);
-        handleSizeButtonChange(mediumButton);
+        // Make sure current size and pen buttons are selected
+        getView().findViewById(currentSizeButtonId).callOnClick();
+        getView().findViewById(currentPenButtonId).callOnClick();
+
+        // Set up the DrawView and ColorPicker based on values saved in the CanvasViewModel
+        doodleDrawView.setMPaths(canvasViewModel.getPaths().getValue());
+        if (canvasViewModel.getColorPickerIsExpanded().getValue()) colorPickerExpandableLayout.expand(false);
+        else colorPickerExpandableLayout.collapse(false);
     }
-
-
 }

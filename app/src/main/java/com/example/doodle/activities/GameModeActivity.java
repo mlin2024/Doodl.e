@@ -169,8 +169,7 @@ public class GameModeActivity extends AppCompatActivity {
         checkGameCodeField();
 
         createGameButton.setOnClickListener(v -> {
-            if (createGameExpandableLayout.isExpanded()) createGameExpandableLayout.collapse();
-            else createGameExpandableLayout.expand();
+            createGameExpandableLayout.toggle();
             joinGameExpandableLayout.collapse();
         });
 

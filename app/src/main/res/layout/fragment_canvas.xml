@@ -104,7 +104,6 @@
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal|center_vertical"
             android:background="@drawable/button_round"
-            android:foreground="@drawable/transparent_circle_indicator"
             app:backgroundTint="@color/button_white"
             app:icon="@drawable/ic_baseline_brightness_1_24"
             app:iconGravity="textEnd"
@@ -152,7 +151,6 @@
             android:layout_gravity="left|center_vertical"
             android:layout_marginLeft="5dp"
             android:background="@drawable/button_round"
-            android:foreground="@drawable/transparent_circle_indicator"
             app:backgroundTint="@color/button_black" />
 
     </LinearLayout>
