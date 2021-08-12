@@ -3,27 +3,18 @@ package com.example.doodle.models;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.doodle.R;
 import com.google.android.material.snackbar.Snackbar;
-import com.parse.GetCallback;
 import com.parse.ParseClassName;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
-import org.parceler.Parcel;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @ParseClassName("Doodle")
 public class Doodle extends ParseObject implements Parcelable {

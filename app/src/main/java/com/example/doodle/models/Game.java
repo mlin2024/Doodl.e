@@ -4,17 +4,12 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 
-import com.example.doodle.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-import org.json.JSONArray;
-import org.parceler.Parcel;
-
 import java.util.ArrayList;
-import java.util.Collections;
 
 @ParseClassName("Game")
 public class Game extends ParseObject implements Parcelable {

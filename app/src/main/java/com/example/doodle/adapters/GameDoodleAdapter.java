@@ -1,6 +1,5 @@
 package com.example.doodle.adapters;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.LayoutInflater;

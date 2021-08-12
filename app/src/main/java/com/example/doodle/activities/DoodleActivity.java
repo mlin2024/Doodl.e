@@ -1,44 +1,27 @@
 package com.example.doodle.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.transition.Transition;
-import androidx.transition.TransitionInflater;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.divyanshu.draw.widget.DrawView;
 import com.example.doodle.BitmapScaler;
 import com.example.doodle.R;
 import com.example.doodle.fragments.CanvasFragment;
-import com.example.doodle.fragments.ColorPickerFragment;
-import com.example.doodle.models.ColorViewModel;
 import com.example.doodle.models.Doodle;
 import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;
@@ -49,13 +32,7 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import net.cachapa.expandablelayout.ExpandableLayout;
-
-import org.jetbrains.annotations.NotNull;
-import org.parceler.Parcels;
-
 import java.io.ByteArrayOutputStream;
-import java.io.Serializable;
 import java.util.HashMap;
 
 public class DoodleActivity extends AppCompatActivity {

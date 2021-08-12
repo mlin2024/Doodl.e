@@ -1,19 +1,16 @@
 package com.example.doodle.activities;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,22 +26,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.doodle.R;
-import com.example.doodle.adapters.DoodleAdapter;
-import com.example.doodle.models.Doodle;
 import com.example.doodle.models.Game;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GameModeActivity extends AppCompatActivity {
     public static final String TAG = "GameModeActivity";

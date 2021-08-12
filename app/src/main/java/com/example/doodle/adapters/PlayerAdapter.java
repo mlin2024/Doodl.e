@@ -9,15 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.doodle.R;
-import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseUser;
 
 import java.util.List;

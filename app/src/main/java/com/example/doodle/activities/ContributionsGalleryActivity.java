@@ -26,7 +26,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ContributionsGalleryActivity extends AppCompatActivity {
     public static final String TAG = "ContributionsGalleryActivity";

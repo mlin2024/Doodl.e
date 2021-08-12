@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.doodle.R;
 import com.example.doodle.activities.ContributionsGalleryActivity;
-import com.example.doodle.activities.GalleryActivity;
 import com.example.doodle.models.Doodle;
 import com.example.doodle.models.Player;
 import com.google.android.material.snackbar.Snackbar;

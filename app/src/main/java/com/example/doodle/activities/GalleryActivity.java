@@ -22,11 +22,9 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
     public static final String TAG = "GalleryActivity";
-    public static final String CURRENT_DOODLE = "currentDoodle";
 
     // Views in the layout
     private RelativeLayout galleryRelativeLayout;

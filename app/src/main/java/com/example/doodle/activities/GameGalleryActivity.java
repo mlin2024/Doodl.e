@@ -3,7 +3,6 @@ package com.example.doodle.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,14 +12,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.example.doodle.R;
-import com.example.doodle.adapters.DoodleAdapter;
 import com.example.doodle.adapters.GameDoodleAdapter;
 import com.example.doodle.models.Doodle;
 import com.example.doodle.models.Game;
@@ -30,7 +25,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameGalleryActivity extends AppCompatActivity {
     public static final String TAG = "GameGalleryActivity";

@@ -3,12 +3,8 @@ package com.example.doodle.models;
 import android.util.Log;
 import android.view.View;
 
-import com.example.doodle.R;
 import com.google.android.material.snackbar.Snackbar;
-import com.parse.LogOutCallback;
-import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 

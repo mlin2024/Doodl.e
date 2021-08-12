@@ -20,13 +20,11 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.doodle.R;
 import com.example.doodle.adapters.PlayerAdapter;
 import com.example.doodle.models.Game;
 import com.google.android.material.snackbar.Snackbar;
-import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
