@@ -1,5 +1,6 @@
 package com.example.doodle.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
@@ -25,6 +26,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.jetbrains.annotations.NotNull;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -33,6 +35,8 @@ import java.util.List;
 public class ContributeActivity extends AppCompatActivity {
     public static final String TAG = "ContributeActivity";
     public static final int NUM_TO_LOAD = 10;
+    public static final String POSITION_IN_VIEW_PAGER = "PositionInViewPager";
+    public static final String DOODLES = "Doodles";
 
     // Views in the layout
     private RelativeLayout contributeRelativeLayout;
@@ -82,13 +86,27 @@ public class ContributeActivity extends AppCompatActivity {
         new TabLayoutMediator(selectTabLayout, selectViewPager, true, true, (tab, position) -> {}).attach();
 
         // Grab doodles to populate the ViewPager
-        findContributableDoodles();
+        if (savedInstanceState != null && savedInstanceState.containsKey(DOODLES)) {
+            // Get the list of doodles saved in the savedInstanceState
+            List<Doodle> foundDoodles = savedInstanceState.getParcelableArrayList(DOODLES);
+            populateViewPager(foundDoodles, savedInstanceState.getInt(POSITION_IN_VIEW_PAGER));
+        }
+        else if (savedInstanceState == null) findContributableDoodles(0);
+        else findContributableDoodles(savedInstanceState.getInt(POSITION_IN_VIEW_PAGER));
 
         selectButton.setOnClickListener(v -> {
             Doodle parentDoodle = doodles.get(selectViewPager.getCurrentItem());
             goDoodleActivity(parentDoodle);
             finish();
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(POSITION_IN_VIEW_PAGER, selectTabLayout.getSelectedTabPosition());
+        if (!doodles.isEmpty()) outState.putParcelableArrayList(DOODLES, doodles);
     }
 
     @Override
@@ -128,7 +146,7 @@ public class ContributeActivity extends AppCompatActivity {
     }
 
     // Finds the oldest 10 doodles the user has never contributed to before
-    private void findContributableDoodles() {
+    private void findContributableDoodles(int positionInViewPager) {
         // Specify what type of data we want to query - Doodle.class
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
         // Don't include doodles with the current user as the artist
@@ -154,17 +172,26 @@ public class ContributeActivity extends AppCompatActivity {
                 return;
             }
             else { // Query has succeeded
-                // Clear out old items before appending in the new ones
-                doodleAdapter.clear();
-                // Save received posts to list and notify adapter of new data
-                doodleAdapter.addAll(foundDoodles);
-                // Show empty message if gallery is empty
-                if (doodles.size() == 0) {
-                    noDoodlesToContributeTo.setVisibility(View.VISIBLE);
-                    selectButton.setEnabled(false);
-                }
+                populateViewPager(foundDoodles, positionInViewPager);
             }
         });
+    }
+
+    // Populates the ViewPager with a list of doodles
+    private void populateViewPager(List<Doodle> foundDoodles, int positionInViewPager) {
+        // Clear out old items before appending in the new ones
+        doodleAdapter.clear();
+        // Save received posts to list and notify adapter of new data
+        doodleAdapter.addAll(foundDoodles);
+        // Show empty message if gallery is empty
+        if (doodles.size() == 0) {
+            noDoodlesToContributeTo.setVisibility(View.VISIBLE);
+            selectButton.setEnabled(false);
+        }
+        // Make sure the ViewPager is on the right page
+        else {
+            selectViewPager.setCurrentItem(positionInViewPager);
+        }
     }
 
     // Starts an intent to go to the login/signup activity
