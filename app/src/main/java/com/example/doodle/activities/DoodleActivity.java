@@ -75,7 +75,7 @@ public class DoodleActivity extends AppCompatActivity {
         savingProgressDialog.setCancelable(false);
 
         // Set up canvas fragment
-        fragmentManager.beginTransaction().add(R.id.canvasFrameLayout, canvasFragment).show(canvasFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.canvasFrameLayout, canvasFragment).show(canvasFragment).commit();
 
         // Listen for result from fragment
         fragmentManager.setFragmentResultListener(CanvasFragment.TAG_RESULT_DOODLE, this, (requestKey, bundle) -> {
@@ -126,17 +126,17 @@ public class DoodleActivity extends AppCompatActivity {
         int width =  bitmap.getWidth();
         int height = bitmap.getHeight();
         Bitmap transparentBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        int [] allpixels = new int [transparentBitmap.getHeight() * transparentBitmap.getWidth()];
-        bitmap.getPixels(allpixels, 0, transparentBitmap.getWidth(), 0, 0, transparentBitmap.getWidth(),transparentBitmap.getHeight());
-        transparentBitmap.setPixels(allpixels, 0, width, 0, 0, width, height);
+        int [] allPixels = new int [transparentBitmap.getHeight() * transparentBitmap.getWidth()];
+        bitmap.getPixels(allPixels, 0, transparentBitmap.getWidth(), 0, 0, transparentBitmap.getWidth(),transparentBitmap.getHeight());
+        transparentBitmap.setPixels(allPixels, 0, width, 0, 0, width, height);
 
         for (int i = 0; i < transparentBitmap.getHeight() * transparentBitmap.getWidth(); i++){
-            if (allpixels[i] == transparentColor) {
-                allpixels[i] = Color.alpha(Color.TRANSPARENT);
+            if (allPixels[i] == transparentColor) {
+                allPixels[i] = Color.alpha(Color.TRANSPARENT);
             }
         }
 
-        transparentBitmap.setPixels(allpixels, 0, transparentBitmap.getWidth(), 0, 0, transparentBitmap.getWidth(), transparentBitmap.getHeight());
+        transparentBitmap.setPixels(allPixels, 0, transparentBitmap.getWidth(), 0, 0, transparentBitmap.getWidth(), transparentBitmap.getHeight());
         return transparentBitmap;
     }
 
@@ -226,6 +226,8 @@ public class DoodleActivity extends AppCompatActivity {
         ParseQuery<Doodle> query = ParseQuery.getQuery(Doodle.class);
         // The doodle we want to change the root of is distinguished by having a null root
         query.whereEqualTo(Doodle.KEY_ROOT, null);
+        // Find only doodles by the current user
+        query.whereEqualTo(Doodle.KEY_ARTIST, ParseUser.getCurrentUser());
         // Start an asynchronous call for the doodle
         query.getFirstInBackground((doodle, e) -> {
             if (e != null) { // Query has failed

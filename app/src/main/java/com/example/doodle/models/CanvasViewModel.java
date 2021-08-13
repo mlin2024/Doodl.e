@@ -53,4 +53,12 @@ public class CanvasViewModel extends ViewModel {
         if (colorPickerIsExpanded.getValue() == null) setColorPickerIsExpanded(false);
         return colorPickerIsExpanded;
     }
+
+    // Resets the ViewModel to default
+    public void clear() {
+        selectSizeButton(R.id.mediumButton);
+        selectPenButton(R.id.colorButton);
+        setPaths(new LinkedHashMap());
+        setColorPickerIsExpanded(false);
+    }
 }

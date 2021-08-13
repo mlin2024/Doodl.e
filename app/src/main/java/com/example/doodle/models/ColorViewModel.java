@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.doodle.R;
 
+import java.util.LinkedHashMap;
+
 public class ColorViewModel extends ViewModel {
     private final MutableLiveData<Integer> selectedColorButtonId = new MutableLiveData<>();
     private final MutableLiveData<Integer> selectedColorId = new MutableLiveData<>();
@@ -28,5 +30,11 @@ public class ColorViewModel extends ViewModel {
         // Set black as default color if no color has been selected
         if (selectedColorId.getValue() == null) selectColor(R.color.button_black);
         return selectedColorId;
+    }
+
+    // Resets the ViewModel to default
+    public void clear() {
+        selectColorButton(R.id.blackButton);
+        selectColor(R.color.button_black);
     }
 }

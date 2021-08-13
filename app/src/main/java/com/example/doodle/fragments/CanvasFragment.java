@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -228,6 +229,10 @@ public class CanvasFragment extends Fragment {
             Bundle result = new Bundle();
             result.putParcelable(TAG_DRAWING_BITMAP, doodleDrawView.getBitmap());
             getParentFragmentManager().setFragmentResult(TAG_RESULT_DOODLE, result);
+
+            // Reset the ViewModels
+            colorViewModel.clear();
+            canvasViewModel.clear();
         }
     };
 
