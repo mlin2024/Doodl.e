@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +37,7 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 
 public class GameModeActivity extends AppCompatActivity {
     public static final String TAG = "GameModeActivity";
-    public static final String GAME_TAG = "game";
+    public static final String TAG_GAME = "game";
     public static final int MAX_PLAYERS = 10;
 
     // Views in the layout
@@ -179,11 +178,11 @@ public class GameModeActivity extends AppCompatActivity {
                 // Save game to database
                 creatingProgressDialog.show();
                 game.saveInBackground(e -> {
+                    creatingProgressDialog.dismiss();
                     if (e != null) { // Save has failed
                         Snackbar.make(gameModeRelativeLayout, getResources().getString(R.string.error_creating_game), Snackbar.LENGTH_LONG).show();
                     }
                     else { // Save has succeeded
-                        creatingProgressDialog.dismiss();
                         goWaitingRoomActivity(game);
                         finish();
                     }
@@ -278,11 +277,11 @@ public class GameModeActivity extends AppCompatActivity {
                     foundGame.addPlayer(ParseUser.getCurrentUser());
                     joiningProgressDialog.show();
                     foundGame.saveInBackground(e1 -> {
+                        joiningProgressDialog.dismiss();
                         if (e1 != null) { // Save has failed
                             Snackbar.make(gameModeRelativeLayout, getResources().getString(R.string.error_joining_game), Snackbar.LENGTH_LONG).show();
                         }
                         else { // Save has succeeded
-                            joiningProgressDialog.dismiss();
                             goWaitingRoomActivity(foundGame);
                             finish();
                         }
@@ -308,7 +307,7 @@ public class GameModeActivity extends AppCompatActivity {
     // Starts an intent to go to the waiting room activity
     private void goWaitingRoomActivity(Game game) {
         Intent intent = new Intent(this, WaitingRoomActivity.class);
-        intent.putExtra(GAME_TAG, game);
+        intent.putExtra(TAG_GAME, game);
         startActivity(intent);
     }
 

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 public class ContributionsGalleryActivity extends AppCompatActivity {
     public static final String TAG = "ContributionsGalleryActivity";
-    public static final String ORIGINAL_DOODLE = "originalDoodle";
+    public static final String TAG_ORIGINAL_DOODLE = "originalDoodle";
 
     // Views in the layout
     private RelativeLayout contributionsGalleryRelativeLayout;
@@ -67,7 +67,7 @@ public class ContributionsGalleryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         // Get current doodle from intent
-        Doodle currentDoodle = getIntent().getParcelableExtra(ORIGINAL_DOODLE);
+        Doodle currentDoodle = getIntent().getParcelableExtra(TAG_ORIGINAL_DOODLE);
 
         // Set up ImageView
         AnimationDrawable loadingDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.loading_circle, getTheme());

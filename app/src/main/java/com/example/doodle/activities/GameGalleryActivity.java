@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -56,7 +55,7 @@ public class GameGalleryActivity extends AppCompatActivity {
         gameDoodles = new ArrayList<>();
         gameDoodleAdapter = new GameDoodleAdapter(this, gameDoodles);
         // Get game from intent
-        game = getIntent().getParcelableExtra(GameModeActivity.GAME_TAG);
+        game = getIntent().getParcelableExtra(GameModeActivity.TAG_GAME);
         loadingProgressDialog = new ProgressDialog(GameGalleryActivity.this);
 
         // Set up toolbar
@@ -139,9 +138,8 @@ public class GameGalleryActivity extends AppCompatActivity {
         loadingProgressDialog.show();
         // Start an asynchronous call for doodles
         query.findInBackground((foundDoodles, e) -> {
-
+            loadingProgressDialog.dismiss();
             if (e != null) { // Query has failed
-                loadingProgressDialog.dismiss();
                 Snackbar.make(gameGalleryRelativeLayout, getResources().getString(R.string.failed_to_load_doodles_from_game), Snackbar.LENGTH_LONG).show();
             }
             else { // Query has succeeded
@@ -149,7 +147,6 @@ public class GameGalleryActivity extends AppCompatActivity {
                 gameDoodleAdapter.clear();
                 // Save received posts to list and notify adapter of new data
                 gameDoodleAdapter.addAll(foundDoodles);
-                loadingProgressDialog.dismiss();
             }
         });
     }

@@ -13,7 +13,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -37,7 +36,7 @@ import java.util.HashMap;
 
 public class DoodleActivity extends AppCompatActivity {
     public static final String TAG = "DoodleActivity";
-    public static final String PARENT_DOODLE = "ParentDoodle";
+    public static final String TAG_PARENT_DOODLE = "parentDoodle";
 
     // Views in the layout
     private RelativeLayout doodleRelativeLayout;
@@ -60,7 +59,7 @@ public class DoodleActivity extends AppCompatActivity {
         // Initialize other member variables
         savingProgressDialog = new ProgressDialog(DoodleActivity.this);
         fragmentManager = getSupportFragmentManager();
-        Doodle parentDoodle = getIntent().getParcelableExtra(PARENT_DOODLE);
+        Doodle parentDoodle = getIntent().getParcelableExtra(TAG_PARENT_DOODLE);
         Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
         // There is no timer, so deadline is -1
         canvasFragment = CanvasFragment.newInstance(parentBitmap, -1);
@@ -79,8 +78,8 @@ public class DoodleActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().add(R.id.canvasFrameLayout, canvasFragment).show(canvasFragment).commit();
 
         // Listen for result from fragment
-        fragmentManager.setFragmentResultListener(CanvasFragment.RESULT_DOODLE, this, (requestKey, bundle) -> {
-            Bitmap drawingBitmap = bundle.getParcelable(CanvasFragment.DRAWING_BITMAP);
+        fragmentManager.setFragmentResultListener(CanvasFragment.TAG_RESULT_DOODLE, this, (requestKey, bundle) -> {
+            Bitmap drawingBitmap = bundle.getParcelable(CanvasFragment.TAG_DRAWING_BITMAP);
             drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
         });
@@ -179,6 +178,7 @@ public class DoodleActivity extends AppCompatActivity {
         // Save doodle to database
         childDoodle.saveInBackground(e -> {
             if (e != null) { // Save has failed
+                savingProgressDialog.dismiss();
                 Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
             }
             else { // Save has succeeded
@@ -237,6 +237,7 @@ public class DoodleActivity extends AppCompatActivity {
                 doodle.setRoot(root);
                 doodle.saveInBackground(e1 -> {
                     if (e1 != null) { // Save has failed
+                        savingProgressDialog.dismiss();
                         Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
                     }
                     else { // Save has succeeded
@@ -252,11 +253,11 @@ public class DoodleActivity extends AppCompatActivity {
         Player player = new Player(ParseUser.getCurrentUser());
         player.addRootContributedTo(root);
         player.saveInBackground(e -> {
+            savingProgressDialog.dismiss();
             if (e != null) { // Save has failed
                 Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
             }
             else { // Save has succeeded
-                savingProgressDialog.dismiss();
                 Toast.makeText(this, getResources().getString(R.string.doodle_submitted), Toast.LENGTH_SHORT).show();
                 goHomeActivity();
             }

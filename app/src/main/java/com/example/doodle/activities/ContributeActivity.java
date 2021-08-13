@@ -8,7 +8,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,8 +33,8 @@ import java.util.List;
 public class ContributeActivity extends AppCompatActivity {
     public static final String TAG = "ContributeActivity";
     public static final int NUM_TO_LOAD = 10;
-    public static final String POSITION_IN_VIEW_PAGER = "PositionInViewPager";
-    public static final String DOODLES = "Doodles";
+    public static final String TAG_POSITION_IN_VIEW_PAGER = "positionInViewPager";
+    public static final String TAG_DOODLES = "doodles";
 
     // Views in the layout
     private RelativeLayout contributeRelativeLayout;
@@ -85,13 +84,13 @@ public class ContributeActivity extends AppCompatActivity {
         new TabLayoutMediator(selectTabLayout, selectViewPager, true, true, (tab, position) -> {}).attach();
 
         // Grab doodles to populate the ViewPager
-        if (savedInstanceState != null && savedInstanceState.containsKey(DOODLES)) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(TAG_DOODLES)) {
             // Get the list of doodles saved in the savedInstanceState
-            List<Doodle> foundDoodles = savedInstanceState.getParcelableArrayList(DOODLES);
-            populateViewPager(foundDoodles, savedInstanceState.getInt(POSITION_IN_VIEW_PAGER));
+            List<Doodle> foundDoodles = savedInstanceState.getParcelableArrayList(TAG_DOODLES);
+            populateViewPager(foundDoodles, savedInstanceState.getInt(TAG_POSITION_IN_VIEW_PAGER));
         }
         else if (savedInstanceState == null) findContributableDoodles(0);
-        else findContributableDoodles(savedInstanceState.getInt(POSITION_IN_VIEW_PAGER));
+        else findContributableDoodles(savedInstanceState.getInt(TAG_POSITION_IN_VIEW_PAGER));
 
         selectButton.setOnClickListener(v -> {
             Doodle parentDoodle = doodles.get(selectViewPager.getCurrentItem());
@@ -104,8 +103,8 @@ public class ContributeActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull @NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putInt(POSITION_IN_VIEW_PAGER, selectTabLayout.getSelectedTabPosition());
-        if (!doodles.isEmpty()) outState.putParcelableArrayList(DOODLES, doodles);
+        outState.putInt(TAG_POSITION_IN_VIEW_PAGER, selectTabLayout.getSelectedTabPosition());
+        if (!doodles.isEmpty()) outState.putParcelableArrayList(TAG_DOODLES, doodles);
     }
 
     @Override
@@ -210,7 +209,7 @@ public class ContributeActivity extends AppCompatActivity {
     private void goDoodleActivity(Doodle parentDoodle) {
         Intent intent = new Intent(this, DoodleActivity.class);
         // Pass the parent doodle
-        intent.putExtra(DoodleActivity.PARENT_DOODLE, parentDoodle);
+        intent.putExtra(DoodleActivity.TAG_PARENT_DOODLE, parentDoodle);
         startActivity(intent);
     }
 

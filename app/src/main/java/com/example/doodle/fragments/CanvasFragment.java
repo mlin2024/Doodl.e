@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,10 +35,10 @@ public class CanvasFragment extends Fragment {
     public static final float STROKE_WIDTH_SMALL = 10;
     public static final float STROKE_WIDTH_MEDIUM = 20;
     public static final float STROKE_WIDTH_LARGE = 30;
-    public static final String PARENT_DOODLE = "ParentDoodle";
-    public static final String TIME_CUR_ROUND_ENDS = "TimeCurRoundEnds";
-    public static final String RESULT_DOODLE = "ResultDoodle";
-    public static final String DRAWING_BITMAP = "DrawingBitmap";
+    public static final String TAG_PARENT_DOODLE = "parentDoodle";
+    public static final String TAG_TIME_CUR_ROUND_ENDS = "timeCurRoundEnds";
+    public static final String TAG_RESULT_DOODLE = "resultDoodle";
+    public static final String TAG_DRAWING_BITMAP = "drawingBitmap";
 
     // Views in the layout
     private ImageView parentImageView;
@@ -72,8 +71,8 @@ public class CanvasFragment extends Fragment {
         CanvasFragment canvasFragment = new CanvasFragment();
 
         Bundle args = new Bundle();
-        args.putParcelable(PARENT_DOODLE, parentBitmap);
-        args.putLong(TIME_CUR_ROUND_ENDS, deadline);
+        args.putParcelable(TAG_PARENT_DOODLE, parentBitmap);
+        args.putLong(TAG_TIME_CUR_ROUND_ENDS, deadline);
         canvasFragment.setArguments(args);
 
         return canvasFragment;
@@ -81,7 +80,7 @@ public class CanvasFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        parentBitmap = getArguments().getParcelable(PARENT_DOODLE);
+        parentBitmap = getArguments().getParcelable(TAG_PARENT_DOODLE);
         super.onCreate(savedInstanceState);
     }
 
@@ -122,7 +121,7 @@ public class CanvasFragment extends Fragment {
 
         // Set up parent ImageView (if parentDoodle exists)
         // Get parent doodle from intent
-        Bitmap parentBitmap = getArguments().getParcelable(PARENT_DOODLE);
+        Bitmap parentBitmap = getArguments().getParcelable(TAG_PARENT_DOODLE);
         if (parentBitmap != null) {
             AnimationDrawable loadingDrawable = (AnimationDrawable) getResources().getDrawable(R.drawable.loading_circle, getActivity().getTheme());
             loadingDrawable.start();
@@ -133,7 +132,7 @@ public class CanvasFragment extends Fragment {
         }
 
         // Set timer to send result back to parent activity by the deadline, if the deadline exists
-        long timeCurRoundEnds = getArguments().getLong(TIME_CUR_ROUND_ENDS);
+        long timeCurRoundEnds = getArguments().getLong(TAG_TIME_CUR_ROUND_ENDS);
         // If timeCurRoundEnds is -1, the parent activity is DoodleActivity and there is no round or time limit
         // Else, the parent activity is GameActivity and has set the timeCurRoundEnds
         if (timeCurRoundEnds != -1) {
@@ -227,8 +226,8 @@ public class CanvasFragment extends Fragment {
             doneButton.setEnabled(false);
 
             Bundle result = new Bundle();
-            result.putParcelable(DRAWING_BITMAP, doodleDrawView.getBitmap());
-            getParentFragmentManager().setFragmentResult(RESULT_DOODLE, result);
+            result.putParcelable(TAG_DRAWING_BITMAP, doodleDrawView.getBitmap());
+            getParentFragmentManager().setFragmentResult(TAG_RESULT_DOODLE, result);
         }
     };
 

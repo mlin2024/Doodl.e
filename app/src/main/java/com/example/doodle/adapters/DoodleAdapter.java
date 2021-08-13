@@ -243,8 +243,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
                     }
 
                     @Override
-                    public void onTabUnselected(TabLayout.Tab tab) {
-                    }
+                    public void onTabUnselected(TabLayout.Tab tab) {}
 
                     @Override
                     public void onTabReselected(TabLayout.Tab tab) {
@@ -297,7 +296,7 @@ public class DoodleAdapter extends RecyclerView.Adapter<DoodleAdapter.ViewHolder
         private void goContributionsGalleryActivity(Doodle doodle) {
             Intent intent = new Intent(context, ContributionsGalleryActivity.class);
             // Pass in the doodle
-            intent.putExtra(ContributionsGalleryActivity.ORIGINAL_DOODLE, doodle);
+            intent.putExtra(ContributionsGalleryActivity.TAG_ORIGINAL_DOODLE, doodle);
             context.startActivity(intent);
         }
     }

@@ -16,7 +16,6 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,7 +76,7 @@ public class GameActivity extends AppCompatActivity {
 
         // Initialize other member variables
         // Unwrap the game that was passed in by the intent
-        game = getIntent().getParcelableExtra(GameModeActivity.GAME_TAG);
+        game = getIntent().getParcelableExtra(GameModeActivity.TAG_GAME);
         timeCurRoundEnds = game.getUpdatedAt().getTime() + (game.getTimeLimit() * 1000);
         savingProgressDialog = new ProgressDialog(GameActivity.this);
         fragmentManager = getSupportFragmentManager();
@@ -114,10 +113,10 @@ public class GameActivity extends AppCompatActivity {
         }
 
         // Listen for result from fragment
-        fragmentManager.setFragmentResultListener(CanvasFragment.RESULT_DOODLE, this, (requestKey, bundle) -> {
+        fragmentManager.setFragmentResultListener(CanvasFragment.TAG_RESULT_DOODLE, this, (requestKey, bundle) -> {
             timeHandler.removeCallbacksAndMessages(null);
 
-            Bitmap drawingBitmap = bundle.getParcelable(CanvasFragment.DRAWING_BITMAP);
+            Bitmap drawingBitmap = bundle.getParcelable(CanvasFragment.TAG_DRAWING_BITMAP);
             drawingBitmap = makeTransparent(drawingBitmap, Color.WHITE);
             Bitmap parentBitmap = getBitmapFromDoodle(parentDoodle);
             saveDoodle(parentDoodle, parentBitmap, drawingBitmap);
@@ -374,6 +373,7 @@ public class GameActivity extends AppCompatActivity {
         // Save doodle to database
         childDoodle.saveInBackground(e -> {
             if (e != null) { // Save has failed
+                savingProgressDialog.dismiss();
                 Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
             }
             else { // Save has succeeded
@@ -402,6 +402,7 @@ public class GameActivity extends AppCompatActivity {
                     doodle.setRoot(root);
                     doodle.saveInBackground(e1 -> {
                         if (e1 != null) { // Save has failed
+                            savingProgressDialog.dismiss();
                             Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
                         }
                         else { // Save has succeeded
@@ -419,11 +420,11 @@ public class GameActivity extends AppCompatActivity {
         player.addRootContributedTo(root);
         // Only check if the next round should start after everything has been saved
         player.saveInBackground(e -> {
+            savingProgressDialog.dismiss();
             if (e != null) { // Save has failed
                 Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
             }
             else { // Save has succeeded
-                savingProgressDialog.dismiss();
                 Toast.makeText(this, getResources().getString(R.string.doodle_submitted), Toast.LENGTH_SHORT).show();
                 checkCurrentRound();
             }
@@ -503,7 +504,7 @@ public class GameActivity extends AppCompatActivity {
     // Starts an intent to go to the game gallery activity
     private void goGameGalleryActivity() {
         Intent intent = new Intent(this, GameGalleryActivity.class);
-        intent.putExtra(GameModeActivity.GAME_TAG, game);
+        intent.putExtra(GameModeActivity.TAG_GAME, game);
         startActivity(intent);
     }
 

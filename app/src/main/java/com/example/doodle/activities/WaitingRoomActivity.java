@@ -74,7 +74,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
         // Initialize other member variables
         // Unwrap the game that was passed in by the intent
-        game = getIntent().getParcelableExtra(GameModeActivity.GAME_TAG);
+        game = getIntent().getParcelableExtra(GameModeActivity.TAG_GAME);
         players = game.getPlayers();
         playerAdapter = new PlayerAdapter(this, players, game.getGameCode());
         updateHandler = new Handler(Looper.getMainLooper());
@@ -334,7 +334,7 @@ public class WaitingRoomActivity extends AppCompatActivity {
     // Starts an intent to go to the game activity
     private void goGameActivity() {
         Intent intent = new Intent(this, GameActivity.class);
-        intent.putExtra(GameModeActivity.GAME_TAG, game);
+        intent.putExtra(GameModeActivity.TAG_GAME, game);
         startActivity(intent);
     }
 
