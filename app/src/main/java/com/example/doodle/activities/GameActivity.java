@@ -290,7 +290,11 @@ public class GameActivity extends AppCompatActivity {
             else { // Query has succeeded
                 if (doodlesSubmittedInRound.size() == numPlayers) {
                     game.setRound(game.getRound() + 1);
-                    game.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                    game.saveInBackground(e1 -> {
+                        if (e1 != null) { // Save has failed
+                            Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_updating_game), Snackbar.LENGTH_LONG).show();
+                        }
+                    });
                 }
             }
         });
@@ -368,10 +372,15 @@ public class GameActivity extends AppCompatActivity {
 
         savingProgressDialog.show();
         // Save doodle to database
-        childDoodle.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
-            // Now if it has no parent, set its root equal to its objectId
-            if (parentDoodle == null) setRootToObjectId();
-            else addToUserRootsContributedTo(parentDoodle.getRoot());
+        childDoodle.saveInBackground(e -> {
+            if (e != null) { // Save has failed
+                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
+            }
+            else { // Save has succeeded
+                // Now if it has no parent, set its root equal to its objectId
+                if (parentDoodle == null) setRootToObjectId();
+                else addToUserRootsContributedTo(parentDoodle.getRoot());
+            }
         });
     }
 
@@ -391,8 +400,13 @@ public class GameActivity extends AppCompatActivity {
                 for (Doodle doodle: doodles) {
                     String root = doodle.getObjectId();
                     doodle.setRoot(root);
-                    doodle.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
-                        addToUserRootsContributedTo(root);
+                    doodle.saveInBackground(e1 -> {
+                        if (e1 != null) { // Save has failed
+                            Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
+                        }
+                        else { // Save has succeeded
+                            addToUserRootsContributedTo(root);
+                        }
                     });
                 }
             }
@@ -404,10 +418,15 @@ public class GameActivity extends AppCompatActivity {
         Player player = new Player(ParseUser.getCurrentUser());
         player.addRootContributedTo(root);
         // Only check if the next round should start after everything has been saved
-        player.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
-            savingProgressDialog.dismiss();
-            Toast.makeText(this, getResources().getString(R.string.doodle_submitted), Toast.LENGTH_SHORT).show();
-            checkCurrentRound();
+        player.saveInBackground(e -> {
+            if (e != null) { // Save has failed
+                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
+            }
+            else { // Save has succeeded
+                savingProgressDialog.dismiss();
+                Toast.makeText(this, getResources().getString(R.string.doodle_submitted), Toast.LENGTH_SHORT).show();
+                checkCurrentRound();
+            }
         });
     }
 
@@ -453,7 +472,11 @@ public class GameActivity extends AppCompatActivity {
             builder.setMessage(getResources().getString(R.string.once_you_leave_you_cant_come_back))
                     .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
                         game.removePlayer(ParseUser.getCurrentUser());
-                        game.saveInBackground(gameRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                        game.saveInBackground(e -> {
+                            if (e != null) { // Save has failed
+                                Snackbar.make(gameRelativeLayout, getResources().getString(R.string.error_updating_game), Snackbar.LENGTH_LONG).show();
+                            }
+                        });
                         runIfReallyLeaving.run();
                     });
         }

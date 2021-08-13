@@ -117,7 +117,11 @@ public class WaitingRoomActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int selected = getResources().getIntArray(R.array.time_limit_array)[position];
                 game.setTimeLimit(selected);
-                game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                game.saveInBackground(e -> {
+                    if (e != null) { // Save has failed
+                        Snackbar.make(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), Snackbar.LENGTH_LONG).show();
+                    }
+                });
             }
 
             @Override
@@ -138,7 +142,11 @@ public class WaitingRoomActivity extends AppCompatActivity {
 
         startGameButton.setOnClickListener(v -> {
             game.setRound(1);
-            game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_starting_game), () -> {});
+            game.saveInBackground(e -> {
+                if (e != null) { // Save has failed
+                    Snackbar.make(waitingRoomRelativeLayout, getResources().getString(R.string.starting_game), Snackbar.LENGTH_LONG).show();
+                }
+            });
             startingProgressDialog.show();
         });
     }
@@ -282,7 +290,11 @@ public class WaitingRoomActivity extends AppCompatActivity {
                     .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
                         game.removePlayer(ParseUser.getCurrentUser());
                         game.setHost(game.getPlayers().get(0));
-                        game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                        game.saveInBackground(e -> {
+                            if (e != null) { // Save has failed
+                                Snackbar.make(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), Snackbar.LENGTH_LONG).show();
+                            }
+                        });
                         runIfReallyLeaving.run();
                     });
         }
@@ -291,7 +303,11 @@ public class WaitingRoomActivity extends AppCompatActivity {
             builder.setMessage(getResources().getString(R.string.you_can_still_rejoin_before_it_starts))
                 .setPositiveButton(getResources().getString(R.string.leave_game), (dialog, which) -> {
                     game.removePlayer(ParseUser.getCurrentUser());
-                    game.saveInBackground(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {});
+                    game.saveInBackground(e -> {
+                        if (e != null) { // Save has failed
+                            Snackbar.make(waitingRoomRelativeLayout, getResources().getString(R.string.error_updating_game), Snackbar.LENGTH_LONG).show();
+                        }
+                    });
                     runIfReallyLeaving.run();
                 });
         }

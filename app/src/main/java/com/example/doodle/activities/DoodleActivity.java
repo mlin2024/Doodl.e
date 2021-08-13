@@ -177,22 +177,27 @@ public class DoodleActivity extends AppCompatActivity {
 
         savingProgressDialog.show();
         // Save doodle to database
-        childDoodle.saveInBackground(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
-            // Now if it has no parent, set its root equal to its objectId
-            if (parentDoodle == null) setRootToObjectId();
-            else addToUserRootsContributedTo(parentDoodle.getRoot());
+        childDoodle.saveInBackground(e -> {
+            if (e != null) { // Save has failed
+                Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
+            }
+            else { // Save has succeeded
+                // Now if it has no parent, set its root equal to its objectId
+                if (parentDoodle == null) setRootToObjectId();
+                else addToUserRootsContributedTo(parentDoodle.getRoot());
 
-            // Handle push notification to the artist of the parent doodle
-            if (parentDoodle != null) {
-                try {
-                    Player player = new Player(parentDoodle.getArtist().fetchIfNeeded());
-                    // If the artist has enabled notifications, send them notification
-                    if (player.getGetsNotifications()) {
-                        handlePushNotification(parentDoodle.getArtist());
+                // Handle push notification to the artist of the parent doodle
+                if (parentDoodle != null) {
+                    try {
+                        Player player = new Player(parentDoodle.getArtist().fetchIfNeeded());
+                        // If the artist has enabled notifications, send them notification
+                        if (player.getGetsNotifications()) {
+                            handlePushNotification(parentDoodle.getArtist());
+                        }
+                    } catch (ParseException e1) {
+                        Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
+                        e1.printStackTrace();
                     }
-                } catch (ParseException e) {
-                    Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
-                    e.printStackTrace();
                 }
             }
         });
@@ -230,8 +235,13 @@ public class DoodleActivity extends AppCompatActivity {
             else { // Query has succeeded
                 String root = doodle.getObjectId();
                 doodle.setRoot(root);
-                doodle.saveInBackground(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
-                    addToUserRootsContributedTo(root);
+                doodle.saveInBackground(e1 -> {
+                    if (e1 != null) { // Save has failed
+                        Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
+                    }
+                    else { // Save has succeeded
+                        addToUserRootsContributedTo(root);
+                    }
                 });
             }
         });
@@ -241,10 +251,15 @@ public class DoodleActivity extends AppCompatActivity {
     private void addToUserRootsContributedTo (String root) {
         Player player = new Player(ParseUser.getCurrentUser());
         player.addRootContributedTo(root);
-        player.saveInBackground(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), () -> {
-            savingProgressDialog.dismiss();
-            Toast.makeText(this, getResources().getString(R.string.doodle_submitted), Toast.LENGTH_SHORT).show();
-            goHomeActivity();
+        player.saveInBackground(e -> {
+            if (e != null) { // Save has failed
+                Snackbar.make(doodleRelativeLayout, getResources().getString(R.string.error_saving_doodle), Snackbar.LENGTH_LONG).show();
+            }
+            else { // Save has succeeded
+                savingProgressDialog.dismiss();
+                Toast.makeText(this, getResources().getString(R.string.doodle_submitted), Toast.LENGTH_SHORT).show();
+                goHomeActivity();
+            }
         });
     }
 

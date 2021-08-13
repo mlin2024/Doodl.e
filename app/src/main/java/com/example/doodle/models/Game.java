@@ -78,16 +78,4 @@ public class Game extends ParseObject implements Parcelable {
     public void setRound(int round) {
         put(KEY_ROUND, round);
     }
-
-    // Asynchronously saves the user data to the database
-    public void saveInBackground(View view, String errorMessage, Runnable run) {
-        saveInBackground(e -> {
-            if (e != null) {  // Query has failed
-                Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
-            }
-            else {  // Query has succeeded
-                run.run();
-            }
-        });
-    }
 }

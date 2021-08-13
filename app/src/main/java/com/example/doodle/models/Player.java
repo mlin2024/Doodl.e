@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONArray;
 
@@ -77,14 +78,7 @@ public class Player {
     }
 
     // Asynchronously saves the user data to the database
-    public void saveInBackground(View view, String errorMessage, Runnable run) {
-        user.saveInBackground(e -> {
-            if (e != null) { // Save has failed
-                Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
-            }
-            else { // Save has succeeded
-                run.run();
-            }
-        });
+    public void saveInBackground(SaveCallback saveCallback) {
+        user.saveInBackground(saveCallback);
     }
 }

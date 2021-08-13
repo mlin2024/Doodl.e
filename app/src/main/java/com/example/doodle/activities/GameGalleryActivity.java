@@ -158,10 +158,15 @@ public class GameGalleryActivity extends AppCompatActivity {
         try {
             game.fetch();
             game.removePlayer(ParseUser.getCurrentUser());
-            game.saveInBackground(gameGalleryRelativeLayout, getResources().getString(R.string.error_updating_game), () -> {
-                // Once everyone has left, delete the game from the database
-                if (game.getPlayers().size() == 0) {
-                    game.deleteInBackground();
+            game.saveInBackground(e -> {
+                if (e != null) { // Save has failed
+                    Snackbar.make(gameGalleryRelativeLayout, getResources().getString(R.string.error_updating_game), Snackbar.LENGTH_LONG).show();
+                }
+                else { // Save has succeeded
+                    // Once everyone has left, delete the game from the database
+                    if (game.getPlayers().size() == 0) {
+                        game.deleteInBackground();
+                    }
                 }
             });
         } catch (ParseException e) {

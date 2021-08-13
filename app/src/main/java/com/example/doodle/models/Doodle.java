@@ -117,16 +117,4 @@ public class Doodle extends ParseObject implements Parcelable {
 
         return "";
     }
-
-    // Asynchronously saves the doodle data to the database
-    public void saveInBackground(View view, String errorMessage, Runnable run) {
-        saveInBackground(e -> {
-            if (e != null) { // Save has failed
-                Snackbar.make(view, errorMessage, Snackbar.LENGTH_LONG).show();
-            }
-            else { // Save has succeeded
-                run.run();
-            }
-        });
-    }
 }

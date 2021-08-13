@@ -66,14 +66,24 @@ public class ProfileActivity extends AppCompatActivity {
         notificationSwitch.setOnClickListener(v -> {
             if (notificationSwitch.isChecked()) {
                 curPlayer.setGetsNotifications(true);
-                curPlayer.saveInBackground(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), () -> {
-                    Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_receive_notifications), Snackbar.LENGTH_LONG).show();
+                curPlayer.saveInBackground(e -> {
+                    if (e != null) { // Save has failed
+                        Snackbar.make(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), Snackbar.LENGTH_LONG).show();
+                    }
+                    else { // Save has succeeded
+                        Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_receive_notifications), Snackbar.LENGTH_LONG).show();
+                    }
                 });
             }
             else {
                 curPlayer.setGetsNotifications(false);
-                curPlayer.saveInBackground(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), () -> {
-                    Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_not_receive_notifications), Snackbar.LENGTH_LONG).show();
+                curPlayer.saveInBackground(e -> {
+                    if (e != null) { // Save has failed
+                        Snackbar.make(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), Snackbar.LENGTH_LONG).show();
+                    }
+                    else { // Save has succeeded
+                        Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_not_receive_notifications), Snackbar.LENGTH_LONG).show();
+                    }
                 });
             }
         });
@@ -86,14 +96,24 @@ public class ProfileActivity extends AppCompatActivity {
         anonymousSwitch.setOnClickListener(v -> {
             if (anonymousSwitch.isChecked()) {
                 curPlayer.setIsAnonymous(true);
-                curPlayer.saveInBackground(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), () -> {
-                    Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_be_anonymous), Snackbar.LENGTH_LONG).show();
+                curPlayer.saveInBackground(e -> {
+                    if (e != null) { // Save has failed
+                        Snackbar.make(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), Snackbar.LENGTH_LONG).show();
+                    }
+                    else { // Save has succeeded
+                        Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_be_anonymous), Snackbar.LENGTH_LONG).show();
+                    }
                 });
             }
             else {
                 curPlayer.setIsAnonymous(false);
-                curPlayer.saveInBackground(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), () -> {
-                    Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_not_be_anonymous), Snackbar.LENGTH_LONG).show();
+                curPlayer.saveInBackground(e -> {
+                    if (e != null) { // Save has failed
+                        Snackbar.make(profileRelativeLayout, getResources().getString(R.string.failed_to_save_user_settings), Snackbar.LENGTH_LONG).show();
+                    }
+                    else { // Save has succeeded
+                        Snackbar.make(profileRelativeLayout, getResources().getString(R.string.you_will_not_be_anonymous), Snackbar.LENGTH_LONG).show();
+                    }
                 });
             }
         });

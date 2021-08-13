@@ -178,10 +178,15 @@ public class GameModeActivity extends AppCompatActivity {
 
                 // Save game to database
                 creatingProgressDialog.show();
-                game.saveInBackground(gameModeRelativeLayout, getResources().getString(R.string.error_creating_game), () -> {
-                    creatingProgressDialog.dismiss();
-                    goWaitingRoomActivity(game);
-                    finish();
+                game.saveInBackground(e -> {
+                    if (e != null) { // Save has failed
+                        Snackbar.make(gameModeRelativeLayout, getResources().getString(R.string.error_creating_game), Snackbar.LENGTH_LONG).show();
+                    }
+                    else { // Save has succeeded
+                        creatingProgressDialog.dismiss();
+                        goWaitingRoomActivity(game);
+                        finish();
+                    }
                 });
             } catch (ParseException e) {
                 Snackbar.make(gameModeRelativeLayout, getResources().getString(R.string.error_creating_game), Snackbar.LENGTH_LONG).show();
@@ -272,10 +277,15 @@ public class GameModeActivity extends AppCompatActivity {
                 else {
                     foundGame.addPlayer(ParseUser.getCurrentUser());
                     joiningProgressDialog.show();
-                    foundGame.saveInBackground(gameModeRelativeLayout, getResources().getString(R.string.error_joining_game), () -> {
-                        joiningProgressDialog.dismiss();
-                        goWaitingRoomActivity(foundGame);
-                        finish();
+                    foundGame.saveInBackground(e1 -> {
+                        if (e1 != null) { // Save has failed
+                            Snackbar.make(gameModeRelativeLayout, getResources().getString(R.string.error_joining_game), Snackbar.LENGTH_LONG).show();
+                        }
+                        else { // Save has succeeded
+                            joiningProgressDialog.dismiss();
+                            goWaitingRoomActivity(foundGame);
+                            finish();
+                        }
                     });
                 }
             }
