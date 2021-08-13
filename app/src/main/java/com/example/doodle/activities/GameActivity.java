@@ -1,5 +1,6 @@
 package com.example.doodle.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -36,6 +37,8 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.util.concurrent.TimeUnit;
@@ -82,7 +85,8 @@ public class GameActivity extends AppCompatActivity {
         timeCurRoundEnds = game.getUpdatedAt().getTime() + (game.getTimeLimit() * 1000);
         savingProgressDialog = new ProgressDialog(GameActivity.this);
         fragmentManager = getSupportFragmentManager();
-        canvasFragment = CanvasFragment.newInstance(null, timeCurRoundEnds);
+        if (savedInstanceState == null) canvasFragment = CanvasFragment.newInstance(null, timeCurRoundEnds);
+        else canvasFragment = fragmentManager.findFragmentByTag(CanvasFragment.class.getSimpleName());
         indexInPlayerList = 0;
         numPlayers = game.getPlayers().size();
         round = 1;
@@ -99,12 +103,17 @@ public class GameActivity extends AppCompatActivity {
         // Set up round text view
         roundTextView.setText(getResources().getString(R.string.round) + " " + game.getRound() + "/" + numPlayers);
 
+        // Set up time text view
+        long timeLeftInRoundMillis = timeCurRoundEnds - System.currentTimeMillis();
+        int timeLeftInRound = (int)(timeLeftInRoundMillis/1000);
+        timeTextView.setText(timeLeftInRound + getResources().getString(R.string.seconds_unit));
+
         // Set up ProgressDialog
         savingProgressDialog.setMessage(getResources().getString(R.string.saving_doodle));
         savingProgressDialog.setCancelable(false);
 
         // Set up canvas fragment
-        fragmentManager.beginTransaction().replace(R.id.canvasFrameLayout_GAME, canvasFragment).show(canvasFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.canvasFrameLayout_GAME, canvasFragment, CanvasFragment.class.getSimpleName()).show(canvasFragment).commit();
 
         // Set up numPlayer
         String curPlayer = ParseUser.getCurrentUser().getObjectId();
@@ -308,7 +317,7 @@ public class GameActivity extends AppCompatActivity {
         timeTextView.setTextColor(MaterialColors.getColor(timeTextView, R.attr.colorSecondary));
         waitingForOtherPlayers.setVisibility(View.INVISIBLE);
         canvasFragment = CanvasFragment.newInstance(getBitmapFromDoodle(parentDoodle), timeCurRoundEnds);
-        fragmentManager.beginTransaction().replace(R.id.canvasFrameLayout_GAME, canvasFragment).show(canvasFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.canvasFrameLayout_GAME, canvasFragment, CanvasFragment.class.getSimpleName()).show(canvasFragment).commit();
     }
 
     private void endCurrentRound() {

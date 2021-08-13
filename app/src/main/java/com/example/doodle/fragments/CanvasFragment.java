@@ -2,6 +2,7 @@ package com.example.doodle.fragments;
 
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 
@@ -30,6 +31,8 @@ import com.example.doodle.models.ColorViewModel;
 import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
 
 public class CanvasFragment extends Fragment {
     public static final String TAG = "CanvasFragment";
@@ -110,7 +113,8 @@ public class CanvasFragment extends Fragment {
 
         // Initialize other member variables
         fragmentManager = getChildFragmentManager();
-        colorPickerFragment = new ColorPickerFragment();
+        if (savedInstanceState == null) colorPickerFragment = new ColorPickerFragment();
+        else colorPickerFragment = fragmentManager.findFragmentByTag(ColorPickerFragment.class.getSimpleName());
         // Set up ViewModel for color picker fragment
         viewModelProvider = new ViewModelProvider(requireActivity());
         colorViewModel = viewModelProvider.get(ColorViewModel.class);
@@ -143,7 +147,7 @@ public class CanvasFragment extends Fragment {
         }
 
         // Set up color picker fragment
-        fragmentManager.beginTransaction().add(R.id.colorPickerFrameLayout, colorPickerFragment).show(colorPickerFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.colorPickerFrameLayout, colorPickerFragment, ColorPickerFragment.class.getSimpleName()).show(colorPickerFragment).commit();
 
         // Set up the colorViewModel to observe whenever the color is changed
         colorViewModel.getSelectedColorId().observe(getViewLifecycleOwner(), colorId -> {
@@ -218,6 +222,9 @@ public class CanvasFragment extends Fragment {
 
         canvasViewModel.setPaths(doodleDrawView.getMPaths());
         canvasViewModel.setColorPickerIsExpanded(colorPickerExpandableLayout.isExpanded());
+
+        // Kill the handler, the recreated fragment will have a new one
+        roundEndHandler.removeCallbacksAndMessages(null);
     }
 
     // Put result doodle in bundle to send back to parent activity

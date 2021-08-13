@@ -75,7 +75,7 @@ public class DoodleActivity extends AppCompatActivity {
         savingProgressDialog.setCancelable(false);
 
         // Set up canvas fragment
-        fragmentManager.beginTransaction().replace(R.id.canvasFrameLayout, canvasFragment).show(canvasFragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.canvasFrameLayout, canvasFragment, CanvasFragment.class.getSimpleName()).show(canvasFragment).commit();
 
         // Listen for result from fragment
         fragmentManager.setFragmentResultListener(CanvasFragment.TAG_RESULT_DOODLE, this, (requestKey, bundle) -> {
